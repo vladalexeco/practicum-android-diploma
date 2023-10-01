@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".feature.search.presentation.fragments.SearchFragment">
+
+    <TextView
+        android:id="@+id/vacancy_search_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimens_16"
+        android:layout_marginTop="@dimen/dimens_20"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="Поиск вакансий"
+        android:textColor="@color/blackDayWhiteNight"
+        android:textSize="@dimen/textSize_22"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/filter_button_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/dimens_8"
+        android:padding="@dimen/dimens_12"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintBottom_toBottomOf="@+id/vacancy_search_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vacancy_search_textView" />
+
+    <EditText
+        android:id="@+id/searchInput_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dimens_16"
+        android:layout_marginTop="@dimen/dimens_8"
+        android:background="@drawable/rounded_edittext_background"
+        android:backgroundTint="@color/yp_lightGray"
+        android:drawableEnd="@drawable/ic_search"
+        android:drawableTint="@color/yp_black"
+        android:fontFamily="@font/ys_display_regular"
+        android:hint="Введите запрос"
+        android:imeOptions="actionDone"
+        android:padding="@dimen/dimens_16"
+        android:singleLine="true"
+        android:textColor="@color/yp_black"
+        android:textColorHint="@color/yp_gray"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:textSize="@dimen/textSize_16"
+        app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView" />
+
+    <ImageView
+        android:id="@+id/clearSearch_ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:padding="@dimen/dimens_12"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/searchInput_editText"
+        app:layout_constraintEnd_toEndOf="@+id/searchInput_editText"
+        app:srcCompat="@drawable/ic_clear"
+        app:tint="@color/yp_black" />
+
+    <TextView
+        android:id="@+id/amount_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_8"
+        android:background="@drawable/rounded_edittext_background"
+        android:backgroundTint="@color/yp_blue"
+        android:fontFamily="@font/ys_display_regular"
+        android:paddingHorizontal="@dimen/dimens_12"
+        android:paddingVertical="@dimen/dimens_4"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchInput_editText"
+        tools:text="Найдено 999 вакансий" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_8"
+        android:paddingHorizontal="@dimen/dimens_16"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/amount_textView"
+        tools:listitem="@layout/vacancy_item" />
+
+    <ImageView
+        android:id="@+id/search_placeholder_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchInput_editText"
+        app:srcCompat="@drawable/search_placeholder" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
