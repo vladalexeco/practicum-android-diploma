@@ -38,7 +38,7 @@
         android:layout_marginHorizontal="@dimen/dimens_16"
         android:layout_marginTop="@dimen/dimens_8"
         android:background="@drawable/rounded_edittext_background"
-        android:backgroundTint="@color/yp_lightGray"
+        android:backgroundTint="@color/LightGrayDayWhiteNight"
         android:drawableEnd="@drawable/ic_search"
         android:drawableTint="@color/yp_black"
         android:fontFamily="@font/ys_display_regular"
@@ -47,7 +47,7 @@
         android:padding="@dimen/dimens_16"
         android:singleLine="true"
         android:textColor="@color/yp_black"
-        android:textColorHint="@color/yp_gray"
+        android:textColorHint="@color/grayDayWhiteNight"
         android:textCursorDrawable="@drawable/color_cursor"
         android:textSize="@dimen/textSize_16"
         app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView" />
