@@ -4,6 +4,12 @@
     <style name="rounding_12">
         <item name="cornerSize">@dimen/dimens_12</item>
     </style>
+  
+    <style name="CommonButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/yp_blue</item>
+        <item name="cornerRadius">@dimen/dimens_12</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="NavigationViewStyle">
         <item name="android:layout_width">0dp</item>
