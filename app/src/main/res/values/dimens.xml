@@ -15,5 +15,6 @@
 
     <item name="textSize_16" type="dimen">16sp</item>
     <item name="textSize_22" type="dimen">22sp</item>
+    <item name="textSize_32" type="dimen">32sp</item>
 
 </resources>
