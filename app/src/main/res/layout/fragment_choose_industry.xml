@@ -40,7 +40,7 @@
         android:drawableEnd="@drawable/ic_search"
         android:drawableTint="@color/yp_black"
         android:fontFamily="@font/ys_display_regular"
-        android:hint="Введите запрос"
+        android:hint="Введите отрасль"
         android:textColorHint="@color/grayDayWhiteNight"
         android:imeOptions="actionDone"
         android:padding="@dimen/dimens_16"
