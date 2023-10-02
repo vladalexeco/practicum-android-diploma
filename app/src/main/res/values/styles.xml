@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="rounding_12">
+        <item name="cornerSize">@dimen/dimens_12</item>
+    </style>
+
+</resources>
