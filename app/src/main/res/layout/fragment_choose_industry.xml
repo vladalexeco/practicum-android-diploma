@@ -7,7 +7,7 @@
     tools:context="feature.filter.presentation.fragments.ChooseIndustryFragment">
 
     <ImageView
-        android:id="@+id/choose_workplace_back_arrow_imageview"
+        android:id="@+id/choose_industry_back_arrow_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimens_20"
@@ -17,7 +17,7 @@
         app:srcCompat="@drawable/ic_back_arrow" />
 
     <TextView
-        android:id="@+id/choose_workplace_header_textview"
+        android:id="@+id/choose_industry_header_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimens_20"
@@ -26,7 +26,7 @@
         android:textColor="@color/blackDayWhiteNight"
         android:text="Выбор отрасли"
         android:textSize="@dimen/textSize_22"
-        app:layout_constraintStart_toEndOf="@+id/choose_workplace_back_arrow_imageview"
+        app:layout_constraintStart_toEndOf="@+id/choose_industry_back_arrow_imageview"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -48,7 +48,7 @@
         android:textColor="@color/yp_black"
         android:textCursorDrawable="@drawable/color_cursor"
         android:textSize="@dimen/textSize_16"
-        app:layout_constraintTop_toBottomOf="@+id/choose_workplace_header_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/choose_industry_header_textview" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/choose_industry_list_recycle_view"
