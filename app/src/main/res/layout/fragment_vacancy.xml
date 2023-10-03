@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/dimens_16"
+        android:paddingBottom="@dimen/dimens_24"
+        tools:context="ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_64"
+            app:contentInsetStart="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/vacancy_details_back_arrow_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_back_arrow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="Вакансия"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_22" />
+
+            <ImageView
+                android:id="@+id/favorites_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/dimens_4"
+                android:src="@drawable/ic_favorite_off" />
+
+            <ImageView
+                android:id="@+id/sharing_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/dimens_28"
+                android:src="@drawable/ic_sharing" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/vacancy_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_24"
+            android:fontFamily="@font/ys_display_bold"
+            android:textColor="@color/blackDayWhiteNight"
+            android:textSize="@dimen/textSize_32"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:text="Android-разработчик" />
+
+        <TextView
+            android:id="@+id/salary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_display_medium"
+            android:textColor="@color/blackDayWhiteNight"
+            android:textSize="@dimen/textSize_22"
+            app:layout_constraintTop_toBottomOf="@id/vacancy_name"
+            tools:text="от 100 000 ₽" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/employer_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_24"
+            android:background="@drawable/bg_rounded_light_gray"
+            android:padding="@dimen/dimens_16"
+            app:layout_constraintTop_toBottomOf="@id/salary">
+
+            <ImageView
+                android:id="@+id/employer_image"
+                android:layout_width="@dimen/dimens_48"
+                android:layout_height="@dimen/dimens_48"
+                android:background="@color/yp_lightGray"
+                android:contentDescription="employer_image"
+                android:src="@drawable/placeholder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/employer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_8"
+                android:background="@color/yp_lightGray"
+                android:fontFamily="@font/ys_display_medium"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize_22"
+                app:layout_constraintStart_toEndOf="@id/employer_image"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Еда" />
+
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/yp_lightGray"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintStart_toStartOf="@id/employer_name"
+                app:layout_constraintTop_toBottomOf="@id/employer_name"
+                tools:text="Москва" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/employer_card">
+
+            <TextView
+                android:id="@+id/required_experience_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_24"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="Требуемый опыт"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/required_experience_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_4"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintTop_toBottomOf="@id/required_experience_field"
+                tools:text="От 1 года до 3 лет" />
+
+            <TextView
+                android:id="@+id/schedule_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintTop_toBottomOf="@id/required_experience_value"
+                tools:text="Полная занятость, Удаленная работа" />
+
+            <TextView
+                android:id="@+id/vacancy_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_32"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="Описание вакансии"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_22"
+                app:layout_constraintTop_toBottomOf="@id/schedule_value" />
+
+            <TextView
+                android:id="@+id/vacancy_description_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/blackDayWhiteNight"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintTop_toBottomOf="@id/vacancy_description"
+                tools:text="Обязанности, требования, условия и т.д." />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/key_skills_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_24"
+                app:layout_constraintTop_toBottomOf="@id/vacancy_description_value">
+
+                <TextView
+                    android:id="@+id/vacancy_key_skills"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="Ключевые навыки"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_22"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/vacancy_key_skills_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_key_skills"
+                    tools:text="Знание классических алгоритмов и структуры данных\nПрограммирование для Android больше одного года\nЗнание WebRTC" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contacts_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_24"
+                app:layout_constraintTop_toBottomOf="@id/key_skills_container">
+
+                <TextView
+                    android:id="@+id/vacancy_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="Контакты"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_22"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_person"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="Контактное лицо"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contacts" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_person_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_person"
+                    tools:text="Ирина" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="E-mail"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_person_value" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_email_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textColor="@color/yp_blue"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_email"
+                    tools:text="i.lozgkina@yandex.ru" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="Телефон"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_email_value" />
+
+                <TextView
+                    android:id="@+id/vacancy_contact_phone_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textColor="@color/yp_blue"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_phone"
+                    tools:text="+7 (904) 329-27-71" />
+
+                <TextView
+                    android:id="@+id/vacancy_phone_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:text="Телефон"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_contact_phone_value" />
+
+                <TextView
+                    android:id="@+id/vacancy_phone_comment_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4"
+                    android:fontFamily="@font/ys_display_regular"
+                    android:textColor="@color/blackDayWhiteNight"
+                    android:textSize="@dimen/textSize_16"
+                    app:layout_constraintTop_toBottomOf="@id/vacancy_phone_comment"
+                    tools:text="Заполнить анкету по форме можно на нашем сайте" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/similar_vacancies_button"
+                style="@style/CommonButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_60"
+                android:layout_marginTop="@dimen/dimens_24"
+                android:fontFamily="@font/ys_display_medium"
+                android:gravity="center"
+                android:text="Похожие вакансии"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_16"
+                app:layout_constraintTop_toBottomOf="@id/contacts_container" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
