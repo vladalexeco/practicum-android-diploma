@@ -13,6 +13,7 @@
     <item name="dimens_36" type="dimen">36dp</item>
     <item name="dimens_48" type="dimen">48dp</item>
 
+    <item name="textSize_12" type="dimen">12sp</item>
     <item name="textSize_16" type="dimen">16sp</item>
     <item name="textSize_22" type="dimen">22sp</item>
     <item name="textSize_32" type="dimen">32sp</item>
