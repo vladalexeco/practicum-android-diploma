@@ -16,7 +16,7 @@ interface HeadHunterApi {
     suspend fun getVacancies(@Query("text") text: String): VacanciesDtoResponse
 
     @GET("/vacancies/{vacancy_id}")
-    suspend fun getVacancy(@Path("vacancy_id") id: String): VacancyResponse
+    suspend fun getVacancy(@Path("vacancy_id") id: String): VacancyDtoResponse
 
     @GET("/vacancies/{vacancy_id}/similar_vacancies")
     suspend fun getSimilarVacancies(@Path("vacancy_id") id: String): VacanciesDtoResponse

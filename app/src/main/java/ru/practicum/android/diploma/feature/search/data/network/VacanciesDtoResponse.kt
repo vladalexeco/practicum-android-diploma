@@ -8,5 +8,5 @@ data class VacanciesDtoResponse (val items: List<VacancyDtoShort>,
                                  val found: Int,
                                  val pages: Int,
                                  @SerializedName("per_page")
-                            val perPage: Int,
+                                 val perPage: Int,
                                  val page: Int): Response()

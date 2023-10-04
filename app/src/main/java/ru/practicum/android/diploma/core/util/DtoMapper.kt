@@ -16,7 +16,9 @@ import com.usunin1994.headhunterapi.data.dtomodels.TypeDto
 import com.usunin1994.headhunterapi.data.dtomodels.VacancyDtoFull
 import com.usunin1994.headhunterapi.data.dtomodels.VacancyDtoShort
 import ru.practicum.android.diploma.feature.search.data.network.VacanciesDtoResponse
+import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoResponse
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
+import ru.practicum.android.diploma.feature.search.domain.VacancyResponse
 import ru.practicum.android.diploma.feature.search.domain.models.Area
 import ru.practicum.android.diploma.feature.search.domain.models.BillingType
 import ru.practicum.android.diploma.feature.search.domain.models.Contacts
@@ -33,9 +35,19 @@ import ru.practicum.android.diploma.feature.search.domain.models.Type
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
+fun VacancyDtoResponse.toVacancyResponse(): VacancyResponse {
+    return VacancyResponse(
+        vacancy = this.vacancy.toVacancyFull()
+    )
+}
+
 fun VacanciesDtoResponse.toVacanciesResponse(): VacanciesResponse {
     return VacanciesResponse(
-
+        items = this.items.map { it.toVacancyShort() },
+        found = this.found,
+        pages = this.pages,
+        perPage = this.perPage,
+        page = this.page
     )
 }
 
