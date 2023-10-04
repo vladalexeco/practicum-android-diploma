@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/dimens_16"
+    android:paddingHorizontal="@dimen/dimens_20"
     tools:context="ru.practicum.android.diploma.feature.similar_vacancies.presentation.fragments.SimilarVacanciesFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimens_16"
+            android:layout_marginStart="@dimen/dimens_20"
             android:fontFamily="@font/ys_display_medium"
             android:text="Похожие вакансии"
             android:textColor="@color/blackDayWhiteNight"
@@ -39,6 +39,7 @@
         android:id="@+id/similar_vacancies_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimens_16"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
