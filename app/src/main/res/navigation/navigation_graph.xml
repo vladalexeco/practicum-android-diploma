@@ -19,4 +19,14 @@
         android:name="ru.practicum.android.diploma.feature.command.presentation.fragments.CommandFragment"
         android:label="fragment_command"
         tools:layout="@layout/fragment_command" />
+    <fragment
+        android:id="@+id/vacancyFragment"
+        android:name="ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment"
+        android:label="VacancyFragment"
+        tools:layout="@layout/fragment_vacancy" />
+    <fragment
+        android:id="@+id/similarVacanciesFragment"
+        android:name="ru.practicum.android.diploma.feature.similar_vacancies.presentation.fragments.SimilarVacanciesFragment"
+        android:label="fragment_similar_vacancies"
+        tools:layout="@layout/fragment_similar_vacancies" />
 </navigation>
