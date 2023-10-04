@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 
 class GetIndustriesUseCase(private val directoryRepository: DirectoryRepository) {
 
-    fun execute(): Flow<DataResponse> {
+    operator fun invoke(): Flow<DataResponse> {
         return directoryRepository.getIndustries().map { result ->
 
             when(result) {

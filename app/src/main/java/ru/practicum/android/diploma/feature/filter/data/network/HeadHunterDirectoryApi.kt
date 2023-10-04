@@ -5,6 +5,6 @@ import ru.practicum.android.diploma.feature.filter.data.network.dto.IndustrySear
 
 interface HeadHunterDirectoryApi {
 
-    @GET("/industries/")
+    @GET("/industries")
     suspend fun getIndustries(): IndustrySearchResponse
 }
