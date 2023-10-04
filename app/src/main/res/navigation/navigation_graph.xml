@@ -19,4 +19,9 @@
         android:name="ru.practicum.android.diploma.feature.command.presentation.fragments.CommandFragment"
         android:label="fragment_command"
         tools:layout="@layout/fragment_command" />
+    <fragment
+        android:id="@+id/settingsFiltersFragment"
+        android:name="ru.practicum.android.diploma.feature.filter.presentation.fragments.SettingsFiltersFragment"
+        android:label="fragment_settings_filters"
+        tools:layout="@layout/fragment_settings_filters" />
 </navigation>
