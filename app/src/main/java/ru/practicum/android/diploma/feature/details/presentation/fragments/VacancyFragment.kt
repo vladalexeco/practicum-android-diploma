@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 
@@ -13,7 +13,7 @@ class VacancyFragment : Fragment() {
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: VacancyViewModel by viewModels()
+    private val viewModel: VacancyViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

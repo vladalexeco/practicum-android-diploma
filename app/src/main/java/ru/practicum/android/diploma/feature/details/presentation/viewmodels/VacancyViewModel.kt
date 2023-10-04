@@ -11,8 +11,9 @@ class VacancyViewModel(
     private val sharingUseCase: ShareVacancyUseCase
 ) : ViewModel() {
 
-    private val email = "chernov.i.u@gmail.com"
-    private val phoneNumber = "79092831220"
+    //todo удалить все три свойства, когда будет добавлена модель Vacancy
+    private val email = "support@yandex.ru"
+    private val phoneNumber = "78002509639"
     private val vacancy = "Вакансия"
 
     fun onContactEmailClicked() {
@@ -23,7 +24,6 @@ class VacancyViewModel(
         callUseCase.invoke(phoneNumber)
     }
 
-    //todo implement as required per TA when model is implemented
     fun onShareVacancyClicked() {
         sharingUseCase.invoke(vacancy)
     }

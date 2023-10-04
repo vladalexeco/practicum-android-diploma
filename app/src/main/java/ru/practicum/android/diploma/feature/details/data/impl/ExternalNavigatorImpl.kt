@@ -18,14 +18,17 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 
     override fun makeCall(phoneNumber: String) {
         Intent(Intent.ACTION_DIAL).apply {
-            data = Uri.parse("tel:")
+            data = Uri.parse(buildString{
+                append("tel:")
+                append(phoneNumber)
+            })
             putExtra(Intent.EXTRA_EMAIL, arrayOf(phoneNumber))
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(this)
         }
     }
 
-    //todo implement as required per TA when model is implemented
+    //todo заменить параметр String на Vacancy, когда модель будет добавлена, реализовать формирование текста из модели Вакансии
     override fun shareVacancy(vacancy: String) {
         Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, vacancy)

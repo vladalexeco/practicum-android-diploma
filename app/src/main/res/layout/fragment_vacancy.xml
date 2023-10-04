@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:context="ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/dimens_16"
-        android:paddingBottom="@dimen/dimens_24"
-        tools:context="ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment">
+        android:paddingBottom="@dimen/dimens_24">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
