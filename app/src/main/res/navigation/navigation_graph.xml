@@ -19,9 +19,4 @@
         android:name="ru.practicum.android.diploma.feature.command.presentation.fragments.CommandFragment"
         android:label="fragment_command"
         tools:layout="@layout/fragment_command" />
-    <fragment
-        android:id="@+id/chooseCountryFragment"
-        android:name="ru.practicum.android.diploma.feature.filter.presentation.fragments.ChooseCountryFragment"
-        android:label="fragment_choose_country"
-        tools:layout="@layout/fragment_choose_country" />
 </navigation>
