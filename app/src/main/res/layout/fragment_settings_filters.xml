@@ -159,7 +159,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dimens_16"
-        android:layout_marginBottom="@dimen/dimens_28"
+        android:layout_marginBottom="@dimen/dimens_24"
         android:background="@drawable/rounded_edittext_background"
         android:backgroundTint="@color/yp_blue"
         android:paddingVertical="@dimen/dimens_20"
