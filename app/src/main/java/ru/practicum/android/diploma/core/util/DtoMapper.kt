@@ -54,9 +54,10 @@ fun VacanciesDtoResponse.toVacanciesResponse(): VacanciesResponse {
 fun VacancyDtoShort.toVacancyShort(): VacancyShort {
     return VacancyShort(
         area = this.area.toArea(),
-        employer = this.employer.toEmployer(),
+        employer = if (this.employer == null) null else this.employer.toEmployer(),
         name = this.name,
-        salary = this.salary.toSalary()
+        salary = if (this.salary == null) null else this.salary.toSalary()
+        //salary = this.salary.toSalary()
     )
 }
 
@@ -191,7 +192,7 @@ fun EmployerDto.toEmployer(): Employer {
         accreditedItEmployer = this.accreditedItEmployer,
         alternateUrl = this.alternateUrl,
         id = this.id,
-        logoUrls = this.logoUrls.toLogoUrls(),
+        logoUrls = if (this.logoUrls == null) null else this.logoUrls.toLogoUrls(),
         name = this.name,
         trusted = this.trusted,
         url = this.url,

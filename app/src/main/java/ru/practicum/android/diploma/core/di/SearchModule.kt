@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.core.di
 
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,8 +12,12 @@ import ru.practicum.android.diploma.feature.search.domain.GetSimilarVacanciesUse
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacancyUseCase
 import ru.practicum.android.diploma.feature.search.domain.VacancyRepository
+import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 
 val searchModule = module {
+    viewModel {
+        SearchViewModel(get())
+    }
 
     factory<GetSimilarVacanciesUseCase>{
         GetSimilarVacanciesUseCase(get())
