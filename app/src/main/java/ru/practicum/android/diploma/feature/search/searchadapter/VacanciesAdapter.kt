@@ -20,7 +20,7 @@ class VacanciesAdapter (private val listener: ClickListener
 
 
     fun interface ClickListener {
-        fun onClick(track: VacancyShort)
+        fun onClick(vacancy: VacancyShort)
     }
 
 

@@ -100,8 +100,8 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         _binding = null
     }
 
-    override fun onClick(track: VacancyShort) {
-        Toast.makeText(requireContext(), "CLICKED!!!", Toast.LENGTH_SHORT).show()
+    override fun onClick(vacancy: VacancyShort) {
+        Toast.makeText(requireContext(), vacancy.id, Toast.LENGTH_SHORT).show()
     }
 
 }

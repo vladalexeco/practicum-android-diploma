@@ -53,11 +53,11 @@ fun VacanciesDtoResponse.toVacanciesResponse(): VacanciesResponse {
 
 fun VacancyDtoShort.toVacancyShort(): VacancyShort {
     return VacancyShort(
+        id = this.id,
         area = this.area.toArea(),
         employer = if (this.employer == null) null else this.employer.toEmployer(),
         name = this.name,
         salary = if (this.salary == null) null else this.salary.toSalary()
-        //salary = this.salary.toSalary()
     )
 }
 
