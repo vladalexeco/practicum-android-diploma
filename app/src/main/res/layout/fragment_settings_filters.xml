@@ -64,7 +64,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/region_textInputLayout"
+        android:id="@+id/industry_textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
         app:layout_constraintTop_toBottomOf="@+id/work_place_textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/region_textInputEditText"
+            android:id="@+id/industry_textInputEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
@@ -114,7 +114,7 @@
         app:expandedHintEnabled="false"
         app:hintEnabled="true"
         app:hintTextColor="@color/yp_blue"
-        app:layout_constraintTop_toBottomOf="@+id/region_textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/industry_textInputLayout"
         app:placeholderTextColor="@color/yp_gray">
 
         <com.google.android.material.textfield.TextInputEditText
