@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.feature.filter.data.network.dto
+package ru.practicum.android.diploma.feature.filter.data.network.dto.model
 
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 

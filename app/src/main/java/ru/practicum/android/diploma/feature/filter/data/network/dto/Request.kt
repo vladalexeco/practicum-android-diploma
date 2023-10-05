@@ -1,5 +1,9 @@
 package ru.practicum.android.diploma.feature.filter.data.network.dto
 
-enum class Request {
-    INDUSTRY_REQUEST
+sealed class Request {
+    object IndustryRequest : Request()
+
+    object CountryRequest : Request()
+
+    class AreaRequest(val areaId: String) : Request()
 }

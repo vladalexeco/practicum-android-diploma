@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.filter.data.network.dto.Request
-import ru.practicum.android.diploma.feature.filter.data.network.dto.Response
+import ru.practicum.android.diploma.feature.filter.data.network.dto.response.Response
 
 
 class RetrofitNetworkDirectoryClient(
@@ -23,7 +23,7 @@ class RetrofitNetworkDirectoryClient(
         return withContext(Dispatchers.IO) {
             when(dto) {
 
-                Request.INDUSTRY_REQUEST -> {
+                is Request.IndustryRequest -> {
                     try {
                         val response = directoryService.getIndustries()
                         response.apply { resultCode = 200 }
@@ -32,6 +32,23 @@ class RetrofitNetworkDirectoryClient(
                     }
                 }
 
+                is Request.CountryRequest -> {
+                    try {
+                        val response = directoryService.getCountries()
+                        response.apply { resultCode = 200 }
+                    }catch (e: Throwable) {
+                        Response().apply { resultCode = 500 }
+                    }
+                }
+
+                is Request.AreaRequest -> {
+                    try {
+                        val response = directoryService.getAreas(dto.areaId)
+                        response.apply { resultCode = 200 }
+                    }catch (e: Throwable) {
+                        Response().apply { resultCode = 500 }
+                    }
+                }
             }
         }
     }
