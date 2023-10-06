@@ -48,7 +48,7 @@ class ChooseIndustryFragment : Fragment() {
         }
         if (industriesAdapter == null) {
             industriesAdapter = FilterAdapter(industries) { industry ->
-                viewModel.onIndustryClicked(industry)
+                viewModel.onIndustryClicked(industry as Industry)
             }
             binding.chooseIndustryListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
