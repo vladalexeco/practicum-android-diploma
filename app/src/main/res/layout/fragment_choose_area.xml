@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.filter.presentation.fragments.ChooseRegionFragment">
+    tools:context=".feature.filter.presentation.fragments.ChooseAreaFragment">
 
     <ImageView
         android:id="@+id/choose_region_back_arrow_imageview"
@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choose_region_enter_field_edittext"
         tools:itemCount="15"
-        tools:listitem="@layout/industry_region_item" />
+        tools:listitem="@layout/industry_area_item" />
 
     <Button
         android:id="@+id/choose_region_approve_button"

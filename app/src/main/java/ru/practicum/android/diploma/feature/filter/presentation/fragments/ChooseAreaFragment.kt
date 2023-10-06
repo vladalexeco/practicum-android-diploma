@@ -8,20 +8,19 @@ import android.view.ViewGroup
 import ru.practicum.android.diploma.R
 
 
-class ChooseRegionFragment : Fragment() {
-
+class ChooseAreaFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_choose_region, container, false)
+        return inflater.inflate(R.layout.fragment_choose_area, container, false)
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance() = ChooseRegionFragment().apply {}
+        fun newInstance() = ChooseAreaFragment().apply {}
     }
 }

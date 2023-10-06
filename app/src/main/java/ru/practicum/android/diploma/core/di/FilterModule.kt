@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.core.di
 
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,6 +14,7 @@ import ru.practicum.android.diploma.feature.filter.domain.api.DirectoryRepositor
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesUseCase
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 
 val filterModule = module {
 
@@ -43,4 +45,6 @@ val filterModule = module {
     factory<GetAreasUseCase> {
         GetAreasUseCase(directoryRepository = get())
     }
+
+    viewModelOf(::ChooseIndustryViewModel)
 }
