@@ -83,7 +83,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             extendedIndustriesList
         }
 
-    fun onIndustryClicked(industry: IndustryAreaModel) {
+    fun onIndustryClicked(industry: Industry) {
         //todo
     }
 }
