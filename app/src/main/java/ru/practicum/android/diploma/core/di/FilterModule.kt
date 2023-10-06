@@ -10,6 +10,8 @@ import ru.practicum.android.diploma.feature.filter.data.network.NetworkDirectory
 import ru.practicum.android.diploma.feature.filter.data.network.RetrofitNetworkDirectoryClient
 import ru.practicum.android.diploma.feature.filter.data.repository.DirectoryRepositoryImpl
 import ru.practicum.android.diploma.feature.filter.domain.api.DirectoryRepository
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesUseCase
 
 val filterModule = module {
@@ -32,5 +34,13 @@ val filterModule = module {
 
     factory<GetIndustriesUseCase> {
         GetIndustriesUseCase(directoryRepository = get())
+    }
+
+    factory<GetCountriesUseCase> {
+        GetCountriesUseCase(directoryRepository = get())
+    }
+
+    factory<GetAreasUseCase> {
+        GetAreasUseCase(directoryRepository = get())
     }
 }
