@@ -57,11 +57,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:background="@null"
         android:padding="@dimen/dimens_12"
         android:visibility="visible"
-        android:background ="@null"
         app:layout_constraintBottom_toBottomOf="@+id/searchInput_editText"
         app:layout_constraintEnd_toEndOf="@+id/searchInput_editText"
+        app:layout_constraintTop_toTopOf="@+id/searchInput_editText"
         app:srcCompat="@drawable/ic_clear"
         app:tint="@color/yp_black" />
 
