@@ -15,6 +15,7 @@
     <dimen name="dimens_60" type="dimen">60dp</dimen>
     <dimen name="dimens_64" type="dimen">64dp</dimen>
 
+    <item name="textSize_12" type="dimen">12sp</item>
     <item name="textSize_16" type="dimen">16sp</item>
     <item name="textSize_22" type="dimen">22sp</item>
     <item name="textSize_32" type="dimen">32sp</item>
