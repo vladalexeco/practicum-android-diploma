@@ -17,13 +17,13 @@
         app:srcCompat="@drawable/ic_back_arrow" />
 
     <TextView
-        android:id="@+id/choose_workplace_header_textview"
+        android:id="@+id/choose_country_header_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimens_20"
         android:layout_marginTop="@dimen/dimens_20"
         android:fontFamily="@font/ys_display_medium"
-        android:text="Выбор места работы"
+        android:text="Выбор страны"
         android:textColor="@color/blackDayWhiteNight"
         android:textSize="@dimen/textSize_22"
         app:layout_constraintStart_toEndOf="@+id/choose_country_back_arrow_imageview"

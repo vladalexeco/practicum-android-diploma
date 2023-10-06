@@ -11,7 +11,6 @@ import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoRespon
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.VacancyRepository
 import ru.practicum.android.diploma.feature.search.domain.VacancyResponse
-import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class VacancyRepositoryImpl(private val networkClient: NetworkClient): VacancyRepository {
     override fun getVacancies(expression: String): Flow<Resource<VacanciesResponse>> = flow {

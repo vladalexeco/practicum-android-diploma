@@ -107,7 +107,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        Toast.makeText(requireContext(), vacancy.id, Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
     }
 
 }
