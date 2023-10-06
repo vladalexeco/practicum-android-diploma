@@ -79,6 +79,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
                 extendedIndustriesList.add(industry.copy(industries = null))
                 if (industry.industries != null) extendedIndustriesList.addAll(industry.industries)
             }
+            extendedIndustriesList.sortBy { it.name }
             extendedIndustriesList
         }
 
