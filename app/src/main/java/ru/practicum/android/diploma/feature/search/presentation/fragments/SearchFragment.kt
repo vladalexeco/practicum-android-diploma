@@ -15,6 +15,8 @@ import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.presentation.SearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
+import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.R
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
@@ -36,6 +38,10 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.filterButtonImageView.setOnClickListener {
+            findNavController().navigate(R.id.action_searchFragment_to_settingsFiltersFragment)
+        }
 
         vacanciesAdapter = VacanciesAdapter(this)
         binding.searchRecycler.adapter = vacanciesAdapter
