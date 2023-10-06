@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryAreaModel
 
-class FilterAdapter<T : IndustryAreaModel>(private val clickListener: ClickListener) :
-    RecyclerView.Adapter<FilterViewHolder>() {
-
-    val items: ArrayList<T> = arrayListOf()
+class FilterAdapter<T : IndustryAreaModel>(
+    val items: ArrayList<T>,
+    private val clickListener: ClickListener
+) : RecyclerView.Adapter<FilterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder =
         FilterViewHolder(

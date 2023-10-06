@@ -12,15 +12,14 @@ import ru.practicum.android.diploma.feature.filter.presentation.states.Industrie
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
+import kotlin.collections.ArrayList
 
 class ChooseIndustryFragment : Fragment() {
 
     private var _binding: FragmentChooseIndustryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
-    private val industriesAdapter: FilterAdapter<Industry> = FilterAdapter { industry ->
-        viewModel.onIndustryClicked(industry)
-    }
+    private var industriesAdapter: FilterAdapter<Industry>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +33,6 @@ class ChooseIndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.chooseIndustryListRecycleView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = industriesAdapter
-        }
-
         viewModel.observeIndustriesState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is IndustriesState.DisplayIndustries -> displayIndustries(state.industries)
@@ -47,22 +41,29 @@ class ChooseIndustryFragment : Fragment() {
         }
     }
 
-    private fun displayIndustries(industries: List<Industry>) {
+    private fun displayIndustries(industries: ArrayList<Industry>) {
         binding.apply {
             chooseIndustryListRecycleView.visibility = View.VISIBLE
-            placeholderImage.visibility = View.GONE
+            errorIndustryLayout.visibility = View.GONE
         }
-        industriesAdapter.apply {
-            items.clear()
-            industriesAdapter.items.addAll(industries)
-            notifyDataSetChanged()
+        if (industriesAdapter == null) {
+            industriesAdapter = FilterAdapter(industries) { industry ->
+                viewModel.onIndustryClicked(industry)
+            }
+            binding.chooseIndustryListRecycleView.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = industriesAdapter
+            }
+        } else {
+            //todo
         }
     }
 
     private fun displayError(errorText: String) {
         binding.apply {
             chooseIndustryListRecycleView.visibility = View.INVISIBLE
-            placeholderImage.visibility = View.VISIBLE
+            errorIndustryLayout.visibility = View.VISIBLE
+            industryErrorText.text = errorText
         }
     }
 

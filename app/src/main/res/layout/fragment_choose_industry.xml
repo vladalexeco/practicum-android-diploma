@@ -60,16 +60,38 @@
         tools:itemCount="15"
         tools:listitem="@layout/industry_area_item" />
 
-    <ImageView
-        android:id="@+id/placeholder_image"
+    <LinearLayout
+        android:id="@+id/error_industry_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/search_placeholder"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/placeholder_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/industry_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimens_16"
+            android:fontFamily="@font/ys_display_medium"
+            android:textColor="@color/blackDayWhiteNight"
+            android:textSize="@dimen/textSize_16" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/choose_industry_approve_button"
