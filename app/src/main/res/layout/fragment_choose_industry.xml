@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimens_8"
-        tools:listitem="@layout/industry_region_item"
+        tools:listitem="@layout/industry_area_item"
         tools:itemCount="15"
         app:layout_constraintTop_toBottomOf="@id/choose_industry_enter_field_edittext"
         app:layout_constraintBottom_toBottomOf="parent"/>
