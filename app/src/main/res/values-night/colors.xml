@@ -7,5 +7,6 @@
     <color name="grayDayWhiteNight">@color/yp_white</color>
     <color name="LightGrayDayWhiteNight">@color/yp_gray</color>
     <color name="whiteDayBlackNight">@color/yp_black</color>
+    <color name="redDayWhiteNight">@color/yp_white</color>
 
 </resources>
