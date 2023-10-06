@@ -21,6 +21,37 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
 
+    private val areas: ArrayList<Area> = arrayListOf(
+        Area("1", null, "Area 1", arrayListOf(
+            Area("1.1", null, "Area 1.1", arrayListOf(
+                Area("1.1.1", null, "Area 1.1.1", arrayListOf()),
+                Area("1.1.2", null, "Area 1.1.2", arrayListOf()),
+                Area("1.1.3", null, "Area 1.1.3", arrayListOf()),
+                Area("1.1.4", null, "Area 1.1.4", arrayListOf())
+            )),
+            Area("1.2", null, "Area 1.2", arrayListOf(
+                Area("1.2.1", null, "Area 1.2.1", arrayListOf()),
+                Area("1.2.2", null, "Area 1.2.2", arrayListOf()),
+                Area("1.2.3", null, "Area 1.2.3", arrayListOf()),
+                Area("1.2.4", null, "Area 1.2.4", arrayListOf())
+            )),
+        )),
+        Area("2", null, "Area 2", arrayListOf(
+            Area("2.1", null, "Area 2.1", arrayListOf(
+                Area("2.1.1", null, "Area 2.1.1", arrayListOf()),
+                Area("2.1.2", null, "Area 2.1.2", arrayListOf()),
+                Area("2.1.3", null, "Area 2.1.3", arrayListOf()),
+                Area("2.1.4", null, "Area 2.1.4", arrayListOf())
+            )),
+            Area("2.2", null, "Area 2.2", arrayListOf(
+                Area("2.2.1", null, "Area 2.2.1", arrayListOf()),
+                Area("2.2.2", null, "Area 2.2.2", arrayListOf()),
+                Area("2.2.3", null, "Area 2.2.3", arrayListOf()),
+                Area("2.2.4", null, "Area 2.2.4", arrayListOf())
+            )),
+        ))
+    )
+
     init {
         initScreen()
     }
@@ -34,10 +65,9 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
     }
 
     private suspend fun processResult(result: DataResponse<Area>) {
-
         if (result.data != null) {
             areasStateLiveData.value =
-                AreasState.DisplayAreas(getFullIndustriesList(result.data))
+                AreasState.DisplayAreas(getAreasList(result.data))
         }
         else {
             when (result.networkError!!) {
@@ -49,9 +79,26 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
         }
     }
 
-    private suspend fun getFullIndustriesList(nestedIndustriesList: List<Area>): ArrayList<Area> =
+    private suspend fun getAreasList(nestedAreasList: List<Area>): ArrayList<Area> =
         withContext(Dispatchers.Default) {
             val extendedAreasList: ArrayList<Area> = arrayListOf()
+            for (area in nestedAreasList) {
+                getAreasRecursively(extendedAreasList, area)
+            }
+            extendedAreasList.sortBy { it.name }
             extendedAreasList
         }
+
+    private fun getAreasRecursively(extendedAreasList: ArrayList<Area>, area: Area) {
+        extendedAreasList.add(area)
+        if (area.areas.isNotEmpty()) {
+            for (nestedArea in area.areas) {
+                getAreasRecursively(extendedAreasList, nestedArea)
+            }
+        }
+    }
+
+    fun onAreaClicked(area: Area) {
+        //todo
+    }
 }
