@@ -21,6 +21,9 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
         true) {
         searchRequest(it)
     }
+    init {
+        renderState(SearchState.ClearScreen())
+    }
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {

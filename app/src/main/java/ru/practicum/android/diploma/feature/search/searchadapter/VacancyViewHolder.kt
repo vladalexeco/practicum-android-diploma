@@ -1,20 +1,17 @@
 package ru.practicum.android.diploma.feature.search.searchadapter
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class VacancyViewHolder(binding: VacancyItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    private val vacancy = itemView.findViewById<TextView>(R.id.vacancy_textView)
-    private val employer = itemView.findViewById<TextView>(R.id.employer_textView)
-    private val salary = itemView.findViewById<TextView>(R.id.salary_textView)
-    private val logo = itemView.findViewById<ImageView>(R.id.vacancy_imageView)
+    private val vacancy = binding.vacancyTextView
+    private val employer = binding.employerTextView
+    private val salary = binding.salaryTextView
+    private val logo = binding.vacancyImageView
 
     fun bind(
         model: VacancyShort,
