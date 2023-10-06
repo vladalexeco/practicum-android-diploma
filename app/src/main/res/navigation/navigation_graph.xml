@@ -8,7 +8,11 @@
         android:id="@+id/searchFragment"
         android:name="ru.practicum.android.diploma.feature.search.presentation.fragments.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_settingsFiltersFragment"
+            app:destination="@id/settingsFiltersFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favouriteFragment"
         android:name="ru.practicum.android.diploma.feature.favourite.presentation.fragments.FavouriteFragment"
@@ -44,4 +48,9 @@
         android:name="ru.practicum.android.diploma.feature.filter.presentation.fragments.ChooseIndustryFragment"
         android:label="ChooseIndustryFragment"
         tools:layout="@layout/fragment_choose_industry" />
+    <fragment
+        android:id="@+id/settingsFiltersFragment"
+        android:name="ru.practicum.android.diploma.feature.filter.presentation.fragments.SettingsFiltersFragment"
+        android:label="fragment_settings_filters"
+        tools:layout="@layout/fragment_settings_filters" />
 </navigation>
