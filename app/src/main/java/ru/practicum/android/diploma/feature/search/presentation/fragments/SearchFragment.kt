@@ -1,16 +1,17 @@
 package ru.practicum.android.diploma.feature.search.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.presentation.SearchState
@@ -138,7 +139,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     override fun onClick(vacancy: VacancyShort) {
         DataTransmitter.postId(vacancy.id)
-        Toast.makeText(requireContext(), vacancy.id, Toast.LENGTH_SHORT).show()
         findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
     }
 }
