@@ -3,15 +3,12 @@ package ru.practicum.android.diploma.feature.search.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.core.util.Resource
-import ru.practicum.android.diploma.core.util.toVacanciesResponse
-import ru.practicum.android.diploma.core.util.toVacancyResponse
 import ru.practicum.android.diploma.feature.search.data.network.SearchRequest
 import ru.practicum.android.diploma.feature.search.data.network.VacanciesDtoResponse
 import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoResponse
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.VacancyRepository
 import ru.practicum.android.diploma.feature.search.domain.VacancyResponse
-import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class VacancyRepositoryImpl(private val networkClient: NetworkClient): VacancyRepository {
     override fun getVacancies(expression: String): Flow<Resource<VacanciesResponse>> = flow {
