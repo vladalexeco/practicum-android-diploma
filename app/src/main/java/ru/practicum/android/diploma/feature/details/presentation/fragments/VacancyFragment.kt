@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 
@@ -32,6 +34,14 @@ class VacancyFragment : Fragment() {
         binding.vacancyContactEmailValue.setOnClickListener { viewModel.onContactEmailClicked() }
         binding.vacancyContactPhoneValue.setOnClickListener { viewModel.onContactPhoneClicked() }
         binding.sharingIcon.setOnClickListener { viewModel.onShareVacancyClicked() }
+
+        binding.vacancyDetailsBackArrowImageview.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.similarVacanciesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_vacancyFragment_to_similarVacanciesFragment)
+        }
     }
 
     override fun onDestroy() {

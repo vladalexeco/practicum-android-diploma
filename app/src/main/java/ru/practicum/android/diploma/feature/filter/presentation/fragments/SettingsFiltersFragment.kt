@@ -7,40 +7,39 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
-import ru.practicum.android.diploma.databinding.FragmentChooseRegionBinding
+import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 
-class ChooseRegionFragment : Fragment() {
+class SettingsFiltersFragment : Fragment() {
 
-    private var _binding: FragmentChooseRegionBinding? = null
+    private var _binding: FragmentSettingsFiltersBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentChooseRegionBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsFiltersBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.chooseRegionBackArrowImageview.setOnClickListener {
+        binding.settingsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.workPlaceTextInputEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseWorkplaceFragment)
+        }
+
+        binding.industryTextInputEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseIndustryFragment)
+        }
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance() = ChooseRegionFragment().apply {}
-    }
-
-
 }

@@ -2,17 +2,17 @@ package ru.practicum.android.diploma.feature.filter.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Path
+import ru.practicum.android.diploma.feature.filter.data.network.dto.model.CountryDto
+import ru.practicum.android.diploma.feature.filter.data.network.dto.model.IndustryDto
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.AreaResponse
-import ru.practicum.android.diploma.feature.filter.data.network.dto.response.CountryResponse
-import ru.practicum.android.diploma.feature.filter.data.network.dto.response.IndustryResponse
 
 interface HeadHunterDirectoryApi {
 
     @GET("/industries")
-    suspend fun getIndustries(): IndustryResponse
+    suspend fun getIndustries(): List<IndustryDto>
 
     @GET("/areas/countries")
-    suspend fun getCountries(): CountryResponse
+    suspend fun getCountries(): List<CountryDto>
 
     @GET("/areas/{area_id}")
     suspend fun getAreas(
