@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentChooseIndustryBinding
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
@@ -38,6 +39,10 @@ class ChooseIndustryFragment : Fragment() {
                 is IndustriesState.DisplayIndustries -> displayIndustries(state.industries)
                 is IndustriesState.Error -> displayError(state.errorText)
             }
+        }
+
+        binding.chooseIndustryBackArrowImageview.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

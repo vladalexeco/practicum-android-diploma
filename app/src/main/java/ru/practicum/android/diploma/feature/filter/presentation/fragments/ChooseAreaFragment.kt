@@ -5,17 +5,34 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.practicum.android.diploma.R
+import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 
+class ChooseRegionFragment : Fragment() {
 
+    private var _binding: FragmentChooseAreaBinding? = null
+    private val binding get() = _binding!!
 class ChooseAreaFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_choose_area, container, false)
+    ): View {
+        _binding = FragmentChooseAreaBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.chooseRegionBackArrowImageview.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -23,4 +40,6 @@ class ChooseAreaFragment : Fragment() {
         @JvmStatic
         fun newInstance() = ChooseAreaFragment().apply {}
     }
+
+
 }

@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.filter.data.network.dto.Request
+import ru.practicum.android.diploma.feature.filter.data.network.dto.response.CountryResponse
+import ru.practicum.android.diploma.feature.filter.data.network.dto.response.IndustryResponse
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.Response
 
 
@@ -23,9 +25,9 @@ class RetrofitNetworkDirectoryClient(
         return withContext(Dispatchers.IO) {
             when(dto) {
 
-                is Request.IndustryRequest -> {
+                is Request.AreaRequest -> {
                     try {
-                        val response = directoryService.getIndustries()
+                        val response = directoryService.getAreas(dto.areaId)
                         response.apply { resultCode = 200 }
                     } catch (e: Throwable) {
                         Response().apply { resultCode = 500 }
@@ -34,23 +36,28 @@ class RetrofitNetworkDirectoryClient(
 
                 is Request.CountryRequest -> {
                     try {
-                        val response = directoryService.getCountries()
+                        val responseList = directoryService.getCountries()
+                        val response = CountryResponse(countries = responseList)
                         response.apply { resultCode = 200 }
-                    }catch (e: Throwable) {
+                    } catch (e: Throwable) {
                         Response().apply { resultCode = 500 }
                     }
                 }
 
-                is Request.AreaRequest -> {
+                is Request.IndustryRequest -> {
                     try {
-                        val response = directoryService.getAreas(dto.areaId)
+                        val responseList = directoryService.getIndustries()
+                        val response = IndustryResponse(industries = responseList)
                         response.apply { resultCode = 200 }
-                    }catch (e: Throwable) {
+                    } catch (e: Throwable) {
                         Response().apply { resultCode = 500 }
                     }
                 }
             }
         }
+
+
+
     }
 
     private fun isConnected(): Boolean {
