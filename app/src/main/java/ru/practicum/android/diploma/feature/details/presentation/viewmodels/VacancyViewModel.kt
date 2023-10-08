@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.details.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,17 +26,17 @@ class VacancyViewModel(
     //todo удалить все три свойства, когда будет добавлена модель Vacancy
     private val email = "support@yandex.ru"
     private val phoneNumber = "78002509639"
-    private val vacancy = "Вакансия"
+//    private val vacancy = "Вакансия"
 
-    fun onContactEmailClicked() {
+    fun onContactEmailClicked(email: String) {
         emailUseCase.invoke(email)
     }
 
-    fun onContactPhoneClicked() {
+    fun onContactPhoneClicked(phoneNumber: String) {
         callUseCase.invoke(phoneNumber)
     }
 
-    fun onShareVacancyClicked() {
+    fun onShareVacancyClicked(vacancy: String) {
         sharingUseCase.invoke(vacancy)
     }
 

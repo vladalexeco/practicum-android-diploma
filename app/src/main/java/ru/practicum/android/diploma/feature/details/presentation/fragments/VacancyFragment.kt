@@ -1,20 +1,30 @@
 package ru.practicum.android.diploma.feature.details.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
+import ru.practicum.android.diploma.feature.search.domain.models.Salary
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class VacancyFragment : Fragment() {
+
+    var withContactEmail = true
+    var withContactPhone = true
+
+    var currentVacancyFull: VacancyFull? = null
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
@@ -42,9 +52,25 @@ class VacancyFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.vacancyContactEmailValue.setOnClickListener { viewModel.onContactEmailClicked() }
-        binding.vacancyContactPhoneValue.setOnClickListener { viewModel.onContactPhoneClicked() }
-        binding.sharingIcon.setOnClickListener { viewModel.onShareVacancyClicked() }
+        binding.vacancyContactEmailValue.setOnClickListener {
+            if (withContactEmail) {
+                currentVacancyFull?.contacts?.email?.let { email ->
+                    viewModel.onContactEmailClicked(email)
+                }
+            }
+        }
+        binding.vacancyContactPhoneValue.setOnClickListener {
+            if (withContactPhone) {
+                currentVacancyFull?.contacts?.phones?.get(0)
+                    ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
+            }
+
+        }
+        binding.sharingIcon.setOnClickListener { currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
+            viewModel.onShareVacancyClicked(
+                alternateUrl
+            )
+        } }
 
         binding.vacancyDetailsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
@@ -82,8 +108,108 @@ class VacancyFragment : Fragment() {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun setContentToViews(vacancyFull: VacancyFull) {
 
+        currentVacancyFull = vacancyFull
+
+        // Наименование вакансии
+        binding.vacancyName.text = vacancyFull.name
+
+        // Предлагаемая заработанная плата
+        if (vacancyFull.salary == null) {
+            binding.salary.text = "Зарплата не указана"
+        } else {
+            val salary: Salary = vacancyFull.salary
+
+            var currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
+
+            if (salary.to == null) {
+                val message = "от ${salary.from} $currencySymbol"
+                binding.salary.text = message
+            } else {
+                val message = "от ${salary.from} до ${salary.to} $currencySymbol"
+                binding.salary.text = message
+            }
+        }
+
+        // Логотип работодателя
+        val logoUrl: String? = vacancyFull.employer?.logoUrls?.original
+        setLogoToImageView(logoUrl)
+
+        // Имя работодателя
+        binding.employerName.text = vacancyFull.employer?.name
+
+        // Город, регион
+        binding.city.text = vacancyFull.area?.name
+
+        // Требуемый опыт работы
+        binding.requiredExperienceValue.text = vacancyFull.experience?.name
+
+        // Трудоустройство
+        binding.scheduleValue.text = "${vacancyFull.employment?.name}, ${vacancyFull.schedule?.name}"
+
+        // Описание вакансии
+        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT))
+
+        // Ключевые навыки
+        if (vacancyFull.keySkills.isNullOrEmpty()) {
+            binding.vacancyKeySkillsValue.text = "не указаны"
+        } else {
+            val interpunct = "\u00B7"
+            var message = ""
+
+            vacancyFull.keySkills.forEach { keySkill ->
+                val singleLine = "$interpunct ${keySkill.name} \n"
+                message += singleLine
+            }
+
+            binding.vacancyKeySkillsValue.text = message.trimEnd()
+
+        }
+
+        // Контактное лицо
+        binding.vacancyContactPersonValue.text = vacancyFull.contacts?.name ?: "не указано"
+
+        // Email
+        if (vacancyFull.contacts?.email == null) {
+            binding.vacancyContactEmailValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackDayWhiteNight))
+            binding.vacancyContactEmailValue.text = "не указан"
+            withContactEmail = false
+        } else {
+            binding.vacancyContactEmailValue.text = vacancyFull.contacts.email
+        }
+
+        // Телефоны
+        if (vacancyFull.contacts?.phones.isNullOrEmpty()) {
+            binding.vacancyContactPhoneValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackDayWhiteNight))
+            binding.vacancyContactPhoneValue.text = "не указан"
+            withContactPhone = false
+        } else {
+            var message = ""
+            vacancyFull.contacts?.phones?.forEach { phone ->
+                message += "$phone "
+            }
+        }
+
+        // Комментарий
+        if (vacancyFull.contacts?.phones.isNullOrEmpty()) {
+            binding.vacancyPhoneCommentValue.text = "нет комментариев"
+        } else {
+            if (vacancyFull.contacts?.phones?.get(0)?.comment == null) {
+                binding.vacancyPhoneCommentValue.text = "нет комментариев"
+            } else {
+                binding.vacancyPhoneCommentValue.text = vacancyFull.contacts?.phones?.get(0)?.comment.toString()
+            }
+        }
+
+    }
+
+    private fun setLogoToImageView(logoUrl: String?) {
+        Glide.with(requireContext())
+            .load(logoUrl)
+            .placeholder(R.drawable.placeholder)
+            .into(binding.employerImage)
     }
 
     private fun showLoader() {

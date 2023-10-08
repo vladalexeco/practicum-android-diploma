@@ -29,7 +29,7 @@
         android:id="@+id/details_main_screen_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -115,6 +115,7 @@
                     android:layout_height="@dimen/dimens_48"
                     android:background="@color/yp_lightGray"
                     android:contentDescription="employer_image"
+                    android:scaleType="centerInside"
                     android:src="@drawable/placeholder"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -296,6 +297,7 @@
                         android:textColor="@color/yp_blue"
                         android:textSize="@dimen/textSize_16"
                         app:layout_constraintTop_toBottomOf="@id/vacancy_contact_email"
+                        tools:layout_editor_absoluteX="0dp"
                         tools:text="i.lozgkina@yandex.ru" />
 
                     <TextView
@@ -349,14 +351,16 @@
                     style="@style/CommonButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimens_60"
-                    android:layout_marginTop="@dimen/dimens_24"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/ys_display_medium"
                     android:gravity="center"
                     android:text="Похожие вакансии"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/textSize_16"
-                    app:layout_constraintTop_toBottomOf="@id/contacts_container" />
+                    app:layout_constraintTop_toBottomOf="@id/contacts_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteX="0dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
