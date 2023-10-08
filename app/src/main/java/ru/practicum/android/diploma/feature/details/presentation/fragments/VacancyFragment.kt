@@ -21,10 +21,7 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class VacancyFragment : Fragment() {
 
-    var withContactEmail = true
-    var withContactPhone = true
-
-    var currentVacancyFull: VacancyFull? = null
+    private var currentVacancyFull: VacancyFull? = null
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
@@ -53,24 +50,18 @@ class VacancyFragment : Fragment() {
 
     private fun initListeners() {
         binding.vacancyContactEmailValue.setOnClickListener {
-            if (withContactEmail) {
-                currentVacancyFull?.contacts?.email?.let { email ->
-                    viewModel.onContactEmailClicked(email)
-                }
+            currentVacancyFull?.contacts?.email?.let { email ->
+                viewModel.onContactEmailClicked(email)
             }
         }
         binding.vacancyContactPhoneValue.setOnClickListener {
-            if (withContactPhone) {
-                currentVacancyFull?.contacts?.phones?.get(0)
-                    ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
-            }
-
+            currentVacancyFull?.contacts?.phones?.get(0)
+                ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
         }
         binding.sharingIcon.setOnClickListener { currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
-            viewModel.onShareVacancyClicked(
-                alternateUrl
-            )
-        } }
+            viewModel.onShareVacancyClicked(alternateUrl)
+            }
+        }
 
         binding.vacancyDetailsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
@@ -154,7 +145,7 @@ class VacancyFragment : Fragment() {
 
         // Ключевые навыки
         if (vacancyFull.keySkills.isNullOrEmpty()) {
-            binding.vacancyKeySkillsValue.text = "не указаны"
+            binding.keySkillsContainer.visibility = View.GONE
         } else {
             val interpunct = "\u00B7"
             var message = ""
@@ -168,39 +159,20 @@ class VacancyFragment : Fragment() {
 
         }
 
-        // Контактное лицо
-        binding.vacancyContactPersonValue.text = vacancyFull.contacts?.name ?: "не указано"
-
-        // Email
-        if (vacancyFull.contacts?.email == null) {
-            binding.vacancyContactEmailValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackDayWhiteNight))
-            binding.vacancyContactEmailValue.text = "не указан"
-            withContactEmail = false
+        if (vacancyFull.contacts == null) {
+            binding.contactsContainer.visibility = View.GONE
         } else {
+            // Контактное лицо
+            binding.vacancyContactPersonValue.text = vacancyFull.contacts.name
+
+            // Email
             binding.vacancyContactEmailValue.text = vacancyFull.contacts.email
-        }
 
-        // Телефоны
-        if (vacancyFull.contacts?.phones.isNullOrEmpty()) {
-            binding.vacancyContactPhoneValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.blackDayWhiteNight))
-            binding.vacancyContactPhoneValue.text = "не указан"
-            withContactPhone = false
-        } else {
-            var message = ""
-            vacancyFull.contacts?.phones?.forEach { phone ->
-                message += "$phone "
-            }
-        }
+            // Телефон
+            binding.vacancyContactPhoneValue.text = vacancyFull.contacts.phones[0].formatted
 
-        // Комментарий
-        if (vacancyFull.contacts?.phones.isNullOrEmpty()) {
-            binding.vacancyPhoneCommentValue.text = "нет комментариев"
-        } else {
-            if (vacancyFull.contacts?.phones?.get(0)?.comment == null) {
-                binding.vacancyPhoneCommentValue.text = "нет комментариев"
-            } else {
-                binding.vacancyPhoneCommentValue.text = vacancyFull.contacts?.phones?.get(0)?.comment.toString()
-            }
+            // Комментарий
+            binding.vacancyPhoneCommentValue.text = vacancyFull.contacts.phones[0].comment.toString()
         }
 
     }

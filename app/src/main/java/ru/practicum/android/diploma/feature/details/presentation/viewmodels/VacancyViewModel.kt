@@ -23,11 +23,6 @@ class VacancyViewModel(
     private var _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    //todo удалить все три свойства, когда будет добавлена модель Vacancy
-    private val email = "support@yandex.ru"
-    private val phoneNumber = "78002509639"
-//    private val vacancy = "Вакансия"
-
     fun onContactEmailClicked(email: String) {
         emailUseCase.invoke(email)
     }
