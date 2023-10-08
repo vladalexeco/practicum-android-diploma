@@ -52,9 +52,13 @@ class ChooseIndustryFragment : Fragment() {
             errorIndustryLayout.visibility = View.GONE
         }
         if (industriesAdapter == null) {
-            industriesAdapter = FilterAdapter(industries) { industry ->
-                viewModel.onIndustryClicked(industry as Industry)
-            }
+            industriesAdapter =
+                FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
+                    viewModel.onIndustryClicked(industry as Industry)
+                    industries[position] = industry.copy(isChecked = !industry.isChecked)
+                    notifyItemChanged.invoke()
+                    setPositionChecked.invoke(industries[position].isChecked)
+                }
             binding.chooseIndustryListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = industriesAdapter

@@ -8,11 +8,10 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 
-class ChooseRegionFragment : Fragment() {
+class ChooseAreaFragment : Fragment() {
 
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
-class ChooseAreaFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,10 +35,7 @@ class ChooseAreaFragment : Fragment() {
     }
 
     companion object {
-
         @JvmStatic
         fun newInstance() = ChooseAreaFragment().apply {}
     }
-
-
 }
