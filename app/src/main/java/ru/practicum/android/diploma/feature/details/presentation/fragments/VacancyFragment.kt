@@ -9,12 +9,14 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
+import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 
 class VacancyFragment : Fragment() {
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: VacancyViewModel by viewModel()
 
     override fun onCreateView(
@@ -27,7 +29,14 @@ class VacancyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initListeners()
+
+        viewModel.getDetailedVacancyData()
+
+        viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
+            render(dataState)
+        }
     }
 
     private fun initListeners() {
@@ -47,5 +56,11 @@ class VacancyFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun render(dataState: DataState) {
+
+
+
     }
 }

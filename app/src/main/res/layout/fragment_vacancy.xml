@@ -6,11 +6,13 @@
     android:layout_height="wrap_content"
     tools:context="ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/dimens_16"
-        android:paddingBottom="@dimen/dimens_24">
+        android:paddingBottom="@dimen/dimens_24"
+        android:visibility="gone">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
