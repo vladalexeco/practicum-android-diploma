@@ -6,20 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
-import ru.practicum.android.diploma.databinding.FragmentChooseRegionBinding
+import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 
-class ChooseRegionFragment : Fragment() {
+class ChooseAreaFragment : Fragment() {
 
-    private var _binding: FragmentChooseRegionBinding? = null
+    private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentChooseRegionBinding.inflate(inflater, container, false)
+        _binding = FragmentChooseAreaBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -30,17 +28,14 @@ class ChooseRegionFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance() = ChooseRegionFragment().apply {}
+        fun newInstance() = ChooseAreaFragment().apply {}
     }
-
-
 }
