@@ -37,7 +37,8 @@ class RetrofitNetworkClient (private val context: Context,
         }
         return withContext(Dispatchers.IO) {
             try {
-                val response = hhApi.getVacancy(dto.data)
+                val responseVacancy = hhApi.getVacancy(dto.data)
+                val response = VacancyDtoResponse(vacancy = responseVacancy)
                 response.apply { resultCode = 200 }
             } catch (e:Throwable) {
                 Response().apply { resultCode = 500}
