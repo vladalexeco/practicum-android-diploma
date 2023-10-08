@@ -15,6 +15,8 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCas
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesUseCase
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseCountryViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 
 val filterModule = module {
 
@@ -45,7 +47,9 @@ val filterModule = module {
     factory<GetAreasUseCase> {
         GetAreasUseCase(directoryRepository = get())
     }
-
-
+    
     viewModelOf(::ChooseCountryViewModel)
+    viewModelOf(::ChooseAreaViewModel)
+    viewModelOf(::ChooseIndustryViewModel)
+    
 }
