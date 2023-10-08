@@ -6,12 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
+import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
+import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 
 class ChooseAreaFragment : Fragment() {
 
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: ChooseAreaViewModel by viewModel()
+    private var areasAdapter: FilterAdapter<Area>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,18 +32,49 @@ class ChooseAreaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.chooseRegionBackArrowImageview.setOnClickListener {
+        viewModel.observeAreasState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AreasState.DisplayAreas -> displayAreas(state.areas)
+                is AreasState.Error -> displayError(state.errorText)
+            }
+        }
+
+        binding.chooseAreaBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun displayAreas(areas: ArrayList<Area>) {
+        binding.apply {
+            chooseAreaListRecycleView.visibility = View.VISIBLE
+            errorAreasLayout.visibility = View.GONE
+        }
+        if (areasAdapter == null) {
+            areasAdapter = FilterAdapter(areas) { area, position, notifyItemChanged, setPositionChecked ->
+                viewModel.onAreaClicked(area as Area)
+                areas[position] = area.copy(isChecked = !area.isChecked)
+                notifyItemChanged.invoke()
+                setPositionChecked.invoke(areas[position].isChecked)
+            }
+            binding.chooseAreaListRecycleView.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = areasAdapter
+            }
+        } else {
+            //todo
+        }
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = ChooseAreaFragment().apply {}
+    private fun displayError(errorText: String) {
+        binding.apply {
+            chooseAreaListRecycleView.visibility = View.INVISIBLE
+            errorAreasLayout.visibility = View.VISIBLE
+            areasErrorText.text = errorText
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

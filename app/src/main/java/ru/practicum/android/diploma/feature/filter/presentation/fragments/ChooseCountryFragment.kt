@@ -34,5 +34,4 @@ class ChooseCountryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
