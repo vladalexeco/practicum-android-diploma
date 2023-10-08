@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
@@ -37,6 +38,10 @@ class ChooseAreaFragment : Fragment() {
                 is AreasState.Error -> displayError(state.errorText)
             }
         }
+
+        binding.chooseAreaBackArrowImageview.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun displayAreas(areas: ArrayList<Area>) {
@@ -45,8 +50,11 @@ class ChooseAreaFragment : Fragment() {
             errorAreasLayout.visibility = View.GONE
         }
         if (areasAdapter == null) {
-            areasAdapter = FilterAdapter(areas) { area ->
+            areasAdapter = FilterAdapter(areas) { area, position, notifyItemChanged, setPositionChecked ->
                 viewModel.onAreaClicked(area as Area)
+                areas[position] = area.copy(isChecked = !area.isChecked)
+                notifyItemChanged.invoke()
+                setPositionChecked.invoke(areas[position].isChecked)
             }
             binding.chooseAreaListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())

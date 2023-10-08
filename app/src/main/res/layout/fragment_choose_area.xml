@@ -107,7 +107,7 @@
         android:textAllCaps="false"
         android:textColor="@color/yp_white"
         android:textSize="@dimen/textSize_16"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/choose_area_list_recycle_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

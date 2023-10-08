@@ -16,39 +16,7 @@ import ru.practicum.android.diploma.feature.filter.presentation.states.AreasStat
 class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
 
     //todo замемнить на реальный areaId
-    private val areaId = "-1"
-
-    //todo удалить после теста
-    private val areas: ArrayList<Area> = arrayListOf(
-        Area("1", null, "Area 1", arrayListOf(
-            Area("1.1", null, "Area 1.1", arrayListOf(
-                Area("1.1.1", null, "Area 1.1.1", arrayListOf()),
-                Area("1.1.2", null, "Area 1.1.2", arrayListOf()),
-                Area("1.1.3", null, "Area 1.1.3", arrayListOf()),
-                Area("1.1.4", null, "Area 1.1.4", arrayListOf())
-            )),
-            Area("1.2", null, "Area 1.2", arrayListOf(
-                Area("1.2.1", null, "Area 1.2.1", arrayListOf()),
-                Area("1.2.2", null, "Area 1.2.2", arrayListOf()),
-                Area("1.2.3", null, "Area 1.2.3", arrayListOf()),
-                Area("1.2.4", null, "Area 1.2.4", arrayListOf())
-            )),
-        )),
-        Area("2", null, "Area 2", arrayListOf(
-            Area("2.1", null, "Area 2.1", arrayListOf(
-                Area("2.1.1", null, "Area 2.1.1", arrayListOf()),
-                Area("2.1.2", null, "Area 2.1.2", arrayListOf()),
-                Area("2.1.3", null, "Area 2.1.3", arrayListOf()),
-                Area("2.1.4", null, "Area 2.1.4", arrayListOf())
-            )),
-            Area("2.2", null, "Area 2.2", arrayListOf(
-                Area("2.2.1", null, "Area 2.2.1", arrayListOf()),
-                Area("2.2.2", null, "Area 2.2.2", arrayListOf()),
-                Area("2.2.3", null, "Area 2.2.3", arrayListOf()),
-                Area("2.2.4", null, "Area 2.2.4", arrayListOf())
-            )),
-        ))
-    )
+    private val areaId = "113"
 
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
@@ -67,10 +35,6 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
 
     private suspend fun processResult(result: DataResponse<Area>) {
 
-        areasStateLiveData.value =
-            AreasState.DisplayAreas(getAreasList(areas))
-
-        /*
         if (result.data != null) {
             areasStateLiveData.value =
                 AreasState.DisplayAreas(getAreasList(result.data))
@@ -83,8 +47,6 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
                     AreasState.Error("Ошибка сервера")
             }
         }
-
-        */
     }
 
     private suspend fun getAreasList(nestedAreasList: List<Area>): ArrayList<Area> =
