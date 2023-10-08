@@ -109,16 +109,18 @@
                 android:padding="@dimen/dimens_16"
                 app:layout_constraintTop_toBottomOf="@id/salary">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/employer_image"
                     android:layout_width="@dimen/dimens_48"
                     android:layout_height="@dimen/dimens_48"
-                    android:background="@color/yp_lightGray"
                     android:contentDescription="employer_image"
+                    app:shapeAppearanceOverlay="@style/rounding_12"
                     android:scaleType="centerInside"
                     android:src="@drawable/placeholder"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/yp_lightGray"
+                    app:strokeWidth="@dimen/dimens_2"/>
 
                 <TextView
                     android:id="@+id/employer_name"
