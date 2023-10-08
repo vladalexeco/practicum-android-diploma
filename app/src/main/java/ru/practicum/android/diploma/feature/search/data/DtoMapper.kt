@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.core.util
+package ru.practicum.android.diploma.feature.search.data
 
 import com.usunin1994.headhunterapi.data.dtomodels.AreaDto
 import com.usunin1994.headhunterapi.data.dtomodels.BillingTypeDto

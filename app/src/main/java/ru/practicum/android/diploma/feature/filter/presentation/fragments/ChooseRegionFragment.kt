@@ -6,32 +6,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
+import ru.practicum.android.diploma.databinding.FragmentChooseRegionBinding
 
-class ChooseCountryFragment : Fragment() {
+class ChooseRegionFragment : Fragment() {
 
-    private var _binding: FragmentChooseCountryBinding? = null
+    private var _binding: FragmentChooseRegionBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentChooseCountryBinding.inflate(inflater, container, false)
+        _binding = FragmentChooseRegionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.chooseCountryBackArrowImageview.setOnClickListener {
+        binding.chooseRegionBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
     }
-
+    
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+
+        @JvmStatic
+        fun newInstance() = ChooseRegionFragment().apply {}
+    }
+
+
 }

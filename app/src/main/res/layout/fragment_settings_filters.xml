@@ -60,6 +60,7 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:fontFamily="@font/ys_display_regular"
+            android:focusable="false"
             android:textSize="@dimen/textSize_16"
             app:boxBackgroundColor="@android:color/transparent" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -96,6 +97,7 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:fontFamily="@font/ys_display_regular"
+            android:focusable="false"
             android:textSize="@dimen/textSize_16"
             app:boxBackgroundColor="@android:color/transparent" />
     </com.google.android.material.textfield.TextInputLayout>
