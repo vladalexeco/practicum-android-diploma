@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseIndustryBinding
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
@@ -21,6 +23,8 @@ class ChooseIndustryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
+
+    var currentIndustry: Industry? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +45,25 @@ class ChooseIndustryFragment : Fragment() {
             }
         }
 
+        viewModel.dataIndustry.observe(viewLifecycleOwner) { industry ->
+            if (industry.isChecked) {
+                binding.chooseIndustryApproveButton.visibility = View.VISIBLE
+                currentIndustry = industry
+            } else {
+                binding.chooseIndustryApproveButton.visibility = View.GONE
+                currentIndustry = null
+            }
+        }
+
+        binding.chooseIndustryApproveButton.setOnClickListener {
+            if (currentIndustry != null) {
+                DataTransmitter.postIndustry(currentIndustry!!)
+                findNavController().navigate(
+                    R.id.action_chooseIndustryFragment_to_settingsFiltersFragment
+                )
+            }
+        }
+
         binding.chooseIndustryBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -54,8 +77,8 @@ class ChooseIndustryFragment : Fragment() {
         if (industriesAdapter == null) {
             industriesAdapter =
                 FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
-                    viewModel.onIndustryClicked(industry as Industry)
-                    industries[position] = industry.copy(isChecked = !industry.isChecked)
+                    industries[position] = (industry as Industry).copy(isChecked = !industry.isChecked)
+                    viewModel.onIndustryClicked(industries[position])
                     notifyItemChanged.invoke()
                     setPositionChecked.invoke(industries[position].isChecked)
                 }

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,9 @@ import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.CountriesState
 
 class ChooseCountryViewModel(private val countryUseCase: GetCountriesUseCase) : ViewModel() {
+
+    private var _dataCountry = MutableLiveData<Country>()
+    val dataCountry: LiveData<Country> = _dataCountry
 
     private val countriesStateLiveData = MutableLiveData<CountriesState>()
     fun observeCountriesState(): LiveData<CountriesState> = countriesStateLiveData
@@ -47,7 +51,7 @@ class ChooseCountryViewModel(private val countryUseCase: GetCountriesUseCase) : 
     }
 
     fun onCountryClicked(country: Country) {
-        //todo
+        _dataCountry.postValue(country)
     }
 
 }

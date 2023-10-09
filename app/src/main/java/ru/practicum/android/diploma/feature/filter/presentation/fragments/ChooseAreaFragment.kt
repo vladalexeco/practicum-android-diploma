@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
@@ -15,6 +17,8 @@ import ru.practicum.android.diploma.feature.filter.presentation.states.AreasStat
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 
 class ChooseAreaFragment : Fragment() {
+
+    var currentArea: Area? = null
 
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
@@ -39,8 +43,25 @@ class ChooseAreaFragment : Fragment() {
             }
         }
 
+        viewModel.dataArea.observe(viewLifecycleOwner) {area ->
+            if (area.isChecked) {
+                binding.chooseAreaApproveButton.visibility = View.VISIBLE
+                currentArea = area
+            } else {
+                binding.chooseAreaApproveButton.visibility = View.GONE
+                currentArea = null
+            }
+        }
+
         binding.chooseAreaBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.chooseAreaApproveButton.setOnClickListener {
+            if (currentArea != null) {
+                DataTransmitter.postArea(currentArea)
+                findNavController().navigate(R.id.action_chooseAreaFragment_to_chooseWorkplaceFragment)
+            }
         }
     }
 
@@ -51,8 +72,8 @@ class ChooseAreaFragment : Fragment() {
         }
         if (areasAdapter == null) {
             areasAdapter = FilterAdapter(areas) { area, position, notifyItemChanged, setPositionChecked ->
-                viewModel.onAreaClicked(area as Area)
-                areas[position] = area.copy(isChecked = !area.isChecked)
+                areas[position] = (area as Area).copy(isChecked = !area.isChecked)
+                viewModel.onAreaClicked(areas[position])
                 notifyItemChanged.invoke()
                 setPositionChecked.invoke(areas[position].isChecked)
             }

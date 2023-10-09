@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
@@ -15,8 +17,8 @@ import ru.practicum.android.diploma.feature.filter.presentation.states.AreasStat
 
 class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
 
-    //todo замемнить на реальный areaId
-    private val areaId = "113"
+    private var _dataArea = MutableLiveData<Area>()
+    val dataArea: LiveData<Area> = _dataArea
 
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
@@ -27,7 +29,7 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
 
     private fun initScreen() {
         viewModelScope.launch {
-            areasUseCase.invoke(areaId).collect { result ->
+            areasUseCase.invoke(DataTransmitter.getCountryId()).collect { result ->
                 processResult(result)
             }
         }
@@ -69,6 +71,6 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
     }
 
     fun onAreaClicked(area: Area) {
-        //todo
+        _dataArea.postValue(area)
     }
 }
