@@ -1,20 +1,14 @@
 package ru.practicum.android.diploma.feature.search.searchadapter
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.Currency
+import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
+import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val vacancy = itemView.findViewById<TextView>(R.id.vacancy_textView)
-    private val employer = itemView.findViewById<TextView>(R.id.employer_textView)
-    private val salary = itemView.findViewById<TextView>(R.id.salary_textView)
-    private val logo = itemView.findViewById<ImageView>(R.id.vacancy_imageView)
+class VacancyViewHolder(private val binding: VacancyItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         model: VacancyShort,
@@ -29,22 +23,29 @@ class VacancyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Glide.with(itemView)
                 .load(model.employer.logoUrls.original)
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(logo)
+                .into(binding.vacancyImageView)
         } else {
             // Если logo_urls равен null, загружаем изображение по умолчанию
             Glide.with(itemView)
                 .load(R.drawable.ic_launcher_foreground)
                 .placeholder(R.drawable.ic_launcher_foreground)
-                .into(logo)
+                .into(binding.vacancyImageView)
         }
 
-        vacancy.text="${model.name}, ${model.area.name}"
-        employer.text=model.employer?.name
+        binding.vacancyTextView.text = "${model.name}, ${model.area.name}"
+        binding.employerTextView.text = model.employer?.name
         if (model.salary != null) {
-            salary.text="От ${model.salary.from} до ${model.salary.to}"
-        } else {
-            salary.text = "Зарплата не указана"
-        }
+            val text = CurrencyLogoCreator.getSymbol(model.salary.currency)
+            if (model.salary.from != null && model.salary.to != null) {
+                binding.salaryTextView.text = "От ${model.salary.from} до ${model.salary.to} $text"
+            } else if (model.salary.from == null && model.salary.to != null) {
+                binding.salaryTextView.text = "До ${model.salary.to} $text"
+            } else {
+                binding.salaryTextView.text = "От ${model.salary.from} $text"
+            }
 
+        } else {
+            binding.salaryTextView.text = "Зарплата не указана"
+        }
     }
 }

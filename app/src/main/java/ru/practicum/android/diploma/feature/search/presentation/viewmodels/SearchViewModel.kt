@@ -16,10 +16,13 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
     private val _stateLiveData = MutableLiveData<SearchState>()
     val stateLiveData : LiveData<SearchState> = _stateLiveData
 
-    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,
+    private val vacanciesSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
         true) {
         searchRequest(it)
+    }
+    init {
+        renderState(SearchState.ClearScreen())
     }
 
     private fun searchRequest(newSearchText: String) {
@@ -59,7 +62,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
     fun searchDebounce(changedText: String) {
         if (latestSearchText != changedText) {
             latestSearchText = changedText
-            trackSearchDebounce(changedText)
+            vacanciesSearchDebounce(changedText)
         }
     }
 

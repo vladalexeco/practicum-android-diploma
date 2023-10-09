@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.core.di
 import android.content.Context
 import android.content.SharedPreferences
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,6 +22,10 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUs
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.SaveFilterSettingsUseCase
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseCountryViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
+
 
 val filterModule = module {
 
@@ -73,4 +78,9 @@ val filterModule = module {
     factory<ClearFilterSettingsUseCase> {
         ClearFilterSettingsUseCase(filterSettingsRepository = get())
     }
+    
+    viewModelOf(::ChooseCountryViewModel)
+    viewModelOf(::ChooseAreaViewModel)
+    viewModelOf(::ChooseIndustryViewModel)
+
 }
