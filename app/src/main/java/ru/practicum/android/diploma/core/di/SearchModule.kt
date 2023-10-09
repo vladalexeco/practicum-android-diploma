@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.VacancyRepositoryImpl
 import ru.practicum.android.diploma.feature.search.data.network.HeadHunterApi
 import ru.practicum.android.diploma.feature.search.data.network.RetrofitNetworkClient
-import ru.practicum.android.diploma.feature.search.domain.GetSimilarVacanciesUseCase
+import ru.practicum.android.diploma.feature.similar_vacancies.domain.GetSimilarVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacancyUseCase
 import ru.practicum.android.diploma.feature.search.domain.VacancyRepository
@@ -17,11 +17,6 @@ import ru.practicum.android.diploma.feature.search.presentation.viewmodels.Searc
 val searchModule = module {
     viewModel {
         SearchViewModel(get())
-    }
-
-    factory<GetSimilarVacanciesUseCase>{
-        GetSimilarVacanciesUseCase(get())
-
     }
 
     factory<GetVacanciesUseCase>{

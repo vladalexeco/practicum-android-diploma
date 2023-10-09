@@ -39,7 +39,11 @@
         android:id="@+id/similarVacanciesFragment"
         android:name="ru.practicum.android.diploma.feature.similar_vacancies.presentation.fragments.SimilarVacanciesFragment"
         android:label="fragment_similar_vacancies"
-        tools:layout="@layout/fragment_similar_vacancies" />
+        tools:layout="@layout/fragment_similar_vacancies" >
+        <action
+            android:id="@+id/action_similarVacanciesFragment_to_vacancyFragment"
+            app:destination="@id/vacancyFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFiltersFragment"
         android:name="ru.practicum.android.diploma.feature.filter.presentation.fragments.SettingsFiltersFragment"
