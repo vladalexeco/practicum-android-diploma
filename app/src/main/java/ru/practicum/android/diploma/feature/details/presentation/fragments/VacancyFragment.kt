@@ -36,7 +36,7 @@ class VacancyFragment : Fragment() {
         binding.sharingIcon.setOnClickListener { viewModel.onShareVacancyClicked() }
 
         binding.vacancyDetailsBackArrowImageview.setOnClickListener {
-            findNavController().popBackStack(R.id.searchFragment, false)
+            findNavController().popBackStack()
         }
 
         binding.similarVacanciesButton.setOnClickListener {

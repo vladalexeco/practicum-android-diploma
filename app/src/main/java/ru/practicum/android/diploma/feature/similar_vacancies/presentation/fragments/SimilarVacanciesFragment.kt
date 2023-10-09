@@ -41,7 +41,7 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.similarVacanciesRecyclerView.adapter = similarVacanciesAdapter
 
         binding.similarVacanciesBackArrowImageview.setOnClickListener {
-            findNavController().popBackStack(R.id.similarVacanciesFragment, false)
+            findNavController().popBackStack()
         }
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {
@@ -77,7 +77,6 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
     private fun showContent(response: VacanciesResponse) {
         clearContent()
         similarVacanciesAdapter?.vacancies = response.items
-        binding.similarVacanciesRecyclerView.visibility = View.VISIBLE
         binding.similarVacanciesRecyclerView.visibility = View.VISIBLE
     }
 
