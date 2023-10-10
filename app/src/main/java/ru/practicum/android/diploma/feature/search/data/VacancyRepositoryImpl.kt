@@ -10,19 +10,26 @@ import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.VacancyRepository
 import ru.practicum.android.diploma.feature.search.domain.VacancyResponse
 
-class VacancyRepositoryImpl(private val networkClient: NetworkClient): VacancyRepository {
-    override fun getVacancies(expression: String): Flow<Resource<VacanciesResponse>> = flow {
+class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyRepository {
+    override fun getVacancies(
+        expression: String,
+        pages: Int,
+        perPage: Int,
+        page: Int
+    ): Flow<Resource<VacanciesResponse>> = flow {
         val response = networkClient.getVacancies(SearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
                 emit(Resource.Error(errorCode = -1))
             }
+
             200 -> {
-                with (response as VacanciesDtoResponse) {
+                with(response as VacanciesDtoResponse) {
                     val data = response.toVacanciesResponse()
                     emit(Resource.Success(data))
                 }
             }
+
             else -> {
                 emit(Resource.Error(errorCode = -2))
             }
@@ -35,12 +42,14 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient): VacancyRe
             -1 -> {
                 emit(Resource.Error(errorCode = -1))
             }
+
             200 -> {
-                with (response as VacancyDtoResponse) {
+                with(response as VacancyDtoResponse) {
                     val data = response.toVacancyResponse()
                     emit(Resource.Success(data))
                 }
             }
+
             else -> {
                 emit(Resource.Error(errorCode = -2))
             }
@@ -53,12 +62,14 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient): VacancyRe
             -1 -> {
                 emit(Resource.Error(errorCode = -1))
             }
+
             200 -> {
-                with (response as VacanciesDtoResponse) {
+                with(response as VacanciesDtoResponse) {
                     val data = response.toVacanciesResponse()
                     emit(Resource.Success(data))
                 }
             }
+
             else -> {
                 emit(Resource.Error(errorCode = -2))
             }

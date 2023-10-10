@@ -4,13 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacanciesAdapter (private val listener: ClickListener
-): RecyclerView.Adapter<VacancyViewHolder> () {
+class VacanciesAdapter(
+    private val listener: ClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    internal var vacancies = listOf<VacancyShort>()
+    internal var vacancies = mutableListOf<VacancyShort>()
         set(newValue) {
             val diffCallBack = VacancyDiffCallBack(field, newValue)
             val diffResult = DiffUtil.calculateDiff(diffCallBack)
@@ -18,23 +20,57 @@ class VacanciesAdapter (private val listener: ClickListener
             diffResult.dispatchUpdatesTo(this)
         }
 
+    fun setVacancyList(list: List<VacancyShort>) {
+        vacancies.addAll(list)
+        notifyItemRangeInserted(vacancies.size, list.size)
+    }
+
+    fun clear() {
+        vacancies = ArrayList()
+    }
 
     fun interface ClickListener {
         fun onClick(vacancy: VacancyShort)
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder {
-        val binding = VacancyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VacancyViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == ITEM_VIEW_TYPE_ITEM) {
+            VacancyViewHolder(
+                VacancyItemBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+        } else {
+            LoadingViewHolder(
+                LoadingItemBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+        }
     }
 
-    override fun onBindViewHolder(holder: VacancyViewHolder, position: Int) {
-        holder.bind(vacancies[position], listener)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is VacancyViewHolder) {
+            holder.bind(vacancies[position], listener)
+        } else {
+            //
+        }
     }
 
     override fun getItemCount(): Int {
         return vacancies.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (position < itemCount - 4) {
+            ITEM_VIEW_TYPE_ITEM
+        } else {
+            ITEM_VIEW_TYPE_LOADING
+        }
+    }
+
+    companion object {
+        private const val ITEM_VIEW_TYPE_ITEM = 0
+        private const val ITEM_VIEW_TYPE_LOADING = 1
+    }
 }

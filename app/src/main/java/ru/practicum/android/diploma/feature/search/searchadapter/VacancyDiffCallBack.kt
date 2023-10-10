@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.feature.search.searchadapter
 import androidx.recyclerview.widget.DiffUtil
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyDiffCallBack (
+class VacancyDiffCallBack(
     private val oldList: List<VacancyShort>,
     private val newList: List<VacancyShort>
 ) : DiffUtil.Callback() {
