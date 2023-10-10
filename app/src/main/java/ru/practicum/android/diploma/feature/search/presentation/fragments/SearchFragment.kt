@@ -184,6 +184,11 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         vacanciesAdapter = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        showClearScreen()
+    }
+
     override fun onClick(vacancy: VacancyShort) {
         DataTransmitter.postId(vacancy.id)
         findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
