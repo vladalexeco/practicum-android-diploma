@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_settingsFiltersFragment_to_chooseIndustryFragment"
             app:destination="@id/chooseIndustryFragment" />
+        <action
+            android:id="@+id/action_settingsFiltersFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
 
     </fragment>
     <fragment

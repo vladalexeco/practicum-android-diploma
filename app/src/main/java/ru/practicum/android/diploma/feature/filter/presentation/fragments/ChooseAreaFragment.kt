@@ -12,13 +12,15 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.mapToAreaPlain
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 
 class ChooseAreaFragment : Fragment() {
 
-    var currentArea: Area? = null
+    var currentAreaPlain: AreaPlain? = null
 
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
@@ -46,10 +48,10 @@ class ChooseAreaFragment : Fragment() {
         viewModel.dataArea.observe(viewLifecycleOwner) {area ->
             if (area.isChecked) {
                 binding.chooseAreaApproveButton.visibility = View.VISIBLE
-                currentArea = area
+                currentAreaPlain = area.mapToAreaPlain()
             } else {
                 binding.chooseAreaApproveButton.visibility = View.GONE
-                currentArea = null
+                currentAreaPlain = null
             }
         }
 
@@ -58,8 +60,8 @@ class ChooseAreaFragment : Fragment() {
         }
 
         binding.chooseAreaApproveButton.setOnClickListener {
-            if (currentArea != null) {
-                DataTransmitter.postArea(currentArea)
+            if (currentAreaPlain != null) {
+                DataTransmitter.postAreaPlain(currentAreaPlain)
                 findNavController().navigate(R.id.action_chooseAreaFragment_to_chooseWorkplaceFragment)
             }
         }

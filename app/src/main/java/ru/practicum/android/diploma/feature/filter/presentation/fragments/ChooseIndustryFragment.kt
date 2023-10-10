@@ -14,6 +14,8 @@ import ru.practicum.android.diploma.databinding.FragmentChooseIndustryBinding
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.mapToIndustryPlain
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
 import kotlin.collections.ArrayList
 
@@ -24,7 +26,7 @@ class ChooseIndustryFragment : Fragment() {
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
 
-    var currentIndustry: Industry? = null
+    var currentIndustryPlain: IndustryPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,16 +50,16 @@ class ChooseIndustryFragment : Fragment() {
         viewModel.dataIndustry.observe(viewLifecycleOwner) { industry ->
             if (industry.isChecked) {
                 binding.chooseIndustryApproveButton.visibility = View.VISIBLE
-                currentIndustry = industry
+                currentIndustryPlain = industry.mapToIndustryPlain()
             } else {
                 binding.chooseIndustryApproveButton.visibility = View.GONE
-                currentIndustry = null
+                currentIndustryPlain = null
             }
         }
 
         binding.chooseIndustryApproveButton.setOnClickListener {
-            if (currentIndustry != null) {
-                DataTransmitter.postIndustry(currentIndustry!!)
+            if (currentIndustryPlain != null) {
+                DataTransmitter.postIndustryPlain(currentIndustryPlain!!)
                 findNavController().navigate(
                     R.id.action_chooseIndustryFragment_to_settingsFiltersFragment
                 )

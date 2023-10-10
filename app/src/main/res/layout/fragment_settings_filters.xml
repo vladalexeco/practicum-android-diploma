@@ -120,6 +120,7 @@
         app:placeholderTextColor="@color/yp_gray">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filter_settings_expected_salary_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_edittext_background"

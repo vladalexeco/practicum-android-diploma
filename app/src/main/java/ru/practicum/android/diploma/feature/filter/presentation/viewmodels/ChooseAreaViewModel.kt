@@ -15,7 +15,7 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 
-class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
+class  ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
 
     private var _dataArea = MutableLiveData<Area>()
     val dataArea: LiveData<Area> = _dataArea

@@ -25,6 +25,7 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.SaveFilterSett
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseCountryViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 
 
 val filterModule = module {
@@ -78,9 +79,11 @@ val filterModule = module {
     factory<ClearFilterSettingsUseCase> {
         ClearFilterSettingsUseCase(filterSettingsRepository = get())
     }
-    
+
+
     viewModelOf(::ChooseCountryViewModel)
     viewModelOf(::ChooseAreaViewModel)
     viewModelOf(::ChooseIndustryViewModel)
+    viewModelOf(::SettingsFiltersViewModel)
 
 }

@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseWorkplaceBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
 
 class ChooseWorkplaceFragment : Fragment() {
@@ -19,7 +20,7 @@ class ChooseWorkplaceFragment : Fragment() {
     private val binding get() = _binding!!
 
     var currentCountry: Country? = null
-    var currentArea: Area? = null
+    var currentAreaPlain: AreaPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +38,9 @@ class ChooseWorkplaceFragment : Fragment() {
             override fun handleOnBackPressed() {
                 findNavController().popBackStack(R.id.settingsFiltersFragment, false)
                 DataTransmitter.postCountry(null)
-                DataTransmitter.postArea(null)
+                DataTransmitter.postAreaPlain(null)
                 currentCountry = null
-                currentArea = null
+                currentAreaPlain = null
             }
 
         })
@@ -47,9 +48,9 @@ class ChooseWorkplaceFragment : Fragment() {
         binding.chooseWorkplaceBackArrowImageview.setOnClickListener {
             findNavController().popBackStack(R.id.settingsFiltersFragment, false)
             DataTransmitter.postCountry(null)
-            DataTransmitter.postArea(null)
+            DataTransmitter.postAreaPlain(null)
             currentCountry = null
-            currentArea = null
+            currentAreaPlain = null
         }
 
         binding.chooseCountryTextInputEditText.setOnClickListener {
@@ -75,9 +76,9 @@ class ChooseWorkplaceFragment : Fragment() {
             currentCountry = DataTransmitter.getCountry()
         }
 
-        if (DataTransmitter.getArea() != null) {
-            binding.regionTextInputEditText.setText(DataTransmitter.getArea()?.name)
-            currentArea = DataTransmitter.getArea()
+        if (DataTransmitter.getAreaPlain() != null) {
+            binding.regionTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
+            currentAreaPlain = DataTransmitter.getAreaPlain()
         }
     }
 

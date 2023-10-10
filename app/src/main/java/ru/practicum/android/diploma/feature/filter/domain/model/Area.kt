@@ -7,3 +7,5 @@ data class Area(
     val areas: List<Area>,
     override var isChecked: Boolean = false
 ) : IndustryAreaModel(id, name)
+
+fun Area.mapToAreaPlain(): AreaPlain = AreaPlain(id = this.id, name = this.name)

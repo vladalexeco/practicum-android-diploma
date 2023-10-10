@@ -6,3 +6,5 @@ data class Industry(
     val industries: List<Industry>? = null,
     override var isChecked: Boolean = false
 ) : IndustryAreaModel(id, name)
+
+fun Industry.mapToIndustryPlain(): IndustryPlain = IndustryPlain(id = this.id, name = this.name)

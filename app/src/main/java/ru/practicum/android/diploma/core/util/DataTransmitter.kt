@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.core.util
 
-import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
-import ru.practicum.android.diploma.feature.filter.domain.model.Industry
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 /** Передатчик Id вакансии
  * Например, по клику на вакансию в поиске мы вызываем DataTransmitter.postId(vacancy.id) и
@@ -14,19 +14,19 @@ import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 
 object DataTransmitter {
 
-    private var currentIndustry: Industry? = null
+    private var currentIndustryPlain: IndustryPlain? = null
     private var currentCountry: Country? = null
-    private var currentArea: Area? = null
+    private var currentAreaPlain: AreaPlain? = null
 
     private var vacancyId: String = ""
     private var countryId: String = ""
 
-    fun postArea(area: Area?) {
-        currentArea = area
+    fun postAreaPlain(areaPlain: AreaPlain?) {
+        currentAreaPlain = areaPlain
     }
 
-    fun getArea(): Area? {
-        return currentArea
+    fun getAreaPlain(): AreaPlain? {
+        return currentAreaPlain
     }
 
     fun postCountryId(id: String) {
@@ -45,12 +45,12 @@ object DataTransmitter {
         return currentCountry
     }
 
-    fun postIndustry(industry: Industry?) {
-        currentIndustry = industry
+    fun postIndustryPlain(industryPlain: IndustryPlain?) {
+        currentIndustryPlain = industryPlain
     }
 
-    fun getIndustry(): Industry? {
-        return currentIndustry
+    fun getIndustryPlain(): IndustryPlain? {
+        return currentIndustryPlain
     }
 
     fun postId(id: String) {
