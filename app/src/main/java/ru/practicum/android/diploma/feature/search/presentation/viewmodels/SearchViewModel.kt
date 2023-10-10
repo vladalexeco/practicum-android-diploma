@@ -11,8 +11,8 @@ import ru.practicum.android.diploma.feature.search.presentation.SearchState
 
 class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : ViewModel() {
 
-    var currentPage = 0
-    var totalPages = 0
+    private var currentPage = 0
+    private var totalPages = 0
     var isLoading = false
     var isFirstLoad = true
 
@@ -26,7 +26,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
         viewModelScope,
         true
     ) { searchText ->
-        searchRequest(searchText, totalPages, 10, currentPage)
+        searchRequest(searchText, totalPages, perPage = PAGE_SIZE, currentPage)
     }
 
     init {
@@ -79,7 +79,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
             val nextPage = currentPage + 1
             isFirstLoad = false
             isLoading = true
-            searchRequest(latestSearchText!!, totalPages, PAGE_SIZE, nextPage)
+            searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
         }
     }
 
