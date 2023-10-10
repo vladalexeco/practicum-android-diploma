@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.usunin1994.headhunterapi.data.dtomodels.EmployerDto
 import com.usunin1994.headhunterapi.data.dtomodels.LogoUrlsDto
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.search.data.toLogoUrls
 import ru.practicum.android.diploma.feature.search.domain.models.Area
 
@@ -23,8 +24,6 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
 @Entity(tableName = "vacancy_table")
 data class VacancyFullEntity(
-    @PrimaryKey(autoGenerate = true)
-    val vacancyId: Int,
     val acceptHandicapped: Boolean?,
     val acceptIncompleteResumes: Boolean?,
     val acceptKids: Boolean?,
@@ -48,6 +47,7 @@ data class VacancyFullEntity(
     val experience: Experience?,
     val hasTest: Boolean?,
     val hidden: Boolean?,
+    @PrimaryKey
     val id: String?,
     val initialCreatedAt: String?,
     val insiderInterview: Any?,
@@ -77,7 +77,6 @@ data class VacancyFullEntity(
 
 fun VacancyFull.toVacancyFullEntity(): VacancyFullEntity {
     return VacancyFullEntity(
-        vacancyId = 0, // Значение по умолчанию для автоматической генерации id
         acceptHandicapped = this.acceptHandicapped,
         acceptIncompleteResumes = this.acceptIncompleteResumes,
         acceptKids = this.acceptKids,
