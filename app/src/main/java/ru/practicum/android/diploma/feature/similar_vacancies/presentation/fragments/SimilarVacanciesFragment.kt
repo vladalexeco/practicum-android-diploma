@@ -64,12 +64,12 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun showError() {
         clearContent()
-
+        binding.internetProblemLinearlayout.visibility = View.VISIBLE
     }
 
     private fun showEmpty() {
         clearContent()
-
+        binding.nothingFoundLinearlayout.visibility = View.VISIBLE
     }
 
     private fun showContent(response: VacanciesResponse) {
@@ -81,6 +81,9 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
     private fun clearContent() {
         binding.similarVacanciesRecyclerView.visibility = View.GONE
         binding.progressBarSimilar.visibility = View.GONE
+        binding.internetProblemLinearlayout.visibility = View.GONE
+        binding.nothingFoundLinearlayout.visibility = View.GONE
+        binding.serverNotRespondingLinearlayout.visibility = View.GONE
     }
 
     override fun onClick(vacancy: VacancyShort) {
