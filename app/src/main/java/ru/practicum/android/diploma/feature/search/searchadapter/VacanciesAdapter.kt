@@ -63,7 +63,7 @@ class VacanciesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position < itemCount - 4) {
+        return if (position < itemCount - ITEM_UPDATE_START) {
             ITEM_VIEW_TYPE_ITEM
         } else {
             ITEM_VIEW_TYPE_LOADING
@@ -73,5 +73,6 @@ class VacanciesAdapter(
     companion object {
         private const val ITEM_VIEW_TYPE_ITEM = 0
         private const val ITEM_VIEW_TYPE_LOADING = 1
+        private const val ITEM_UPDATE_START = 4
     }
 }

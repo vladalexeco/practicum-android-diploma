@@ -77,7 +77,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
             val nextPage = currentPage + 1
             isFirstLoad = false
             isLoading = true
-            searchRequest(latestSearchText!!, totalPages, perPage = 20, nextPage)
+            searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
         }
     }
 
