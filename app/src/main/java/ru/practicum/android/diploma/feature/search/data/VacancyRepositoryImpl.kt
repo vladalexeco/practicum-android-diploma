@@ -17,7 +17,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         perPage: Int,
         page: Int
     ): Flow<Resource<VacanciesResponse>> = flow {
-        val response = networkClient.getVacancies(SearchRequest(expression))
+        val response = networkClient.getVacancies(SearchRequest(expression), page, perPage, page)
         when (response.resultCode) {
             -1 -> {
                 emit(Resource.Error(errorCode = -1))

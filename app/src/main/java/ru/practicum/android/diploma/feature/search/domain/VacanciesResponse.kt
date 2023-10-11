@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.search.domain
 
-import com.google.gson.annotations.SerializedName
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
 data class VacanciesResponse(

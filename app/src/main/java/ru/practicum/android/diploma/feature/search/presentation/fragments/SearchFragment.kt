@@ -47,7 +47,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
                     && !viewModel.isLastPage()
                 ) {
                     viewModel.loadNextPage()
-
                 }
             }
         }
@@ -159,6 +158,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun clearButtonVisibility(s: CharSequence?) {
         if (s.isNullOrEmpty()) {
+            viewModel.showClearScreen()
             binding.searchImageView.visibility = View.VISIBLE
             binding.clearSearchImageView.visibility = View.GONE
         } else {
@@ -186,11 +186,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         super.onDestroyView()
         _binding = null
         vacanciesAdapter = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showClearScreen()
     }
 
     override fun onClick(vacancy: VacancyShort) {

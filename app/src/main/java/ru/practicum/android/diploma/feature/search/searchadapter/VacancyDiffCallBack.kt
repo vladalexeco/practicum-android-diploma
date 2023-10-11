@@ -13,14 +13,14 @@ class VacancyDiffCallBack(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldTrack = oldList[oldItemPosition]
-        val newTrack = newList[newItemPosition]
-        return oldTrack.name == newTrack.name
+        val oldList = oldList[oldItemPosition]
+        val newList = newList[newItemPosition]
+        return oldList.id == newList.id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldTrack = oldList[oldItemPosition]
-        val newTrack = newList[newItemPosition]
-        return oldTrack == newTrack
+        val oldList = oldList[oldItemPosition]
+        val newList = newList[newItemPosition]
+        return oldList == newList
     }
 }

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.search.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,7 +27,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
         viewModelScope,
         true
     ) { searchText ->
-        searchRequest(searchText, totalPages, perPage = PAGE_SIZE, currentPage)
+        searchRequest(searchText, totalPages, PAGE_SIZE, currentPage)
     }
 
     init {
@@ -54,7 +55,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                                 )
                             }
 
-                            pair.first?.items?.isNotEmpty() == true -> {
+                            else -> {
                                 currentPage = page
                                 totalPages = pair.first!!.pages
                                 renderState(
@@ -63,10 +64,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                                     )
                                 )
                                 isLoading = false
-                            }
 
-                            else -> {
-                                renderState(SearchState.ClearScreen())
                             }
                         }
                     }
@@ -79,7 +77,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
             val nextPage = currentPage + 1
             isFirstLoad = false
             isLoading = true
-            searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
+            searchRequest(latestSearchText!!, totalPages, perPage = 20, nextPage)
         }
     }
 
@@ -96,6 +94,10 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
 
     private fun renderState(state: SearchState) {
         _stateLiveData.postValue(state)
+    }
+
+    fun showClearScreen() {
+        renderState(SearchState.ClearScreen())
     }
 
     companion object {

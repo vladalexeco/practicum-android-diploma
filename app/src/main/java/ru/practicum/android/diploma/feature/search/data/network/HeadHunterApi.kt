@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 import ru.practicum.android.diploma.core.util.token
 
 interface HeadHunterApi {
@@ -14,7 +15,8 @@ interface HeadHunterApi {
 
     // Данна функция является тестовой и не имеет фильтрации
     @GET("/vacancies?describe_arguments=true")
-    suspend fun getVacancies(@Query("text") text: String): VacanciesDtoResponse
+    suspend fun getVacancies(@Query("text") text: String,
+                             @QueryMap options: Map<String, Int>): VacanciesDtoResponse
 
     @GET("/vacancies/{vacancy_id}")
     suspend fun getVacancy(@Path("vacancy_id") id: String): VacancyDtoFull
