@@ -65,9 +65,15 @@ class ChooseWorkplaceFragment : Fragment() {
         }
 
         binding.chooseButton.setOnClickListener {
-            if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true ||
+            if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
+                binding.regionTextInputEditText.text?.isEmpty() == true) {
+                DataTransmitter.postAreaPlain(AreaPlain(id = "", name = ""))
+                findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
+            } else if(binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
                 binding.regionTextInputEditText.text?.isNotEmpty() == true) {
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
+            } else {
+
             }
         }
 

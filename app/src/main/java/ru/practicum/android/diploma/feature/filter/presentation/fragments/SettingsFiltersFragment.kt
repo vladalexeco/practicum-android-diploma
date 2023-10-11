@@ -24,9 +24,9 @@ class SettingsFiltersFragment : Fragment() {
 
     private val viewModel: SettingsFiltersViewModel by viewModel()
 
-    var settingIndustryPlain: IndustryPlain? = null
-    var settingCountry: Country? = null
-    var settingAreaPlain: AreaPlain? = null
+    private var settingIndustryPlain: IndustryPlain? = null
+    private var settingCountry: Country? = null
+    private var settingAreaPlain: AreaPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +44,8 @@ class SettingsFiltersFragment : Fragment() {
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
             val plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
             binding.workPlaceTextInputEditText.setText(plainText)
+        } else if (filterSettings.country != null) {
+            binding.workPlaceTextInputEditText.setText(filterSettings.country!!.name)
         }
 
         if (filterSettings.industryPlain != null) {
@@ -61,29 +63,16 @@ class SettingsFiltersFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
-                DataTransmitter.postIndustryPlain(null)
-                DataTransmitter.postCountry(null)
-                DataTransmitter.postAreaPlain(null)
-                settingIndustryPlain = null
-                settingCountry = null
-                settingAreaPlain = null
-
+                clearFields()
                 findNavController().popBackStack(R.id.searchFragment, false)
             }
 
         })
 
         binding.settingsBackArrowImageview.setOnClickListener {
-
-            settingIndustryPlain = null
-            settingCountry = null
-            settingAreaPlain = null
-            DataTransmitter.postIndustryPlain(null)
-            DataTransmitter.postCountry(null)
-            DataTransmitter.postAreaPlain(null)
-
-        findNavController().popBackStack(R.id.searchFragment, false)
-    }
+            clearFields()
+            findNavController().popBackStack(R.id.searchFragment, false)
+        }
 
         binding.resetSettingsTextview.setOnClickListener {
 
@@ -94,57 +83,60 @@ class SettingsFiltersFragment : Fragment() {
             binding.filterSettingsExpectedSalaryEditText.setText("")
             binding.doNotShowWithoutSalaryCheckBox.isChecked = false
 
-            settingIndustryPlain = null
-            settingCountry = null
-            settingAreaPlain = null
-            DataTransmitter.postIndustryPlain(null)
-            DataTransmitter.postCountry(null)
-            DataTransmitter.postAreaPlain(null)
+            clearFields()
 
         }
 
-    binding.workPlaceTextInputEditText.setOnClickListener {
-        findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseWorkplaceFragment)
-    }
+        binding.workPlaceTextInputEditText.setOnClickListener {
+            DataTransmitter.postCountry(null)
+            DataTransmitter.postAreaPlain(null)
+            findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseWorkplaceFragment)
+        }
 
-    binding.industryTextInputEditText.setOnClickListener {
-        findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseIndustryFragment)
-    }
+        binding.industryTextInputEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseIndustryFragment)
+        }
 
-    binding.confirmButton.setOnClickListener {
+        binding.confirmButton.setOnClickListener {
 
-        val expectedSalaryRawString: String = binding.filterSettingsExpectedSalaryEditText.text.toString()
+            val expectedSalaryRawString: String =
+                binding.filterSettingsExpectedSalaryEditText.text.toString()
 
-        val expectedSalary: Int = if (expectedSalaryRawString.isEmpty()) -1 else expectedSalaryRawString.toInt()
+            val expectedSalary: Int =
+                if (expectedSalaryRawString.isEmpty()) -1 else expectedSalaryRawString.toInt()
 
-        val notShowWithoutSalary: Boolean = binding.doNotShowWithoutSalaryCheckBox.isChecked
+            val notShowWithoutSalary: Boolean = binding.doNotShowWithoutSalaryCheckBox.isChecked
 
-        val oldFilterSettings = viewModel.getFilterSettings()
+            val oldFilterSettings = viewModel.getFilterSettings()
 
-        val country = if(DataTransmitter.getCountry() != null) DataTransmitter.getCountry()
-        else oldFilterSettings.country
+            val country = if (DataTransmitter.getCountry() != null) DataTransmitter.getCountry()
+            else oldFilterSettings.country
 
-        val areaPlain =  if(DataTransmitter.getAreaPlain() != null) DataTransmitter.getAreaPlain()
-        else oldFilterSettings.areaPlain
+            var areaPlain =
+                if (DataTransmitter.getAreaPlain() != null) DataTransmitter.getAreaPlain()
+                else oldFilterSettings.areaPlain
 
-        val industryPlain = if (DataTransmitter.getIndustryPlain() != null) DataTransmitter.getIndustryPlain()
-        else oldFilterSettings.industryPlain
+            areaPlain = if (areaPlain?.id?.isEmpty() == true) null else areaPlain
 
-        filterSettings = FilterSettings(
-            country = country,
-            areaPlain = areaPlain,
-            industryPlain = industryPlain,
-            expectedSalary = expectedSalary,
-            notShowWithoutSalary = notShowWithoutSalary
-        )
+            val industryPlain =
+                if (DataTransmitter.getIndustryPlain() != null) DataTransmitter.getIndustryPlain()
+                else oldFilterSettings.industryPlain
 
-        viewModel.saveFilterSettings(filterSettings)
+            filterSettings = FilterSettings(
+                country = country,
+                areaPlain = areaPlain,
+                industryPlain = industryPlain,
+                expectedSalary = expectedSalary,
+                notShowWithoutSalary = notShowWithoutSalary
+            )
 
-        findNavController().navigate(R.id.action_settingsFiltersFragment_to_searchFragment)
+            viewModel.saveFilterSettings(filterSettings)
 
-    }
+            findNavController().navigate(R.id.action_settingsFiltersFragment_to_searchFragment)
 
-    if (DataTransmitter.getIndustryPlain() != null) {
+        }
+
+        if (DataTransmitter.getIndustryPlain() != null) {
             binding.industryTextInputEditText.setText(DataTransmitter.getIndustryPlain()?.name)
             settingIndustryPlain = DataTransmitter.getIndustryPlain()
         }
@@ -157,6 +149,15 @@ class SettingsFiltersFragment : Fragment() {
             binding.workPlaceTextInputEditText.setText(plainText)
         }
 
+    }
+
+    private fun clearFields() {
+        settingIndustryPlain = null
+        settingCountry = null
+        settingAreaPlain = null
+        DataTransmitter.postIndustryPlain(null)
+        DataTransmitter.postCountry(null)
+        DataTransmitter.postAreaPlain(null)
     }
 
     override fun onDestroyView() {
