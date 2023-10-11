@@ -77,12 +77,13 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun showError() {
         clearContent()
-        binding.progressBar.visibility = View.VISIBLE
+        binding.internetProblemLinearlayout.visibility = View.VISIBLE
     }
 
     private fun showEmpty() {
         clearContent()
         binding.amountTextView.visibility = View.VISIBLE
+        binding.nothingFoundLinearlayout.visibility = View.VISIBLE
         binding.amountTextView.text = "Таких вакансий нет"
     }
 
@@ -103,11 +104,14 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchPlaceholderImageView.visibility = View.GONE
         binding.searchRecycler.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
+        binding.internetProblemLinearlayout.visibility = View.GONE
+        binding.nothingFoundLinearlayout.visibility = View.GONE
+        binding.serverNotRespondingLinearlayout.visibility = View.GONE
         binding.amountTextView.visibility = View.GONE
     }
 
     private fun clearButtonVisibility(s: CharSequence?) {
-        if (s.isNullOrEmpty()){
+        if (s.isNullOrEmpty()) {
             binding.searchImageView.visibility = View.VISIBLE
             binding.clearSearchImageView.visibility = View.GONE
         } else {
