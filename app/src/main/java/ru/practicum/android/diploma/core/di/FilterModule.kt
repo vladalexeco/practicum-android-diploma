@@ -26,6 +26,7 @@ import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.Choos
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseWorkPlaceViewModel
 
 
 val filterModule = module {
@@ -85,5 +86,6 @@ val filterModule = module {
     viewModelOf(::ChooseAreaViewModel)
     viewModelOf(::ChooseIndustryViewModel)
     viewModelOf(::SettingsFiltersViewModel)
+    viewModelOf(::ChooseWorkPlaceViewModel)
 
 }

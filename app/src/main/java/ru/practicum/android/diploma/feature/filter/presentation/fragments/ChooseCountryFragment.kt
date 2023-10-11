@@ -43,6 +43,7 @@ class ChooseCountryFragment : Fragment() {
 
         viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
             DataTransmitter.postCountry(country)
+            DataTransmitter.postAreaPlain(null)
             findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
         }
 

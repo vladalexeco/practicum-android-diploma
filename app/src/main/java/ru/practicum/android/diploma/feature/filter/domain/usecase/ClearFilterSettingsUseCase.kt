@@ -4,9 +4,10 @@ import ru.practicum.android.diploma.feature.filter.domain.api.FilterSettingsRepo
 
 /**
  * Сбрасывает все настройки в SharedPreferences до начальных состояний.
- * - параметр regionId становится равен ""
- * - параметр industryId становится равен ""
- * - параметр expectedSalary становится равен 0
+ * - параметр country становится равен "null"
+ * - параметр areaPlain становится равен "null"
+ * - параметр industryPlain становится равен "null"
+ * - параметр expectedSalary становится равен -1
  * - параметр notShowWithoutSalary становится равен false
  */
 class ClearFilterSettingsUseCase(private val filterSettingsRepository: FilterSettingsRepository) {

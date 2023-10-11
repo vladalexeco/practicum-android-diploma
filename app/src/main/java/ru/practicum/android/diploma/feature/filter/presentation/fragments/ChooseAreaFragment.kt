@@ -20,7 +20,7 @@ import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.Choos
 
 class ChooseAreaFragment : Fragment() {
 
-    var currentAreaPlain: AreaPlain? = null
+    private var currentAreaPlain: AreaPlain? = null
 
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!

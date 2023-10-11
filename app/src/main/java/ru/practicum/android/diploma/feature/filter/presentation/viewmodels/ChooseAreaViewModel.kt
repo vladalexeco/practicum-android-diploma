@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +28,7 @@ class  ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewMode
 
     private fun initScreen() {
         viewModelScope.launch {
-            areasUseCase.invoke(DataTransmitter.getCountryId()).collect { result ->
+            areasUseCase.invoke(DataTransmitter.getCountry()!!.id).collect { result ->
                 processResult(result)
             }
         }

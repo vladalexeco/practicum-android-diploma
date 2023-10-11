@@ -26,7 +26,7 @@ class ChooseIndustryFragment : Fragment() {
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
 
-    var currentIndustryPlain: IndustryPlain? = null
+    private var currentIndustryPlain: IndustryPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

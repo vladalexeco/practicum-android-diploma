@@ -10,12 +10,9 @@ import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
-import ru.practicum.android.diploma.feature.filter.domain.model.Country
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
-import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -23,10 +20,6 @@ class SettingsFiltersFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SettingsFiltersViewModel by viewModel()
-
-    private var settingIndustryPlain: IndustryPlain? = null
-    private var settingCountry: Country? = null
-    private var settingAreaPlain: AreaPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,8 +68,6 @@ class SettingsFiltersFragment : Fragment() {
         }
 
         binding.resetSettingsTextview.setOnClickListener {
-
-            viewModel.clearFilterSettings()
 
             binding.workPlaceTextInputEditText.setText("")
             binding.industryTextInputEditText.setText("")
@@ -138,23 +129,17 @@ class SettingsFiltersFragment : Fragment() {
 
         if (DataTransmitter.getIndustryPlain() != null) {
             binding.industryTextInputEditText.setText(DataTransmitter.getIndustryPlain()?.name)
-            settingIndustryPlain = DataTransmitter.getIndustryPlain()
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            settingCountry = DataTransmitter.getCountry()
-            settingAreaPlain = DataTransmitter.getAreaPlain()
 
-            val plainText = "${settingCountry?.name}\n${settingAreaPlain?.name}"
+            val plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
             binding.workPlaceTextInputEditText.setText(plainText)
         }
 
     }
 
     private fun clearFields() {
-        settingIndustryPlain = null
-        settingCountry = null
-        settingAreaPlain = null
         DataTransmitter.postIndustryPlain(null)
         DataTransmitter.postCountry(null)
         DataTransmitter.postAreaPlain(null)
