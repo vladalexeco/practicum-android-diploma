@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.similar_vacancies.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,41 +8,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.similar_vacancies.domain.GetSimilarVacanciesUseCase
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
+import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 
 class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimilarVacanciesUseCase): ViewModel() {
 
-    private val _stateLiveData = MutableLiveData<SearchState>()
-    val stateLiveData : LiveData<SearchState> = _stateLiveData
+    private val _stateLiveData = MutableLiveData<SimilarSearchState>()
+    val stateLiveData : LiveData<SimilarSearchState> = _stateLiveData
 
     init {
-        searchSimilarVacancies(DataTransmitter.getId())
+        searchSimilarVacancies()
     }
 
-    private fun searchSimilarVacancies(newSearchText: String) {
-        if (newSearchText.isNotEmpty()) {
-            renderState(SearchState.Loading)
+    private fun searchSimilarVacancies() {
+            renderState(SimilarSearchState.Loading)
 
             viewModelScope.launch (Dispatchers.IO) {
                 getSimilarVacanciesUseCase
-                    .getSimilarVacancies(newSearchText)
+                    .getSimilarVacancies(DataTransmitter.getId())
                     .collect { pair ->
                         when {
                             pair.second != null -> {
                                 renderState(
-                                    SearchState.Error()
+                                    SimilarSearchState.Error()
                                 )
                             }
 
                             pair.first?.items.isNullOrEmpty() -> {
                                 renderState(
-                                    SearchState.Empty()
+                                    SimilarSearchState.Empty()
                                 )
                             }
 
                             else -> {
                                 renderState(
-                                    SearchState.Content(
+                                    SimilarSearchState.Content(
                                         response = pair.first!!
                                     )
                                 )
@@ -52,10 +50,10 @@ class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimil
                         }
                     }
             }
-        }
+
     }
 
-    private fun renderState(state: SearchState) {
+    private fun renderState(state: SimilarSearchState) {
         _stateLiveData.postValue(state)
     }
 }

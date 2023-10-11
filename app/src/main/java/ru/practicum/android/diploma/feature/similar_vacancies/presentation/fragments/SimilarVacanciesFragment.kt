@@ -12,9 +12,8 @@ import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentSimilarVacanciesBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
-import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
+import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.viewmodels.SimilarVacanciesViewModel
 
 class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
@@ -49,13 +48,12 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
         }
     }
 
-    private fun render(state: SearchState) {
+    private fun render(state: SimilarSearchState) {
         when (state) {
-            is SearchState.Loading -> showLoading()
-            is SearchState.Content -> showContent(state.response)
-            is SearchState.Error -> showError()
-            is SearchState.Empty -> showEmpty()
-            is SearchState.ClearScreen -> showClearScreen()
+            is SimilarSearchState.Loading -> showLoading()
+            is SimilarSearchState.Content -> showContent(state.response)
+            is SimilarSearchState.Error -> showError()
+            is SimilarSearchState.Empty -> showEmpty()
         }
     }
 
@@ -78,11 +76,6 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
         clearContent()
         similarVacanciesAdapter?.vacancies = response.items
         binding.similarVacanciesRecyclerView.visibility = View.VISIBLE
-    }
-
-    private fun showClearScreen() {
-        clearContent()
-
     }
 
     private fun clearContent() {

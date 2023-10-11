@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.debounce
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
+import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 
 class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): ViewModel() {
 
     private var latestSearchText: String? = null
 
-    private val _stateLiveData = MutableLiveData<SearchState>()
-    val stateLiveData : LiveData<SearchState> = _stateLiveData
+    private val _stateLiveData = MutableLiveData<VacanciesSearchState>()
+    val stateLiveData : LiveData<VacanciesSearchState> = _stateLiveData
 
     private val vacanciesSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY,
         viewModelScope,
@@ -22,12 +22,12 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
         searchRequest(it)
     }
     init {
-        renderState(SearchState.ClearScreen())
+        renderState(VacanciesSearchState.ClearScreen())
     }
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
-            renderState(SearchState.Loading)
+            renderState(VacanciesSearchState.Loading)
 
             viewModelScope.launch {
                 getVacanciesUseCase
@@ -36,19 +36,19 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
                         when {
                             pair.second != null -> {
                                 renderState(
-                                    SearchState.Error()
+                                    VacanciesSearchState.Error()
                                 )
                             }
 
                             pair.first?.items.isNullOrEmpty() -> {
                                 renderState(
-                                    SearchState.Empty()
+                                    VacanciesSearchState.Empty()
                                 )
                             }
 
                             else -> {
                                 renderState(
-                                    SearchState.Content(
+                                    VacanciesSearchState.Content(
                                         response = pair.first!!,
                                     )
                                 )
@@ -66,7 +66,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
         }
     }
 
-    private fun renderState(state: SearchState) {
+    private fun renderState(state: VacanciesSearchState) {
         _stateLiveData.postValue(state)
     }
 

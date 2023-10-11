@@ -23,6 +23,10 @@ class VacancyViewModel(
     private var _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
+    init {
+        getDetailedVacancyData()
+    }
+
     fun onContactEmailClicked(email: String) {
         emailUseCase.invoke(email)
     }
