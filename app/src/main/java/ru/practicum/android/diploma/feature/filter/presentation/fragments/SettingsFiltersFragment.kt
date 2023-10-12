@@ -13,6 +13,9 @@ import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.Country
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -74,7 +77,9 @@ class SettingsFiltersFragment : Fragment() {
             binding.filterSettingsExpectedSalaryEditText.setText("")
             binding.doNotShowWithoutSalaryCheckBox.isChecked = false
 
-            clearFields()
+            DataTransmitter.postAreaPlain(AreaPlain(id = "", name = " "))
+            DataTransmitter.postCountry(Country(id = "", name = ""))
+            DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
 
         }
 
@@ -100,18 +105,20 @@ class SettingsFiltersFragment : Fragment() {
 
             val oldFilterSettings = viewModel.getFilterSettings()
 
-            val country = if (DataTransmitter.getCountry() != null) DataTransmitter.getCountry()
+            var country = if (DataTransmitter.getCountry() != null) DataTransmitter.getCountry()
             else oldFilterSettings.country
 
             var areaPlain =
                 if (DataTransmitter.getAreaPlain() != null) DataTransmitter.getAreaPlain()
                 else oldFilterSettings.areaPlain
 
-            areaPlain = if (areaPlain?.id?.isEmpty() == true) null else areaPlain
-
-            val industryPlain =
+            var industryPlain =
                 if (DataTransmitter.getIndustryPlain() != null) DataTransmitter.getIndustryPlain()
                 else oldFilterSettings.industryPlain
+
+            areaPlain = if (areaPlain?.id?.isEmpty() == true) null else areaPlain
+            country = if (country?.id?.isEmpty() == true) null else country
+            industryPlain = if (industryPlain?.id?.isEmpty() == true) null else industryPlain
 
             filterSettings = FilterSettings(
                 country = country,
