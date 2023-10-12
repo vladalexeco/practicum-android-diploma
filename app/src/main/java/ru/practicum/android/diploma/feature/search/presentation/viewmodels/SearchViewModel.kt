@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.search.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +13,12 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
 
     private var currentPage = 0
     private var totalPages = 0
-    var isLoading = false
-    var isFirstLoad = true
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isFirstLoad = MutableLiveData(true)
+    val isFirstLoad: LiveData<Boolean> = _isFirstLoad
 
     private var latestSearchText: String? = null
 
@@ -37,7 +40,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     private fun searchRequest(newSearchText: String, pages: Int, perPage: Int, page: Int) {
         if (newSearchText.isNotEmpty()) {
             renderState(SearchState.Loading)
-            isLoading = true
+            _isLoading.postValue(true)
             viewModelScope.launch {
                 getVacanciesUseCase
                     .getVacancies(newSearchText, pages, perPage, page)
@@ -63,8 +66,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                                         response = pair.first!!,
                                     )
                                 )
-                                isLoading = false
-
+                                _isLoading.postValue(false)
                             }
                         }
                     }
@@ -75,14 +77,14 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     fun loadNextPage() {
         if (!isLastPage()) {
             val nextPage = currentPage + 1
-            isFirstLoad = false
-            isLoading = true
+            _isFirstLoad.postValue(false)
+            _isLoading.postValue(true)
             searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
         }
     }
 
     fun isLastPage(): Boolean {
-        return currentPage == totalPages
+        return currentPage == totalPages - 1
     }
 
     fun searchDebounce(changedText: String) {
