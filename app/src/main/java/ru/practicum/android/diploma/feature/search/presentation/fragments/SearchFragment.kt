@@ -14,7 +14,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
+import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
@@ -60,13 +60,13 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         }
     }
 
-    private fun render(state: SearchState) {
+    private fun render(state: VacanciesSearchState) {
         when (state) {
-            is SearchState.Loading -> showLoading()
-            is SearchState.Content -> showContent(state.response)
-            is SearchState.Error -> showError()
-            is SearchState.Empty -> showEmpty()
-            is SearchState.ClearScreen -> showClearScreen()
+            is VacanciesSearchState.Loading -> showLoading()
+            is VacanciesSearchState.Content -> showContent(state.response)
+            is VacanciesSearchState.Error -> showError()
+            is VacanciesSearchState.Empty -> showEmpty()
+            is VacanciesSearchState.ClearScreen -> showClearScreen()
         }
     }
 
@@ -77,12 +77,13 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun showError() {
         clearContent()
-        binding.progressBar.visibility = View.VISIBLE
+        binding.internetProblemLinearlayout.visibility = View.VISIBLE
     }
 
     private fun showEmpty() {
         clearContent()
         binding.amountTextView.visibility = View.VISIBLE
+        binding.nothingFoundLinearlayout.visibility = View.VISIBLE
         binding.amountTextView.text = "Таких вакансий нет"
     }
 
@@ -103,11 +104,14 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchPlaceholderImageView.visibility = View.GONE
         binding.searchRecycler.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
+        binding.internetProblemLinearlayout.visibility = View.GONE
+        binding.nothingFoundLinearlayout.visibility = View.GONE
+        binding.serverNotRespondingLinearlayout.visibility = View.GONE
         binding.amountTextView.visibility = View.GONE
     }
 
     private fun clearButtonVisibility(s: CharSequence?) {
-        if (s.isNullOrEmpty()){
+        if (s.isNullOrEmpty()) {
             binding.searchImageView.visibility = View.VISIBLE
             binding.clearSearchImageView.visibility = View.GONE
         } else {
@@ -123,10 +127,10 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
     }
 
-    private fun showVacanciesNumber(searchState: SearchState) {
-        if (searchState is SearchState.Content) {
+    private fun showVacanciesNumber(vacanciesSearchState: VacanciesSearchState) {
+        if (vacanciesSearchState is VacanciesSearchState.Content) {
             binding.amountTextView.text = requireContext().resources.getQuantityString(
-                R.plurals.plural_vacancies, searchState.response.found, searchState.response.found
+                R.plurals.plural_vacancies, vacanciesSearchState.response.found, vacanciesSearchState.response.found
             )
         }
     }

@@ -183,7 +183,7 @@
         android:gravity="center"
         android:paddingVertical="@dimen/dimens_20"
         android:text="Сбросить"
-        android:textColor="@color/redDayWhiteNight"
+        android:textColor="@color/yp_red"
         android:textSize="@dimen/textSize_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
