@@ -42,6 +42,7 @@ class ChooseAreaFragment : Fragment() {
             when (state) {
                 is AreasState.DisplayAreas -> displayAreas(state.areas)
                 is AreasState.Error -> displayError(state.errorText)
+                else -> {}
             }
         }
 

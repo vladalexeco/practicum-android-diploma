@@ -44,6 +44,7 @@ class ChooseIndustryFragment : Fragment() {
             when (state) {
                 is IndustriesState.DisplayIndustries -> displayIndustries(state.industries)
                 is IndustriesState.Error -> displayError(state.errorText)
+                else -> {}
             }
         }
 
