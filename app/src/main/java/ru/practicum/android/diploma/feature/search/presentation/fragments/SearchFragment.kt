@@ -31,8 +31,10 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     private var isFirstLoad = true
 
     private var vacanciesAdapter: VacanciesAdapter? = null
+    val itemsCount = vacanciesAdapter?.itemCount
 
     private var lastVisibleItemPosition: Int = 0
+
 
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -46,7 +48,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
             if (!isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
-                    && firstVisibleItemPosition >= 0
+                    && firstVisibleItemPosition >= 1
                     && !viewModel.isLastPage()
                 ) {
                     viewModel.loadNextPage()
