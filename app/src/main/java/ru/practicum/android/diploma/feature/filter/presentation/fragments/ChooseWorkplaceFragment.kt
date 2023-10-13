@@ -14,6 +14,7 @@ import ru.practicum.android.diploma.databinding.FragmentChooseWorkplaceBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseWorkPlaceViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.feature.filter.domain.model.Country
 
 class ChooseWorkplaceFragment : Fragment() {
 
@@ -60,15 +61,7 @@ class ChooseWorkplaceFragment : Fragment() {
         }
 
         binding.regionTextInputEditText.setOnClickListener {
-            if (DataTransmitter.getCountry() != null) {
-               if (hasRegions) {
-                   findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseRegionFragment)
-               } else {
-                   Toast.makeText(requireContext(), "Выбранная страна не имеет в базе регионы", Toast.LENGTH_SHORT).show()
-               }
-            } else {
-                Toast.makeText(requireContext(), "Сначала выберете страну", Toast.LENGTH_SHORT).show()
-            }
+            findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseRegionFragment)
         }
 
         binding.chooseButton.setOnClickListener {
@@ -83,10 +76,10 @@ class ChooseWorkplaceFragment : Fragment() {
                 binding.regionTextInputEditText.text?.isNotEmpty() == true) {
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
 
-            } else {
-
-                Toast.makeText(requireContext(), "Вам нужно выбрать страну", Toast.LENGTH_SHORT).show()
-
+            } else if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
+                binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+                DataTransmitter.postCountry(Country(id = "", name = ""))
+                findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
             }
         }
 

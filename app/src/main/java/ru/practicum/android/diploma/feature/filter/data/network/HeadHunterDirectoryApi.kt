@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.feature.filter.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Path
+import ru.practicum.android.diploma.feature.filter.data.network.dto.model.AreaDto
 import ru.practicum.android.diploma.feature.filter.data.network.dto.model.CountryDto
 import ru.practicum.android.diploma.feature.filter.data.network.dto.model.IndustryDto
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.AreaResponse
@@ -18,5 +19,8 @@ interface HeadHunterDirectoryApi {
     suspend fun getAreas(
         @Path("area_id") areaId: String
     ): AreaResponse
+
+    @GET("/areas")
+    suspend fun getAllAreas(): List<AreaDto>
 
 }

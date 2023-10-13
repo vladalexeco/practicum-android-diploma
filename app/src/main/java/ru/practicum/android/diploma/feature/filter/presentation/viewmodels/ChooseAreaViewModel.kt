@@ -9,12 +9,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAllAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 
-class  ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
+class  ChooseAreaViewModel(
+    private val areasUseCase: GetAreasUseCase,
+    private val areasAllUseCase: GetAllAreasUseCase
+) : ViewModel() {
 
     private var _dataArea = MutableLiveData<Area>()
     val dataArea: LiveData<Area> = _dataArea
@@ -28,9 +32,42 @@ class  ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewMode
 
     private fun initScreen() {
         viewModelScope.launch {
-            areasUseCase.invoke(DataTransmitter.getCountry()!!.id).collect { result ->
-                processResult(result)
+            if (DataTransmitter.getCountry() != null) {
+                areasUseCase.invoke(DataTransmitter.getCountry()!!.id).collect { result ->
+                    processResult(result)
+                }
+            } else {
+                areasAllUseCase.invoke().collect { result ->
+
+                    val networkError: NetworkError? = result.networkError
+
+                    if (networkError != null) {
+                        processResult(result)
+                    } else {
+
+                        var data: List<Area>? = result.data
+
+                        data = data?.filter { area -> area.name != "Другие регионы" }
+
+                        val totalAreas: ArrayList<Area> = ArrayList()
+
+                        if (data != null) {
+                            for (country in data) {
+                                country.areas.forEach { area ->
+                                    totalAreas.add(area)
+                                }
+                            }
+                        }
+
+                        val dataResponse: DataResponse<Area> = DataResponse(data = totalAreas, networkError = null)
+
+                        processResult(dataResponse)
+
+                    }
+
+                }
             }
+
         }
     }
 

@@ -38,10 +38,13 @@ class SettingsFiltersFragment : Fragment() {
         var filterSettings: FilterSettings = viewModel.getFilterSettings()
 
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
-            val plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
+            var plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
+            plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
         } else if (filterSettings.country != null) {
             binding.workPlaceTextInputEditText.setText(filterSettings.country!!.name)
+        } else if (filterSettings.areaPlain != null) {
+            binding.workPlaceTextInputEditText.setText(filterSettings.areaPlain!!.name)
         }
 
         if (filterSettings.industryPlain != null) {
@@ -139,9 +142,13 @@ class SettingsFiltersFragment : Fragment() {
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-
-            val plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
+            var plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
+            plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
+        } else if (DataTransmitter.getCountry() != null) {
+            binding.workPlaceTextInputEditText.setText(DataTransmitter.getCountry()?.name)
+        } else if (DataTransmitter.getAreaPlain() != null) {
+            binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
     }

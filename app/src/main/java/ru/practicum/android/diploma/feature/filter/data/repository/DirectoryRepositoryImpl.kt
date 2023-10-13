@@ -88,4 +88,28 @@ class DirectoryRepositoryImpl(
 
     }
 
+    override fun getAllAreas(): Flow<Resource<List<Area>>> = flow {
+
+        val response = networkDirectoryClient.doRequest(Request.AllAreasRequest)
+
+        when(response.resultCode) {
+
+            -1 -> {
+                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            }
+
+            200 -> {
+                emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
+                    areaDto.mapToArea()
+                }))
+            }
+
+            else -> {
+                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
+            }
+
+        }
+
+    }
+
 }
