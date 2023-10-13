@@ -22,7 +22,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
         searchRequest(it)
     }
     init {
-        renderState(VacanciesSearchState.ClearScreen())
+        renderState(VacanciesSearchState.ClearScreen)
     }
 
     private fun searchRequest(newSearchText: String) {
@@ -34,15 +34,21 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase): Vie
                     .getVacancies(newSearchText)
                     .collect { pair ->
                         when {
-                            pair.second != null -> {
+                            pair.second == -1 || pair.second == 400 -> {
                                 renderState(
-                                    VacanciesSearchState.Error()
+                                    VacanciesSearchState.Error
+                                )
+                            }
+
+                            pair.second == 500 -> {
+                                renderState(
+                                    VacanciesSearchState.ServerError
                                 )
                             }
 
                             pair.first?.items.isNullOrEmpty() -> {
                                 renderState(
-                                    VacanciesSearchState.Empty()
+                                    VacanciesSearchState.Empty
                                 )
                             }
 

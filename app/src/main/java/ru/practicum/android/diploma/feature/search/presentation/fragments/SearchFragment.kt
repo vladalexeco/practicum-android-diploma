@@ -67,6 +67,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             is VacanciesSearchState.Error -> showError()
             is VacanciesSearchState.Empty -> showEmpty()
             is VacanciesSearchState.ClearScreen -> showClearScreen()
+            is VacanciesSearchState.ServerError -> showServerError()
         }
     }
 
@@ -98,6 +99,11 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         clearContent()
         binding.amountTextView.visibility = View.GONE
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
+    }
+
+    private fun showServerError() {
+        clearContent()
+        binding.serverNotRespondingLinearlayout.visibility = View.VISIBLE
     }
 
     private fun clearContent() {

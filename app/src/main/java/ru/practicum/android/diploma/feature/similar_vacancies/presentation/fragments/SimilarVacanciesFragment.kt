@@ -54,6 +54,7 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
             is SimilarSearchState.Content -> showContent(state.response)
             is SimilarSearchState.Error -> showError()
             is SimilarSearchState.Empty -> showEmpty()
+            is SimilarSearchState.ServerError -> showServerError()
         }
     }
 
@@ -76,6 +77,11 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapter.ClickListener {
         clearContent()
         similarVacanciesAdapter?.vacancies = response.items
         binding.similarVacanciesRecyclerView.visibility = View.VISIBLE
+    }
+
+    private fun showServerError() {
+        clearContent()
+        binding.serverNotRespondingLinearlayout.visibility = View.VISIBLE
     }
 
     private fun clearContent() {
