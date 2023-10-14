@@ -115,13 +115,15 @@ class VacancyFragment : Fragment() {
 
             var currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
 
-            if (salary.to == null) {
-                val message = "от ${salary.from} $currencySymbol"
-                binding.salary.text = message
+            val message = if (salary.to == null && salary.from != null) {
+                "от ${salary.from} $currencySymbol"
+            } else if (salary.to != null && salary.from == null) {
+                "до ${salary.to} $currencySymbol"
             } else {
-                val message = "от ${salary.from} до ${salary.to} $currencySymbol"
-                binding.salary.text = message
+                "от ${salary.from} до ${salary.to} $currencySymbol"
             }
+
+            binding.salary.text = message
         }
 
         // Логотип работодателя
