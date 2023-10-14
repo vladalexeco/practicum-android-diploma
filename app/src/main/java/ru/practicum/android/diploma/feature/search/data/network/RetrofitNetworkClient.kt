@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.feature.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
@@ -11,19 +12,21 @@ import ru.practicum.android.diploma.feature.search.data.Response
 class RetrofitNetworkClient (private val context: Context,
                              private val hhApi: HeadHunterApi) : NetworkClient {
 
-    override suspend fun getVacancies(dto: Any): Response {
+    override suspend fun getVacancies(dto: SearchRequest, pages: Int, perPage: Int, page: Int): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = 400 }
-        }
         return withContext(Dispatchers.IO) {
             try {
-                val response = hhApi.getVacancies(dto.data)
+                val options = mapOf(
+                    "pages" to pages,
+                    "per_page" to perPage,
+                    "page" to page
+                )
+                val response = hhApi.getVacancies(dto.data, options)
                 response.apply { resultCode = 200 }
-            } catch (e:Throwable) {
-                Response().apply { resultCode = 500}
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
             }
         }
     }
