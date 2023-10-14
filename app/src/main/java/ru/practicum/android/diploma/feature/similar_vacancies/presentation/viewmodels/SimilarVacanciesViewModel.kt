@@ -27,15 +27,21 @@ class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimil
                     .getSimilarVacancies(DataTransmitter.getId())
                     .collect { pair ->
                         when {
-                            pair.second != null -> {
+                            pair.second == -1 || pair.second == 400 -> {
                                 renderState(
-                                    SimilarSearchState.Error()
+                                    SimilarSearchState.Error
+                                )
+                            }
+
+                            pair.second == 500 -> {
+                                renderState(
+                                    SimilarSearchState.ServerError
                                 )
                             }
 
                             pair.first?.items.isNullOrEmpty() -> {
                                 renderState(
-                                    SimilarSearchState.Empty()
+                                    SimilarSearchState.Empty
                                 )
                             }
 

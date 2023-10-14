@@ -37,7 +37,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     }
 
     init {
-        renderState(VacanciesSearchState.ClearScreen())
+        renderState(VacanciesSearchState.ClearScreen)
     }
 
     private fun searchRequest(newSearchText: String, pages: Int, perPage: Int, page: Int) {
@@ -50,15 +50,21 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                     .getVacancies(newSearchText, pages, perPage, page)
                     .collect { pair ->
                         when {
-                            pair.second != null -> {
+                            pair.second == -1 || pair.second == 400 -> {
                                 renderState(
-                                    VacanciesSearchState.Error()
+                                    VacanciesSearchState.Error
+                                )
+                            }
+
+                            pair.second == 500 -> {
+                                renderState(
+                                    VacanciesSearchState.ServerError
                                 )
                             }
 
                             pair.first?.items.isNullOrEmpty() -> {
                                 renderState(
-                                    VacanciesSearchState.Empty()
+                                    VacanciesSearchState.Empty
                                 )
                             }
 
@@ -103,7 +109,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     }
 
     fun showClearScreen() {
-        renderState(SearchState.ClearScreen())
+        renderState(VacanciesSearchState.ClearScreen)
     }
 
     companion object {

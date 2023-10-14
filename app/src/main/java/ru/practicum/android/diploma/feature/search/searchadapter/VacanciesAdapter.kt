@@ -12,7 +12,7 @@ class VacanciesAdapter(
     private val listener: ClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var vacancies = listOf<VacancyShort>()
+    var vacancies = listOf<VacancyShort>()
         set(newValue) {
             val diffCallBack = VacancyDiffCallBack(field, newValue)
             val diffResult = DiffUtil.calculateDiff(diffCallBack)
