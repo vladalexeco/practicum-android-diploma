@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,10 @@ import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 
 class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCase) : ViewModel() {
+
+
+    private var _dataIndustry = MutableLiveData<Industry>()
+    val dataIndustry: LiveData<Industry> = _dataIndustry
 
     private val industriesStateLiveData = MutableLiveData<IndustriesState>()
     fun observeIndustriesState(): LiveData<IndustriesState> = industriesStateLiveData
@@ -59,6 +64,6 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
         }
 
     fun onIndustryClicked(industry: Industry) {
-        //todo
+        _dataIndustry.postValue(industry)
     }
 }

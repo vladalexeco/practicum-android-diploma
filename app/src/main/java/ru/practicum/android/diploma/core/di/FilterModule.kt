@@ -17,6 +17,7 @@ import ru.practicum.android.diploma.feature.filter.data.repository.FilterSetting
 import ru.practicum.android.diploma.feature.filter.domain.api.DirectoryRepository
 import ru.practicum.android.diploma.feature.filter.domain.api.FilterSettingsRepository
 import ru.practicum.android.diploma.feature.filter.domain.usecase.ClearFilterSettingsUseCase
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAllAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
@@ -25,6 +26,8 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.SaveFilterSett
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseCountryViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
+import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseWorkPlaceViewModel
 
 
 val filterModule = module {
@@ -58,6 +61,10 @@ val filterModule = module {
         GetAreasUseCase(directoryRepository = get())
     }
 
+    factory<GetAllAreasUseCase> {
+        GetAllAreasUseCase(directoryRepository = get())
+    }
+
     // Shared Preferences
     single<SharedPreferences> {
         androidContext().getSharedPreferences(FILTER_SETTINGS_SP, Context.MODE_PRIVATE)
@@ -78,9 +85,12 @@ val filterModule = module {
     factory<ClearFilterSettingsUseCase> {
         ClearFilterSettingsUseCase(filterSettingsRepository = get())
     }
-    
+
+
     viewModelOf(::ChooseCountryViewModel)
     viewModelOf(::ChooseAreaViewModel)
     viewModelOf(::ChooseIndustryViewModel)
+    viewModelOf(::SettingsFiltersViewModel)
+    viewModelOf(::ChooseWorkPlaceViewModel)
 
 }

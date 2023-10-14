@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.CountriesAdapter
@@ -36,7 +38,14 @@ class ChooseCountryFragment : Fragment() {
             when (state) {
                 is CountriesState.DisplayCountries -> displayCountries(state.countries)
                 is CountriesState.Error -> displayError(state.errorText)
+                else -> {}
             }
+        }
+
+        viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
+            DataTransmitter.postCountry(country)
+            DataTransmitter.postAreaPlain(null)
+            findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
         }
 
         binding.chooseCountryBackArrowImageview.setOnClickListener {

@@ -8,10 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseIndustryBinding
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseIndustryViewModel
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.mapToIndustryPlain
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
 import kotlin.collections.ArrayList
 
@@ -21,6 +25,8 @@ class ChooseIndustryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
+
+    private var currentIndustryPlain: IndustryPlain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +44,26 @@ class ChooseIndustryFragment : Fragment() {
             when (state) {
                 is IndustriesState.DisplayIndustries -> displayIndustries(state.industries)
                 is IndustriesState.Error -> displayError(state.errorText)
+                else -> {}
+            }
+        }
+
+        viewModel.dataIndustry.observe(viewLifecycleOwner) { industry ->
+            if (industry.isChecked) {
+                binding.chooseIndustryApproveButton.visibility = View.VISIBLE
+                currentIndustryPlain = industry.mapToIndustryPlain()
+            } else {
+                binding.chooseIndustryApproveButton.visibility = View.GONE
+                currentIndustryPlain = null
+            }
+        }
+
+        binding.chooseIndustryApproveButton.setOnClickListener {
+            if (currentIndustryPlain != null) {
+                DataTransmitter.postIndustryPlain(currentIndustryPlain!!)
+                findNavController().navigate(
+                    R.id.action_chooseIndustryFragment_to_settingsFiltersFragment
+                )
             }
         }
 
@@ -54,8 +80,8 @@ class ChooseIndustryFragment : Fragment() {
         if (industriesAdapter == null) {
             industriesAdapter =
                 FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
-                    viewModel.onIndustryClicked(industry as Industry)
-                    industries[position] = industry.copy(isChecked = !industry.isChecked)
+                    industries[position] = (industry as Industry).copy(isChecked = !industry.isChecked)
+                    viewModel.onIndustryClicked(industries[position])
                     notifyItemChanged.invoke()
                     setPositionChecked.invoke(industries[position].isChecked)
                 }
