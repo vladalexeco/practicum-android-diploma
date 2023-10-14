@@ -86,8 +86,6 @@ class VacancyFragment : Fragment() {
             }
 
             is DataState.Failed -> {
-                val message = "Failed. Code Response - ${dataState.codeResponse}"
-                binding.detailsErrorMessageTextView.text = message
                 showErrorMessage()
             }
 

@@ -15,15 +15,31 @@
         android:indeterminateTint="@color/yp_blue"
         android:visibility="gone"/>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/details_error_message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
         android:layout_gravity="center"
-        tools:text="Failed. Code Response 500"
-        android:textSize="@dimen/textSize_22"
-        android:textColor="@color/blackDayWhiteNight"
-        android:visibility="gone"/>
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/whiteDayBlackNight"
+            app:srcCompat="@drawable/vacancy_placeholder_server_problem" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ys_display_medium"
+            android:gravity="center"
+            android:text="Ошибка сервера"
+            android:textColor="@color/blackDayWhiteNight"
+            android:textSize="@dimen/textSize_22" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/details_main_screen_scroll_view"

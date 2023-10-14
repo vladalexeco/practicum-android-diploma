@@ -109,7 +109,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     }
 
     fun showClearScreen() {
-        renderState(SearchState.ClearScreen())
+        renderState(VacanciesSearchState.ClearScreen)
     }
 
     companion object {
