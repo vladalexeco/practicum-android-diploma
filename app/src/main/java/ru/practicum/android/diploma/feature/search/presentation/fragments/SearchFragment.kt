@@ -9,13 +9,11 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.processNextEventInCurrentThread
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
-import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
@@ -32,7 +30,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     private var isLoading = false
     private var isFirstLoad = true
     private var lastVisibleItemPosition: Int = 0
-
 
     private var vacanciesAdapter: VacanciesAdapter? = null
 

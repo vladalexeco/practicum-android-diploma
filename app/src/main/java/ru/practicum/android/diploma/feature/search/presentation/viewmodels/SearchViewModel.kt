@@ -4,18 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.core.util.debounce
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 
 class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : ViewModel() {
 
-    var currentPage = 0
-    var totalPages = 0
+    private var currentPage = 0
+    private var totalPages = 0
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -26,7 +24,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     private var latestSearchText: String? = null
 
     private val _stateLiveData = MutableLiveData<VacanciesSearchState>()
-    val stateLiveData : LiveData<VacanciesSearchState> = _stateLiveData
+    val stateLiveData: LiveData<VacanciesSearchState> = _stateLiveData
 
     private val vacanciesSearchDebounce = debounce<String>(
         SEARCH_DEBOUNCE_DELAY_MILLIS,
@@ -85,15 +83,18 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     }
 
     fun loadNextPage() {
+        IsLastPage.IS_LAST_PAGE = true
         if (!isLastPage()) {
             val nextPage = currentPage + 1
             _isFirstLoad.postValue(false)
             _isLoading.postValue(true)
             searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
+            IsLastPage.IS_LAST_PAGE = false
         }
     }
 
     fun isLastPage(): Boolean {
+        IsLastPage.IS_LAST_PAGE = true // работает отсюда точно
         return currentPage == totalPages - 1
     }
 
