@@ -7,12 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
@@ -39,9 +39,9 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initListeners()
+        currentVacancyFull?.id?.let{DataTransmitter.postId(it)}
 
-        viewModel.getDetailedVacancyData()
+        initListeners()
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
             render(dataState)

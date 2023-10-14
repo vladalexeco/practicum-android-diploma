@@ -2,22 +2,22 @@ package ru.practicum.android.diploma.feature.search.presentation
 
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 
-sealed interface SearchState{
-    object Loading : SearchState
+sealed interface VacanciesSearchState{
+    object Loading : VacanciesSearchState
 
     data class Content(
         val response: VacanciesResponse
-    ) : SearchState
+    ) : VacanciesSearchState
 
     data class Error(
         val response: VacanciesResponse? = null
-    ) : SearchState
+    ) : VacanciesSearchState
 
     data class Empty(
         val response: VacanciesResponse? = null
-    ) : SearchState
+    ) : VacanciesSearchState
 
     data class ClearScreen(
         val response: VacanciesResponse? = null
-    ) : SearchState
+    ) : VacanciesSearchState
 }

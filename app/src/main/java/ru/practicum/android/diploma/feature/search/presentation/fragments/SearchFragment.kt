@@ -18,8 +18,8 @@ import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
+import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
@@ -113,13 +113,13 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     }
 
-    private fun render(state: SearchState) {
+    private fun render(state: VacanciesSearchState) {
         when (state) {
-            is SearchState.Loading -> showLoading()
-            is SearchState.Content -> showContent(state.response)
-            is SearchState.Error -> showError()
-            is SearchState.Empty -> showEmpty()
-            is SearchState.ClearScreen -> showClearScreen()
+            is VacanciesSearchState.Loading -> showLoading()
+            is VacanciesSearchState.Content -> showContent(state.response)
+            is VacanciesSearchState.Error -> showError()
+            is VacanciesSearchState.Empty -> showEmpty()
+            is VacanciesSearchState.ClearScreen -> showClearScreen()
         }
     }
 
@@ -188,10 +188,10 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
     }
 
-    private fun showVacanciesNumber(searchState: SearchState) {
-        if (searchState is SearchState.Content) {
+    private fun showVacanciesNumber(vacanciesSearchState: VacanciesSearchState) {
+        if (vacanciesSearchState is VacanciesSearchState.Content) {
             binding.amountTextView.text = requireContext().resources.getQuantityString(
-                R.plurals.plural_vacancies, searchState.response.found, searchState.response.found
+                R.plurals.plural_vacancies, vacanciesSearchState.response.found, vacanciesSearchState.response.found
             )
         }
     }
