@@ -15,7 +15,7 @@ class VacancyDiffCallBack(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldList = oldList[oldItemPosition]
         val newList = newList[newItemPosition]
-        return oldList.id == newList.id
+        return oldList == newList
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

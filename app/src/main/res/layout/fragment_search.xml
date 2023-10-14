@@ -35,8 +35,8 @@
         android:id="@+id/search_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView">
+
         <EditText
             android:id="@+id/searchInput_editText"
             android:layout_width="match_parent"
@@ -54,18 +54,18 @@
             android:textColor="@color/yp_black"
             android:textColorHint="@color/grayDayWhiteNight"
             android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="@dimen/textSize_16"/>
+            android:textSize="@dimen/textSize_16" />
 
         <ImageView
             android:id="@+id/clearSearch_ImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:layout_marginBottom="2dp"
             android:background="@null"
             android:padding="@dimen/dimens_12"
             android:visibility="gone"
-            android:layout_marginEnd="@dimen/dimens_16"
-            android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/search_frame_layout"
             app:layout_constraintEnd_toEndOf="@+id/search_frame_layout"
             app:layout_constraintTop_toTopOf="@+id/search_frame_layout"
@@ -77,11 +77,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:layout_marginBottom="2dp"
             android:background="@null"
             android:padding="@dimen/dimens_12"
             android:visibility="visible"
-            android:layout_marginEnd="@dimen/dimens_16"
-            android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/search_frame_layout"
             app:layout_constraintEnd_toEndOf="@+id/search_frame_layout"
             app:layout_constraintTop_toTopOf="@+id/search_frame_layout"
@@ -112,6 +112,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimens_8"
         android:paddingHorizontal="@dimen/dimens_16"
+        android:paddingBottom="150dp"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/amount_textView"
         tools:listitem="@layout/vacancy_item" />
