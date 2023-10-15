@@ -19,18 +19,10 @@ class VacancyViewHolder(private val binding: VacancyItemBinding) :
             listener.onClick(model)
         }
 
-        if (model.employer?.logoUrls != null) {
-            Glide.with(itemView)
-                .load(model.employer.logoUrls.original)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(binding.vacancyImageView)
-        } else {
-            // Если logo_urls равен null, загружаем изображение по умолчанию
-            Glide.with(itemView)
-                .load(R.drawable.ic_launcher_foreground)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(binding.vacancyImageView)
-        }
+        Glide.with(itemView)
+            .load(model.employer?.logoUrls?.original)
+            .placeholder(R.drawable.placeholder)
+            .into(binding.vacancyImageView)
 
         binding.vacancyTextView.text = "${model.name}, ${model.area.name}"
         binding.employerTextView.text = model.employer?.name
