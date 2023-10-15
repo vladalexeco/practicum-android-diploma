@@ -186,19 +186,19 @@ class VacancyFragment : Fragment() {
 
     private fun showLoader() {
         binding.detailsLoaderProgressBar.visibility = View.VISIBLE
-        binding.detailsMainScreenScrollView.visibility = View.GONE
-        binding.detailsErrorMessageTextView.visibility = View.GONE
+        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
+        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
     }
 
     private fun showContent() {
         binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenScrollView.visibility = View.VISIBLE
-        binding.detailsErrorMessageTextView.visibility = View.GONE
+        binding.detailsMainScreenConstraintLayout.visibility = View.VISIBLE
+        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
     }
 
     private fun showErrorMessage() {
         binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenScrollView.visibility = View.GONE
-        binding.detailsErrorMessageTextView.visibility = View.VISIBLE
+        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
+        binding.detailsErrorMessageLinearLayout.visibility = View.VISIBLE
     }
 }
