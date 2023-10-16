@@ -21,18 +21,18 @@ class FilterAdapter<T : IndustryAreaModel>(
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
         holder.bind(
-            items[position],
-            position,
+            items[holder.adapterPosition],
+            holder.adapterPosition,
             clickListener,
-            { notifyItemChanged(position) },
-            { isChecked: Boolean -> setPositionChecked(position, isChecked) })
+            { notifyItemChanged(holder.adapterPosition) },
+            { isChecked: Boolean -> setPositionChecked(holder.adapterPosition, isChecked) })
 
         holder.itemView.setOnClickListener {
             clickListener.onItemClicked(
-                items[position],
-                position,
-                { notifyItemChanged(position) },
-                { isChecked: Boolean -> setPositionChecked(position, isChecked) }
+                items[holder.adapterPosition],
+                holder.adapterPosition,
+                { notifyItemChanged(holder.adapterPosition) },
+                { isChecked: Boolean -> setPositionChecked(holder.adapterPosition, isChecked) }
             )
         }
     }

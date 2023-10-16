@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -84,6 +85,9 @@ class SettingsFiltersFragment : Fragment() {
             DataTransmitter.postCountry(Country(id = "", name = ""))
             DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
 
+            renderWorkplaceTextInputLayout("")
+            renderIndustryTextInputLayout("")
+
         }
 
         binding.workPlaceTextInputEditText.setOnClickListener {
@@ -138,11 +142,14 @@ class SettingsFiltersFragment : Fragment() {
         }
 
         if (DataTransmitter.getIndustryPlain() != null) {
-            binding.industryTextInputEditText.setText(DataTransmitter.getIndustryPlain()?.name)
+            val industryName = DataTransmitter.getIndustryPlain()?.name
+            binding.industryTextInputEditText.setText(industryName)
+            renderIndustryTextInputLayout(industryName!!)
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            var plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
+            var plainText =
+                "${DataTransmitter.getCountry()?.name}, ${DataTransmitter.getAreaPlain()?.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
         } else if (DataTransmitter.getCountry() != null) {
@@ -151,6 +158,57 @@ class SettingsFiltersFragment : Fragment() {
             binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
+        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
+
+        binding.apply {
+            workplaceClear.setOnClickListener {
+                binding.workPlaceTextInputEditText.setText("")
+                DataTransmitter.postAreaPlain(AreaPlain(id = "", name = " "))
+                DataTransmitter.postCountry(Country(id = "", name = ""))
+                renderWorkplaceTextInputLayout("")
+            }
+            industryClear.setOnClickListener {
+                binding.industryTextInputEditText.setText("")
+                DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
+                renderIndustryTextInputLayout("")
+            }
+        }
+    }
+
+    private fun renderIndustryTextInputLayout(industry: String) {
+        if (industry.isNotEmpty()) {
+            binding.apply {
+                industryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.black_to_white_color)
+                industryClear.visibility = View.VISIBLE
+                industryArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                industryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                industryClear.visibility = View.GONE
+                industryArrowForward.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun renderWorkplaceTextInputLayout(workplace: String) {
+        if (workplace.isNotEmpty()) {
+            binding.apply {
+                workPlaceTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.black_to_white_color)
+                workplaceClear.visibility = View.VISIBLE
+                workplaceArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                workPlaceTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                workplaceClear.visibility = View.GONE
+                workplaceArrowForward.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun clearFields() {

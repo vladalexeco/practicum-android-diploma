@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
@@ -22,6 +22,8 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
 
     private val industriesStateLiveData = MutableLiveData<IndustriesState>()
     fun observeIndustriesState(): LiveData<IndustriesState> = industriesStateLiveData
+
+    private var industries = arrayListOf<Industry>()
 
     init {
         initScreen()
@@ -38,16 +40,25 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
     //todo Добавить strings из ресурсов
     private suspend fun processResult(result: DataResponse<Industry>) {
         if (result.data != null) {
+            industries.apply {
+                clear()
+                addAll(getFullIndustriesList(result.data))
+            }
             industriesStateLiveData.value =
-                IndustriesState.DisplayIndustries(getFullIndustriesList(result.data))
-        }
-        else {
+                IndustriesState.DisplayIndustries(industries)
+        } else {
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> industriesStateLiveData.value =
-                    IndustriesState.Error("Проверьте подключение к интернету")
+                    IndustriesState.Error(
+                        "Нет интернета",
+                        R.drawable.search_placeholder_internet_problem
+                    )
 
                 NetworkError.SERVER_ERROR -> industriesStateLiveData.value =
-                    IndustriesState.Error("Ошибка сервера")
+                    IndustriesState.Error(
+                        "Ошибка сервера",
+                        R.drawable.search_placeholder_server_not_responding
+                    )
             }
         }
     }
@@ -65,5 +76,31 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
 
     fun onIndustryClicked(industry: Industry) {
         _dataIndustry.postValue(industry)
+    }
+
+    fun onIndustryTextChanged(filterText: String?) {
+        filterIndustries(filterText)
+    }
+
+    private fun filterIndustries(filterText: String?) {
+        if (filterText.isNullOrEmpty()) {
+            industriesStateLiveData.value = IndustriesState.DisplayIndustries(industries)
+        } else {
+            val allIndustries = arrayListOf<Industry>()
+            allIndustries.addAll(industries)
+            val filteredIndustries = (allIndustries.filter {
+                it.name.contains(filterText, true)
+            })
+            if (filteredIndustries.isNotEmpty()) {
+                industriesStateLiveData.value =
+                    IndustriesState.DisplayIndustries(filteredIndustries)
+            } else {
+                industriesStateLiveData.value =
+                    IndustriesState.Error(
+                        "Такой отрасли нет",
+                        R.drawable.search_placeholder_nothing_found
+                    )
+            }
+        }
     }
 }
