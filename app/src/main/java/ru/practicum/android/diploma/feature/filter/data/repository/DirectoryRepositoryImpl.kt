@@ -2,6 +2,8 @@ package ru.practicum.android.diploma.feature.filter.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.domain.util.Resource
 import ru.practicum.android.diploma.feature.filter.data.network.NetworkDirectoryClient
@@ -28,11 +30,11 @@ class DirectoryRepositoryImpl(
 
         when(response.resultCode) {
 
-            -1 -> {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> {
                 emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
             }
 
-            200 -> {
+            STATUS_CODE_SUCCESS -> {
                 emit(Resource.Success((response as IndustryResponse).industries.map { industryDto ->
                     industryDto.mapToIndustry()
                 }))
@@ -51,11 +53,11 @@ class DirectoryRepositoryImpl(
 
         when(response.resultCode) {
 
-            -1 -> {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> {
                 emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
             }
 
-            200 -> {
+            STATUS_CODE_SUCCESS -> {
                 emit(Resource.Success((response as CountryResponse).countries.map { countryDto ->
                     countryDto.mapToCountry()
                 }))
@@ -73,11 +75,11 @@ class DirectoryRepositoryImpl(
 
         when(response.resultCode) {
 
-            -1 -> {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> {
                 emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
             }
 
-            200 -> {
+            STATUS_CODE_SUCCESS -> {
                 emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
                     areaDto.mapToArea()
                 }))
@@ -96,11 +98,11 @@ class DirectoryRepositoryImpl(
 
         when(response.resultCode) {
 
-            -1 -> {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> {
                 emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
             }
 
-            200 -> {
+            STATUS_CODE_SUCCESS -> {
                 emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
                     areaDto.mapToArea()
                 }))

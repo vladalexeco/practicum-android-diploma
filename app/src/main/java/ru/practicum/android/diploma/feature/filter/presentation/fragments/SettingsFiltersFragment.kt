@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -147,7 +148,8 @@ class SettingsFiltersFragment : Fragment() {
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            var plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
+            var plainText =
+                "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
             showConfirmAndClearButtons(true)
@@ -183,17 +185,35 @@ class SettingsFiltersFragment : Fragment() {
             }
         }
 
+        binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
+            clearButtonVisibility(text)
+        }
+
+        binding.clearSalaryImageView.setOnClickListener {
+            clearSearch()
+        }
+
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun clearSearch() {
+        binding.filterSettingsExpectedSalaryEditText.setText("")
+        binding.filterSettingsExpectedSalaryEditText.clearFocus()
+        binding.clearSalaryImageView.isVisible = false
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?) {
+        binding.clearSalaryImageView.isVisible = !s.isNullOrEmpty()
     }
 
     private fun clearFields() {
         DataTransmitter.postIndustryPlain(null)
         DataTransmitter.postCountry(null)
         DataTransmitter.postAreaPlain(null)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showConfirmAndClearButtons(isVisible: Boolean) {
