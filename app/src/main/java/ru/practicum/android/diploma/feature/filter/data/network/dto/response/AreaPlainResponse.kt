@@ -1,5 +1,4 @@
 package ru.practicum.android.diploma.feature.filter.data.network.dto.response
 
-import ru.practicum.android.diploma.feature.filter.data.network.dto.model.AreaPlainDto
 
-class AreaPlainResponse(val areaPlain: AreaPlainDto): Response()
+class AreaPlainResponse(val id: String, val parent_id: String, val name: String): Response()

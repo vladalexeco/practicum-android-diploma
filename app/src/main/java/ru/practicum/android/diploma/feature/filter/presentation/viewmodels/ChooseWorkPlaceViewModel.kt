@@ -1,30 +1,33 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.core.util.DataTransmitter
-import ru.practicum.android.diploma.feature.filter.domain.model.Area
-import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreaPlainUseCase
+
 
 class ChooseWorkPlaceViewModel(
-    private val getAreasUseCase: GetAreasUseCase
+    private val getAreaPlainUseCase: GetAreaPlainUseCase
 ) : ViewModel() {
 
-    private var _hasRegionsLiveData = MutableLiveData<Boolean>()
-    val hasRegionsLiveData: LiveData<Boolean> = _hasRegionsLiveData
+    private var _dataAreaPlain = MutableLiveData<AreaPlain?>()
+    val dataAreaPlain: LiveData<AreaPlain?> = _dataAreaPlain
 
-    fun checkCountryHasRegions() {
+    fun getAreaPlain(areaId: String) {
         viewModelScope.launch {
-            getAreasUseCase(DataTransmitter.getCountry()!!.id)
-                .collect {
-                    val areaList: List<Area>? = it.data
-                    if (areaList != null) {
-                        _hasRegionsLiveData.postValue(areaList.isNotEmpty())
-                    }
+            getAreaPlainUseCase(areaId).collect { result ->
+
+                if (result.first != null) {
+                    _dataAreaPlain.postValue(result.first)
+                } else {
+                    Log.d("CHECK_AREA_PLAIN", result.second.toString())
                 }
+
+            }
         }
     }
 

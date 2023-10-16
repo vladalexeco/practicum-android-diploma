@@ -14,9 +14,6 @@ import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
-import ru.practicum.android.diploma.feature.filter.domain.model.Country
-import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -45,9 +42,6 @@ class SettingsFiltersFragment : Fragment() {
             showConfirmAndClearButtons(true)
         } else if (filterSettings.country != null) {
             binding.workPlaceTextInputEditText.setText(filterSettings.country!!.name)
-            showConfirmAndClearButtons(true)
-        } else if (filterSettings.areaPlain != null) {
-            binding.workPlaceTextInputEditText.setText(filterSettings.areaPlain!!.name)
             showConfirmAndClearButtons(true)
         }
 
@@ -160,9 +154,6 @@ class SettingsFiltersFragment : Fragment() {
         } else if (DataTransmitter.getCountry() != null) {
             binding.workPlaceTextInputEditText.setText(DataTransmitter.getCountry()?.name)
             showConfirmAndClearButtons(true)
-        } else if (DataTransmitter.getAreaPlain() != null) {
-            binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
-            showConfirmAndClearButtons(true)
         }
 
         binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
@@ -184,6 +175,7 @@ class SettingsFiltersFragment : Fragment() {
             } else {
                 if (binding.workPlaceTextInputEditText.text?.isEmpty() == true &&
                     binding.industryTextInputEditText.text?.isEmpty() == true &&
+                    binding.filterSettingsExpectedSalaryEditText.text?.isEmpty() == true &&
                     !binding.doNotShowWithoutSalaryCheckBox.isChecked
                 ) {
                     showConfirmAndClearButtons(false)

@@ -7,6 +7,10 @@ import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.domain.util.Resource
 
+/**
+ * Получает объект AreaPlain с тремя полями: id, parent_id, name
+ */
+
 class GetAreaPlainUseCase(private val directoryRepository: DirectoryRepository) {
     operator fun invoke(areaId: String): Flow<Pair<AreaPlain?, NetworkError?>> {
         return directoryRepository.getAreaPlain(areaId).map { result ->

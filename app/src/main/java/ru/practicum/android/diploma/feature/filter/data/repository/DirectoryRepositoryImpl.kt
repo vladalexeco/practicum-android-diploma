@@ -8,7 +8,6 @@ import ru.practicum.android.diploma.feature.filter.data.network.NetworkDirectory
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.IndustryResponse
 import ru.practicum.android.diploma.feature.filter.data.network.dto.Request
 import ru.practicum.android.diploma.feature.filter.data.network.dto.model.mapToArea
-import ru.practicum.android.diploma.feature.filter.data.network.dto.model.mapToAreaPlain
 import ru.practicum.android.diploma.feature.filter.data.network.dto.model.mapToCountry
 import ru.practicum.android.diploma.feature.filter.data.network.dto.model.mapToIndustry
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.AreaPlainResponse
@@ -126,7 +125,11 @@ class DirectoryRepositoryImpl(
             }
 
             200 -> {
-                emit(Resource.Success((response as AreaPlainResponse).areaPlain.mapToAreaPlain()))
+                emit(Resource.Success(data = AreaPlain(
+                    id = (response as AreaPlainResponse).id,
+                    parent_id = response.parent_id,
+                    name = response.name
+                )))
             }
 
             else -> {

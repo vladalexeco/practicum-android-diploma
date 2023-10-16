@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
@@ -22,8 +21,6 @@ class ChooseWorkplaceFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: ChooseWorkPlaceViewModel by viewModel()
-
-    private var hasRegions = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +43,15 @@ class ChooseWorkplaceFragment : Fragment() {
 
         })
 
-        viewModel.hasRegionsLiveData.observe(viewLifecycleOwner) {
-            hasRegions = it
+        viewModel.dataAreaPlain.observe(viewLifecycleOwner) { areaPlain ->
+            if (areaPlain != null) {
+                if (areaPlain.parent_id != null) {
+                    viewModel.getAreaPlain(areaPlain.parent_id)
+                } else {
+                    DataTransmitter.postCountry(Country(id = areaPlain.id, name = areaPlain.name))
+                    binding.chooseCountryTextInputEditText.setText(areaPlain.name)
+                }
+            }
         }
 
         binding.chooseWorkplaceBackArrowImageview.setOnClickListener {
@@ -91,8 +95,11 @@ class ChooseWorkplaceFragment : Fragment() {
             binding.regionTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
-        if (binding.chooseCountryTextInputEditText.text!!.isNotEmpty()) {
-            viewModel.checkCountryHasRegions()
+        if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
+            binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+
+            DataTransmitter.getAreaPlain()?.id?.let { viewModel.getAreaPlain(it) }
+
         }
     }
 
