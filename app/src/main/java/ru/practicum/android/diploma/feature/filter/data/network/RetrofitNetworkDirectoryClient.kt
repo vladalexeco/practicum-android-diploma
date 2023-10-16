@@ -5,6 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
 import ru.practicum.android.diploma.feature.filter.data.network.dto.Request
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.AreaResponse
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.CountryResponse
@@ -20,7 +23,7 @@ class RetrofitNetworkDirectoryClient(
     override suspend fun doRequest(dto: Request): Response {
 
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
+            return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
         }
 
         return withContext(Dispatchers.IO) {
@@ -29,9 +32,9 @@ class RetrofitNetworkDirectoryClient(
                 is Request.AreaRequest -> {
                     try {
                         val response = directoryService.getAreas(dto.areaId)
-                        response.apply { resultCode = 200 }
+                        response.apply { resultCode = STATUS_CODE_SUCCESS }
                     } catch (e: Throwable) {
-                        Response().apply { resultCode = 500 }
+                        Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
 
@@ -39,9 +42,9 @@ class RetrofitNetworkDirectoryClient(
                     try {
                         val responseList = directoryService.getCountries()
                         val response = CountryResponse(countries = responseList)
-                        response.apply { resultCode = 200 }
+                        response.apply { resultCode = STATUS_CODE_SUCCESS }
                     } catch (e: Throwable) {
-                        Response().apply { resultCode = 500 }
+                        Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
 
@@ -49,9 +52,9 @@ class RetrofitNetworkDirectoryClient(
                     try {
                         val responseList = directoryService.getIndustries()
                         val response = IndustryResponse(industries = responseList)
-                        response.apply { resultCode = 200 }
+                        response.apply { resultCode = STATUS_CODE_SUCCESS }
                     } catch (e: Throwable) {
-                        Response().apply { resultCode = 500 }
+                        Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
 
@@ -59,9 +62,9 @@ class RetrofitNetworkDirectoryClient(
                     try {
                         val responseList = directoryService.getAllAreas()
                         val response = AreaResponse(areas = responseList)
-                        response.apply { resultCode = 200 }
+                        response.apply { resultCode = STATUS_CODE_SUCCESS }
                     }catch (e: Throwable) {
-                        Response().apply { resultCode = 500 }
+                        Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
             }
