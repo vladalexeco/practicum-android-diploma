@@ -88,11 +88,9 @@ class ChooseIndustryFragment : Fragment() {
             industriesAdapter =
                 FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
                     industries[position] = (industry as Industry).copy(isChecked = !industry.isChecked)
-                    viewModel.onIndustryClicked(industries[position])
+                    viewModel.onIndustryClicked(industries[position], position)
                     notifyItemChanged.invoke()
                     setPositionChecked.invoke(industries[position].isChecked)
-                    //sharedViewModel.industry =
-                    //    if (industries[position].isChecked) industry else null
                     binding.chooseIndustryApproveButton.visibility =
                         if (industries[position].isChecked) View.VISIBLE else View.GONE
                 }

@@ -63,8 +63,6 @@ class ChooseCountryFragment : Fragment() {
         if (countriesAdapter == null) {
             countriesAdapter = CountriesAdapter(countries) { country ->
                 viewModel.onCountryClicked(country)
-                //sharedViewModel.country = country
-                //findNavController().navigateUp()
             }
             binding.countryListRecyclerView.apply {
                 adapter = countriesAdapter

@@ -86,7 +86,6 @@ class ChooseAreaFragment : Fragment() {
                 viewModel.onAreaClicked(areas[position], position)
                 notifyItemChanged.invoke()
                 setPositionChecked.invoke(areas[position].isChecked)
-                //sharedViewModel.area = if (areas[position].isChecked) area else null
                 binding.chooseAreaApproveButton.visibility =
                     if (areas[position].isChecked) View.VISIBLE else View.GONE
             }

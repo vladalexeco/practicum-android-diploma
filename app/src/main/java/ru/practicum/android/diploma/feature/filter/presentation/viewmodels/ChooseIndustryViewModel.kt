@@ -24,6 +24,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
     fun observeIndustriesState(): LiveData<IndustriesState> = industriesStateLiveData
 
     private var industries = arrayListOf<Industry>()
+    private lateinit var filteredIndustries: List<Industry>
 
     init {
         initScreen()
@@ -44,6 +45,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
                 clear()
                 addAll(getFullIndustriesList(result.data))
             }
+            filteredIndustries = industries
             industriesStateLiveData.value =
                 IndustriesState.DisplayIndustries(industries)
         } else {
@@ -74,7 +76,8 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             extendedIndustriesList
         }
 
-    fun onIndustryClicked(industry: Industry) {
+    fun onIndustryClicked(industry: Industry, position: Int) {
+        filteredIndustries[position].isChecked = industry.isChecked
         _dataIndustry.postValue(industry)
     }
 
@@ -84,11 +87,10 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
 
     private fun filterIndustries(filterText: String?) {
         if (filterText.isNullOrEmpty()) {
-            industriesStateLiveData.value = IndustriesState.DisplayIndustries(industries)
+            filteredIndustries = industries
+            industriesStateLiveData.value = IndustriesState.DisplayIndustries(filteredIndustries)
         } else {
-            val allIndustries = arrayListOf<Industry>()
-            allIndustries.addAll(industries)
-            val filteredIndustries = (allIndustries.filter {
+            val filteredIndustries = (industries.filter {
                 it.name.contains(filterText, true)
             })
             if (filteredIndustries.isNotEmpty()) {

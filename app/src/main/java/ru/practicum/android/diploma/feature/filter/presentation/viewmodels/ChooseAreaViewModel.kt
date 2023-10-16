@@ -132,7 +132,8 @@ class ChooseAreaViewModel(
 
     private fun filterAreas(filterText: String?) {
         if (filterText.isNullOrEmpty()) {
-            areasStateLiveData.value = AreasState.DisplayAreas(areas)
+            filteredAreas = areas
+            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas)
         } else {
             filteredAreas = areas.filter {
                 it.name.contains(filterText, true)
