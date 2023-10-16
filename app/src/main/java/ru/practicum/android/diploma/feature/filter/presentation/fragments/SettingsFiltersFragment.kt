@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -142,7 +144,8 @@ class SettingsFiltersFragment : Fragment() {
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            var plainText = "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
+            var plainText =
+                "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
         } else if (DataTransmitter.getCountry() != null) {
@@ -151,6 +154,24 @@ class SettingsFiltersFragment : Fragment() {
             binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
+        binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
+            clearButtonVisibility(text)
+        }
+
+        binding.clearSalaryImageView.setOnClickListener {
+            clearSearch()
+        }
+
+    }
+
+    private fun clearSearch() {
+        binding.filterSettingsExpectedSalaryEditText.setText("")
+        binding.filterSettingsExpectedSalaryEditText.clearFocus()
+        binding.clearSalaryImageView.isVisible = false
+    }
+
+    private fun clearButtonVisibility(s: CharSequence?) {
+        binding.clearSalaryImageView.isVisible = !s.isNullOrEmpty()
     }
 
     private fun clearFields() {
