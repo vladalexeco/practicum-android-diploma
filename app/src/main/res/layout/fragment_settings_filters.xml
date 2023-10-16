@@ -169,6 +169,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_16"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/reset_settings_textview"
         app:layout_constraintEnd_toEndOf="@+id/reset_settings_textview"
         app:layout_constraintStart_toStartOf="@+id/reset_settings_textview" />
@@ -185,6 +186,7 @@
         android:text="Сбросить"
         android:textColor="@color/yp_red"
         android:textSize="@dimen/textSize_16"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
