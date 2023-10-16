@@ -45,6 +45,9 @@ class VacancyFragment : Fragment() {
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
             render(dataState)
+            if (dataState is DataState.DataReceived) {
+                viewModel.checkFavoriteStatus(dataState.data)
+            }
         }
     }
 
@@ -70,6 +73,16 @@ class VacancyFragment : Fragment() {
         binding.similarVacanciesButton.setOnClickListener {
             findNavController().navigate(R.id.action_vacancyFragment_to_similarVacanciesFragment)
         }
+
+        binding.favoritesIcon.setOnClickListener {
+            currentVacancyFull?.let { vacancyFull ->
+                viewModel.onFavoriteButtonClick(vacancyFull)
+            }
+        }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            setFabIcon(isFavorite)
+        }
     }
 
     override fun onDestroy() {
@@ -92,6 +105,7 @@ class VacancyFragment : Fragment() {
             is DataState.DataReceived -> {
                 setContentToViews(vacancyFull = dataState.data)
                 showContent()
+                viewModel.checkFavoriteStatus(dataState.data)
             }
         }
 
@@ -200,5 +214,16 @@ class VacancyFragment : Fragment() {
         binding.detailsLoaderProgressBar.visibility = View.GONE
         binding.detailsMainScreenConstraintLayout.visibility = View.GONE
         binding.detailsErrorMessageLinearLayout.visibility = View.VISIBLE
+    }
+
+    private fun setFabIcon(isFavorite: Boolean) {
+        binding.favoritesIcon.setImageResource(
+            if (isFavorite) R.drawable.ic_favorite_on else R.drawable.ic_favorite_off
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 }
