@@ -21,7 +21,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     ): Flow<Resource<VacanciesResponse>> = flow {
         val response = networkClient.getVacancies(SearchRequest(expression), page, perPage, page)
         when (response.resultCode) {
-            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = -1))
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = response.resultCode))
             STATUS_CODE_SUCCESS ->
                 with(response as VacanciesDtoResponse) {
                     val data = response.toVacanciesResponse()
@@ -35,7 +35,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     override fun getVacancy(expression: String): Flow<Resource<VacancyResponse>> = flow {
         val response = networkClient.getVacancy(SearchRequest(expression))
         when (response.resultCode) {
-            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = -1))
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = response.resultCode))
             STATUS_CODE_SUCCESS -> with(response as VacancyDtoResponse) {
                 val data = response.toVacancyResponse()
                 emit(Resource.Success(data))
@@ -48,7 +48,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
     override fun getSimilarVacancies(expression: String): Flow<Resource<VacanciesResponse>> = flow {
         val response = networkClient.getSimilarVacancies(SearchRequest(expression))
         when (response.resultCode) {
-            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = -1))
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = response.resultCode))
             STATUS_CODE_SUCCESS -> with(response as VacanciesDtoResponse) {
                 val data = response.toVacanciesResponse()
                 emit(Resource.Success(data))
