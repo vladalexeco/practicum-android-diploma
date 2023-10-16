@@ -27,39 +27,22 @@ class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimil
                     .getSimilarVacancies(DataTransmitter.getId())
                     .collect { pair ->
                         when {
-                            pair.second == -1 || pair.second == 400 -> {
-                                renderState(
-                                    SimilarSearchState.Error
-                                )
-                            }
-
-                            pair.second == 500 -> {
-                                renderState(
-                                    SimilarSearchState.ServerError
-                                )
-                            }
-
-                            pair.first?.items.isNullOrEmpty() -> {
-                                renderState(
-                                    SimilarSearchState.Empty
-                                )
-                            }
-
-                            else -> {
-                                renderState(
-                                    SimilarSearchState.Content(
-                                        response = pair.first!!
-                                    )
-                                )
-
-                            }
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(SimilarSearchState.Error)
+                            pair.second == STATUS_CODE_SERVER_ERROR -> renderState(SimilarSearchState.ServerError)
+                            pair.first?.items.isNullOrEmpty() -> renderState(SimilarSearchState.Empty)
+                            else -> renderState(SimilarSearchState.Content(response = pair.first!!))
                         }
                     }
             }
-
     }
 
     private fun renderState(state: SimilarSearchState) {
         _stateLiveData.postValue(state)
+    }
+
+    companion object {
+        const val STATUS_CODE_SERVER_ERROR = 500
+        const val STATUS_CODE_BAD_REQUEST = 400
+        const val STATUS_CODE_NO_NETWORK_CONNECTION = -1
     }
 }

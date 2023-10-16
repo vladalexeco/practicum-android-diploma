@@ -26,7 +26,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     private var latestSearchText: String? = null
 
     private val _stateLiveData = MutableLiveData<VacanciesSearchState>()
-    val stateLiveData : LiveData<VacanciesSearchState> = _stateLiveData
+    val stateLiveData: LiveData<VacanciesSearchState> = _stateLiveData
 
     private val vacanciesSearchDebounce = debounce<String>(
         SEARCH_DEBOUNCE_DELAY_MILLIS,
@@ -50,32 +50,13 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                     .getVacancies(newSearchText, pages, perPage, page)
                     .collect { pair ->
                         when {
-                            pair.second == -1 || pair.second == 400 -> {
-                                renderState(
-                                    VacanciesSearchState.Error
-                                )
-                            }
-
-                            pair.second == 500 -> {
-                                renderState(
-                                    VacanciesSearchState.ServerError
-                                )
-                            }
-
-                            pair.first?.items.isNullOrEmpty() -> {
-                                renderState(
-                                    VacanciesSearchState.Empty
-                                )
-                            }
-
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(VacanciesSearchState.Error)
+                            pair.second == STATUS_CODE_SERVER_ERROR -> renderState(VacanciesSearchState.ServerError)
+                            pair.first?.items.isNullOrEmpty() -> renderState(VacanciesSearchState.Empty)
                             else -> {
                                 currentPage = page
                                 totalPages = pair.first!!.pages
-                                renderState(
-                                    VacanciesSearchState.Content(
-                                        response = pair.first!!,
-                                    )
-                                )
+                                renderState(VacanciesSearchState.Content(response = pair.first!!))
                                 _isLoading.postValue(false)
                             }
                         }
@@ -115,5 +96,8 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private const val PAGE_SIZE = 20
+        const val STATUS_CODE_SERVER_ERROR = 500
+        const val STATUS_CODE_BAD_REQUEST = 400
+        const val STATUS_CODE_NO_NETWORK_CONNECTION = -1
     }
 }
