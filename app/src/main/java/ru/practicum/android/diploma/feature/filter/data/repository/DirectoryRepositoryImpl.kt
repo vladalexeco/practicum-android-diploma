@@ -19,49 +19,26 @@ import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 
 class DirectoryRepositoryImpl(
     private val networkDirectoryClient: NetworkDirectoryClient
-) : DirectoryRepository  {
+) : DirectoryRepository {
     override fun getIndustries(): Flow<Resource<List<Industry>>> = flow {
 
-        val response =networkDirectoryClient.doRequest(Request.IndustryRequest)
+        val response = networkDirectoryClient.doRequest(Request.IndustryRequest)
 
-        when(response.resultCode) {
-
-            -1 -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            200 -> {
-                emit(Resource.Success((response as IndustryResponse).industries.map { industryDto ->
-                    industryDto.mapToIndustry()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+        when (response.resultCode) {
+            -1 -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            200 -> emit(Resource.Success((response as IndustryResponse).industries.map { it.mapToIndustry() }))
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
 
     override fun getCountries(): Flow<Resource<List<Country>>> = flow {
 
         val response = networkDirectoryClient.doRequest(Request.CountryRequest)
 
-        when(response.resultCode) {
-
-            -1 -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            200 -> {
-                emit(Resource.Success((response as CountryResponse).countries.map { countryDto ->
-                    countryDto.mapToCountry()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+        when (response.resultCode) {
+            -1 -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            200 -> emit(Resource.Success((response as CountryResponse).countries.map { it.mapToCountry() }))
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
     }
 
@@ -69,47 +46,21 @@ class DirectoryRepositoryImpl(
 
         val response = networkDirectoryClient.doRequest(Request.AreaRequest(areaId))
 
-        when(response.resultCode) {
-
-            -1 -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            200 -> {
-                emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
-                    areaDto.mapToArea()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+        when (response.resultCode) {
+            -1 -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            200 -> emit(Resource.Success((response as AreaResponse).areas.map { it.mapToArea() }))
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
 
     override fun getAllAreas(): Flow<Resource<List<Area>>> = flow {
 
         val response = networkDirectoryClient.doRequest(Request.AllAreasRequest)
 
-        when(response.resultCode) {
-
-            -1 -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            200 -> {
-                emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
-                    areaDto.mapToArea()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
-
+        when (response.resultCode) {
+            -1 -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            200 -> emit(Resource.Success((response as AreaResponse).areas.map { it.mapToArea() }))
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
-
 }
