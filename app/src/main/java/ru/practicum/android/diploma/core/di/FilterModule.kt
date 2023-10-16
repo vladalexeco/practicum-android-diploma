@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.feature.filter.domain.api.DirectoryRepositor
 import ru.practicum.android.diploma.feature.filter.domain.api.FilterSettingsRepository
 import ru.practicum.android.diploma.feature.filter.domain.usecase.ClearFilterSettingsUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAllAreasUseCase
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreaPlainUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetCountriesUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
@@ -63,6 +64,10 @@ val filterModule = module {
 
     factory<GetAllAreasUseCase> {
         GetAllAreasUseCase(directoryRepository = get())
+    }
+
+    factory<GetAreaPlainUseCase> {
+        GetAreaPlainUseCase(directoryRepository = get())
     }
 
     // Shared Preferences
