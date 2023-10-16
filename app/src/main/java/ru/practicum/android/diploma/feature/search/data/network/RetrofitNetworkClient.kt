@@ -6,6 +6,10 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.Response
 
@@ -87,12 +91,5 @@ class RetrofitNetworkClient(
             }
         }
         return false
-    }
-
-    companion object {
-        const val STATUS_CODE_SUCCESS = 200
-        const val STATUS_CODE_SERVER_ERROR = 500
-        const val STATUS_CODE_BAD_REQUEST = 400
-        const val STATUS_CODE_NO_NETWORK_CONNECTION = -1
     }
 }

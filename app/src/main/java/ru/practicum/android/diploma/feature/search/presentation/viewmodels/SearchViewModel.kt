@@ -8,6 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.debounce
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
@@ -50,13 +53,13 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                     .getVacancies(newSearchText, pages, perPage, page)
                     .collect { pair ->
                         when {
-                            pair.second == -1 || pair.second == 400 -> {
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> {
                                 renderState(
                                     VacanciesSearchState.Error
                                 )
                             }
 
-                            pair.second == 500 -> {
+                            pair.second == STATUS_CODE_SERVER_ERROR -> {
                                 renderState(
                                     VacanciesSearchState.ServerError
                                 )

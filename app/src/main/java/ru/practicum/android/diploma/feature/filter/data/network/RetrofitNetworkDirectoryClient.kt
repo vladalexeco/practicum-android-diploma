@@ -5,6 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
 import ru.practicum.android.diploma.feature.filter.data.network.dto.Request
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.AreaResponse
 import ru.practicum.android.diploma.feature.filter.data.network.dto.response.CountryResponse
@@ -83,11 +86,5 @@ class RetrofitNetworkDirectoryClient(
             }
         }
         return false
-    }
-
-    companion object {
-        const val STATUS_CODE_SUCCESS = 200
-        const val STATUS_CODE_SERVER_ERROR = 500
-        const val STATUS_CODE_NO_NETWORK_CONNECTION = -1
     }
 }
