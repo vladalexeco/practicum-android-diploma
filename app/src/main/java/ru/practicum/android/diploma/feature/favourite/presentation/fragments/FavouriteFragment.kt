@@ -16,14 +16,15 @@ import ru.practicum.android.diploma.feature.favourite.presentation.FavoriteVacan
 import ru.practicum.android.diploma.feature.favourite.presentation.viewmodels.FavouriteFragmentViewModel
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
+import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.SimilarVacanciesAdapter
 
-class FavouriteFragment : Fragment(), VacanciesAdapter.ClickListener {
+class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
 
     private var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: FavouriteFragmentViewModel by viewModel()
-    private val favoriteAdapter = VacanciesAdapter(this)
+    private val favoriteAdapter = SimilarVacanciesAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +54,7 @@ class FavouriteFragment : Fragment(), VacanciesAdapter.ClickListener {
                         binding.placeHolderFavorite.visibility = View.GONE
                         binding.recyclerViewFavorite.visibility=View.VISIBLE
                         val vacancy = state.vacancy.map { it.toVacancyShort() }
-                        favoriteAdapter.vacancies=vacancy
+                        favoriteAdapter.setVacancyList(vacancy)
                     }
                 }
             }
