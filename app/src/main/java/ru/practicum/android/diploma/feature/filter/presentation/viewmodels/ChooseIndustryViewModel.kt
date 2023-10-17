@@ -47,7 +47,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             }
             filteredIndustries = industries
             industriesStateLiveData.value =
-                IndustriesState.DisplayIndustries(industries)
+                IndustriesState.DisplayIndustries(filteredIndustries)
         } else {
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> industriesStateLiveData.value =
