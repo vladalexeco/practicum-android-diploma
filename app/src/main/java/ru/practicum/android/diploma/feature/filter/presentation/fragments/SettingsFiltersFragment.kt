@@ -16,9 +16,6 @@ import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
-import ru.practicum.android.diploma.feature.filter.domain.model.Country
-import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -83,17 +80,15 @@ class SettingsFiltersFragment : Fragment() {
             binding.filterSettingsExpectedSalaryEditText.setText("")
             binding.doNotShowWithoutSalaryCheckBox.isChecked = false
 
-            DataTransmitter.postAreaPlain(AreaPlain(id = "", name = " "))
-            DataTransmitter.postCountry(Country(id = "", name = ""))
-            DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
+            DataTransmitter.postAreaPlain(null)
+            DataTransmitter.postCountry(null)
+            DataTransmitter.postIndustryPlain(null)
 
             renderWorkplaceTextInputLayout("")
             renderIndustryTextInputLayout("")
         }
 
         binding.workPlaceTextInputEditText.setOnClickListener {
-            DataTransmitter.postCountry(null)
-            DataTransmitter.postAreaPlain(null)
             findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseWorkplaceFragment)
         }
 
@@ -162,13 +157,13 @@ class SettingsFiltersFragment : Fragment() {
         binding.apply {
             workplaceClear.setOnClickListener {
                 binding.workPlaceTextInputEditText.setText("")
-                DataTransmitter.postAreaPlain(AreaPlain(id = "", name = " "))
-                DataTransmitter.postCountry(Country(id = "", name = ""))
+                DataTransmitter.postAreaPlain(null)
+                DataTransmitter.postCountry(null)
                 renderWorkplaceTextInputLayout("")
             }
             industryClear.setOnClickListener {
                 binding.industryTextInputEditText.setText("")
-                DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
+                DataTransmitter.postIndustryPlain(null)
                 renderIndustryTextInputLayout("")
             }
         }

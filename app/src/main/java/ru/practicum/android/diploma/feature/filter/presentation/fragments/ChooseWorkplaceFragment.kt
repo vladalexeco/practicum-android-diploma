@@ -46,7 +46,7 @@ class ChooseWorkplaceFragment : Fragment() {
 
         })
 
-        viewModel.initScreenData()
+        //viewModel.initScreenData()
 
         viewModel.hasRegionsLiveData.observe(viewLifecycleOwner) {
             hasRegions = it
@@ -107,14 +107,6 @@ class ChooseWorkplaceFragment : Fragment() {
             }
         }
 
-        if (DataTransmitter.getCountry() != null) {
-            binding.chooseCountryTextInputEditText.setText(DataTransmitter.getCountry()?.name)
-        }
-
-        if (DataTransmitter.getAreaPlain() != null) {
-            binding.areaTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
-        }
-
         if (binding.chooseCountryTextInputEditText.text!!.isNotEmpty()) {
             viewModel.checkCountryHasRegions()
         }
@@ -162,6 +154,11 @@ class ChooseWorkplaceFragment : Fragment() {
                 countryArrowForward.visibility = View.VISIBLE
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.initScreenData()
     }
 
     override fun onDestroyView() {
