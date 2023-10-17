@@ -46,7 +46,7 @@ class ChooseWorkplaceFragment : Fragment() {
 
         })
 
-        //viewModel.initScreenData()
+        viewModel.initScreenData()
 
         viewModel.hasRegionsLiveData.observe(viewLifecycleOwner) {
             hasRegions = it
@@ -154,11 +154,6 @@ class ChooseWorkplaceFragment : Fragment() {
                 countryArrowForward.visibility = View.VISIBLE
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.initScreenData()
     }
 
     override fun onDestroyView() {

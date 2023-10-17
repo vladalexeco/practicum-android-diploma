@@ -175,6 +175,9 @@ class SettingsFiltersFragment : Fragment() {
         binding.clearSalaryImageView.setOnClickListener {
             clearSearch()
         }
+
+        renderIndustryTextInputLayout(binding.industryTextInputEditText.text.toString())
+        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
     }
 
     private fun clearSearch() {
@@ -227,12 +230,6 @@ class SettingsFiltersFragment : Fragment() {
         DataTransmitter.postIndustryPlain(null)
         DataTransmitter.postCountry(null)
         DataTransmitter.postAreaPlain(null)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        renderIndustryTextInputLayout(binding.industryTextInputEditText.text.toString())
-        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
     }
 
     override fun onDestroyView() {
