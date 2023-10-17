@@ -174,6 +174,19 @@
             android:textSize="@dimen/textSize_16" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ImageView
+        android:id="@+id/clear_salary_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimens_12"
+        android:background="@null"
+        android:src="@drawable/ic_clear"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/salary_editText"
+        app:layout_constraintEnd_toEndOf="@+id/salary_editText"
+        app:layout_constraintTop_toTopOf="@+id/salary_editText"
+        app:tint="@color/yp_black" />
+
     <TextView
         android:id="@+id/do_not_show_without_salary_textView"
         android:layout_width="wrap_content"
