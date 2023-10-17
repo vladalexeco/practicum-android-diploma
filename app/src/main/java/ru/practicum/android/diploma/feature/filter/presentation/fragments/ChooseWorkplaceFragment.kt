@@ -23,8 +23,6 @@ class ChooseWorkplaceFragment : Fragment() {
 
     private val viewModel: ChooseWorkPlaceViewModel by viewModel()
 
-    private var hasRegions = false
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,11 +44,16 @@ class ChooseWorkplaceFragment : Fragment() {
 
         })
 
+        viewModel.dataAreaPlain.observe(viewLifecycleOwner) { areaPlain ->
+            if (areaPlain != null) {
+                if (areaPlain.parent_id != null) {
+                    viewModel.getAreaPlain(areaPlain.parent_id)
+                } else {
+                    DataTransmitter.postCountry(Country(id = areaPlain.id, name = areaPlain.name))
+                    binding.chooseCountryTextInputEditText.setText(areaPlain.name)
+                }
+            }
         viewModel.initScreenData()
-
-        viewModel.hasRegionsLiveData.observe(viewLifecycleOwner) {
-            hasRegions = it
-        }
 
         viewModel.dataCountry.observe(viewLifecycleOwner) {
             binding.chooseCountryTextInputEditText.setText(it)
@@ -87,28 +90,36 @@ class ChooseWorkplaceFragment : Fragment() {
 
         binding.chooseButton.setOnClickListener {
             if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
-                binding.areaTextInputEditText.text?.isEmpty() == true
-            ) {
+                binding.regionTextInputEditText.text?.isEmpty() == true) {
 
                 DataTransmitter.postAreaPlain(AreaPlain(id = "", name = ""))
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
 
-            } else if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
+            } else if(binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
 
-                binding.areaTextInputEditText.text?.isNotEmpty() == true
-            ) {
+                binding.regionTextInputEditText.text?.isNotEmpty() == true) {
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
 
             } else if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
-                binding.areaTextInputEditText.text?.isNotEmpty() == true
-            ) {
+                binding.regionTextInputEditText.text?.isNotEmpty() == true) {
                 DataTransmitter.postCountry(Country(id = "", name = ""))
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
             }
         }
 
-        if (binding.chooseCountryTextInputEditText.text!!.isNotEmpty()) {
-            viewModel.checkCountryHasRegions()
+        if (DataTransmitter.getCountry() != null) {
+            binding.chooseCountryTextInputEditText.setText(DataTransmitter.getCountry()?.name)
+        }
+
+        if (DataTransmitter.getAreaPlain() != null) {
+            binding.regionTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
+        }
+
+        if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
+            binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+
+            DataTransmitter.getAreaPlain()?.id?.let { viewModel.getAreaPlain(it) }
+
         }
 
         binding.countryClear.setOnClickListener {

@@ -67,6 +67,15 @@ class RetrofitNetworkDirectoryClient(
                         Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
+
+                is Request.AreaPlainRequest -> {
+                    try {
+                        val response = directoryService.getAreaPlain(dto.areaId)
+                        response.apply { resultCode = 200 }
+                    }catch (e: Throwable) {
+                        Response().apply { resultCode = 500 }
+                    }
+                }
             }
         }
 

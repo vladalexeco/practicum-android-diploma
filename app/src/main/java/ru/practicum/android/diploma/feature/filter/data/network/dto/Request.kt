@@ -9,4 +9,6 @@ sealed class Request {
 
     class AreaRequest(val areaId: String) : Request()
 
+    class AreaPlainRequest(val areaId: String) : Request()
+
 }

@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -41,23 +42,29 @@ class SettingsFiltersFragment : Fragment() {
             var plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
+            showConfirmAndClearButtons(true)
         } else if (filterSettings.country != null) {
             binding.workPlaceTextInputEditText.setText(filterSettings.country!!.name)
-        } else if (filterSettings.areaPlain != null) {
-            binding.workPlaceTextInputEditText.setText(filterSettings.areaPlain!!.name)
+            showConfirmAndClearButtons(true)
         }
 
         if (filterSettings.industryPlain != null) {
             binding.industryTextInputEditText.setText(filterSettings.industryPlain!!.name)
+            showConfirmAndClearButtons(true)
         }
 
         if (filterSettings.expectedSalary != -1) {
             binding.filterSettingsExpectedSalaryEditText.setText(filterSettings.expectedSalary.toString())
+            showConfirmAndClearButtons(true)
         } else {
             binding.filterSettingsExpectedSalaryEditText.setText("")
         }
 
-        binding.doNotShowWithoutSalaryCheckBox.isChecked = filterSettings.notShowWithoutSalary
+        if (filterSettings.notShowWithoutSalary) {
+            binding.doNotShowWithoutSalaryCheckBox.isChecked = filterSettings.notShowWithoutSalary
+            showConfirmAndClearButtons(true)
+        }
+
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
 
@@ -79,6 +86,10 @@ class SettingsFiltersFragment : Fragment() {
             binding.industryTextInputEditText.setText("")
             binding.filterSettingsExpectedSalaryEditText.setText("")
             binding.doNotShowWithoutSalaryCheckBox.isChecked = false
+
+            viewModel.clearFilterSettings()
+
+            showConfirmAndClearButtons(false)
 
             DataTransmitter.postAreaPlain(null)
             DataTransmitter.postCountry(null)
@@ -141,6 +152,7 @@ class SettingsFiltersFragment : Fragment() {
             val industryName = DataTransmitter.getIndustryPlain()?.name
             binding.industryTextInputEditText.setText(industryName)
             renderIndustryTextInputLayout(industryName!!)
+            showConfirmAndClearButtons(true)
         }
 
         if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
@@ -148,10 +160,37 @@ class SettingsFiltersFragment : Fragment() {
                 "${DataTransmitter.getCountry()?.name}, ${DataTransmitter.getAreaPlain()?.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
+            showConfirmAndClearButtons(true)
         } else if (DataTransmitter.getCountry() != null) {
             binding.workPlaceTextInputEditText.setText(DataTransmitter.getCountry()?.name)
-        } else if (DataTransmitter.getAreaPlain() != null) {
-            binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
+            showConfirmAndClearButtons(true)
+        }
+
+        binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
+            if (text?.isNotEmpty() == true) {
+                showConfirmAndClearButtons(true)
+            } else {
+                if (binding.workPlaceTextInputEditText.text?.isEmpty() == true &&
+                    binding.industryTextInputEditText.text?.isEmpty() == true &&
+                    !binding.doNotShowWithoutSalaryCheckBox.isChecked
+                ) {
+                    showConfirmAndClearButtons(false)
+                }
+            }
+        }
+
+        binding.doNotShowWithoutSalaryCheckBox.setOnClickListener {
+            if (binding.doNotShowWithoutSalaryCheckBox.isChecked) {
+                showConfirmAndClearButtons(true)
+            } else {
+                if (binding.workPlaceTextInputEditText.text?.isEmpty() == true &&
+                    binding.industryTextInputEditText.text?.isEmpty() == true &&
+                    binding.filterSettingsExpectedSalaryEditText.text?.isEmpty() == true &&
+                    !binding.doNotShowWithoutSalaryCheckBox.isChecked
+                ) {
+                    showConfirmAndClearButtons(false)
+                }
+            }
         }
 
         binding.apply {
@@ -236,4 +275,15 @@ class SettingsFiltersFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun showConfirmAndClearButtons(isVisible: Boolean) {
+        if (isVisible) {
+            binding.confirmButton.visibility = View.VISIBLE
+            binding.resetSettingsTextview.visibility = View.VISIBLE
+        } else {
+            binding.confirmButton.visibility = View.GONE
+            binding.resetSettingsTextview.visibility = View.GONE
+        }
+    }
+
 }
