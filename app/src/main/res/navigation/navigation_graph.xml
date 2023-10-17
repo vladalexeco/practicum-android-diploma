@@ -20,7 +20,11 @@
         android:id="@+id/favouriteFragment"
         android:name="ru.practicum.android.diploma.feature.favourite.presentation.fragments.FavouriteFragment"
         android:label="fragment_favourite"
-        tools:layout="@layout/fragment_favourite" />
+        tools:layout="@layout/fragment_favourite" >
+        <action
+            android:id="@+id/action_favouriteFragment_to_vacancyFragment"
+            app:destination="@id/vacancyFragment" />
+    </fragment>
     <fragment
         android:id="@+id/commandFragment"
         android:name="ru.practicum.android.diploma.feature.command.presentation.fragments.CommandFragment"

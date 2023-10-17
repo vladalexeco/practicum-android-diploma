@@ -16,6 +16,7 @@ import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFullEntity
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.AddVacancyToFavouriteUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetFavoriteIdsUseCase
+import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetVacancyByIdUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.RemoveVacancyFromFavouriteUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacancyUseCase
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
@@ -27,7 +28,8 @@ class VacancyViewModel(
     private val getVacancyUseCase: GetVacancyUseCase,
     private val addVacancyToFavouriteUseCase: AddVacancyToFavouriteUseCase,
     private val removeVacancyFromFavouriteUseCase: RemoveVacancyFromFavouriteUseCase,
-    private val getFavoriteIdsUseCase: GetFavoriteIdsUseCase
+    private val getFavoriteIdsUseCase: GetFavoriteIdsUseCase,
+    private val getVacancyByIdUseCase: GetVacancyByIdUseCase,
 ) : ViewModel() {
 
     private var _dataState = MutableLiveData<DataState>()
@@ -101,5 +103,14 @@ class VacancyViewModel(
             val isFavorite = vacancyIds?.contains(vacancyId) == true
             _isFavorite.postValue(isFavorite)
         }
+    }
+
+    fun getVacancyById(vacancyId: String): LiveData<VacancyFull?> {
+        val vacancyLiveData = MutableLiveData<VacancyFull?>()
+        viewModelScope.launch(Dispatchers.IO) {
+            val vacancy = getVacancyByIdUseCase.getVacancyById(vacancyId)
+            vacancyLiveData.postValue(vacancy)
+        }
+        return vacancyLiveData
     }
 }
