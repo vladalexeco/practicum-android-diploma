@@ -18,13 +18,12 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         position: Int,
         clickListener: FilterAdapter.ClickListener,
         notifyItemChanged: () -> Unit,
-        setPositionChecked: (Boolean) -> Unit
     ) {
         name.text = model.name
         radioButton.apply {
             isChecked = model.isChecked
             setOnClickListener {
-                clickListener.onItemClicked(model, position, notifyItemChanged, setPositionChecked)
+                clickListener.onItemClicked(model, position, notifyItemChanged)
             }
         }
     }

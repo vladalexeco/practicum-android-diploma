@@ -76,9 +76,14 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             extendedIndustriesList
         }
 
-    fun onIndustryClicked(industry: Industry, position: Int) {
-        filteredIndustries[position].isChecked = industry.isChecked
-        _dataIndustry.postValue(industry)
+    fun onIndustryClicked(industryClicked: Industry, previousIndustryClicked: Industry?) {
+        val industryPosition = industries.indexOf(industryClicked)
+        val previousIndustryPosition = if (previousIndustryClicked!= null) industries.indexOf(previousIndustryClicked) else -1
+
+        industries[industryPosition] = industryClicked
+        if (previousIndustryPosition != -1) industries[previousIndustryPosition].isChecked = false
+
+        _dataIndustry.postValue(industryClicked)
     }
 
     fun onIndustryTextChanged(filterText: String?) {

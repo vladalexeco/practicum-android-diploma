@@ -28,6 +28,7 @@ class ChooseIndustryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
+    private var previousIndustryClicked: Industry? = null
 
     private var currentIndustryPlain: IndustryPlain? = null
 
@@ -85,15 +86,7 @@ class ChooseIndustryFragment : Fragment() {
             errorIndustryLayout.visibility = View.GONE
         }
         if (industriesAdapter == null) {
-            industriesAdapter =
-                FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
-                    industries[position] = (industry as Industry).copy(isChecked = !industry.isChecked)
-                    viewModel.onIndustryClicked(industries[position], position)
-                    notifyItemChanged.invoke()
-                    setPositionChecked.invoke(industries[position].isChecked)
-                    binding.chooseIndustryApproveButton.visibility =
-                        if (industries[position].isChecked) View.VISIBLE else View.GONE
-                }
+            initAdapter(industries)
             binding.chooseIndustryListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = industriesAdapter
@@ -104,6 +97,32 @@ class ChooseIndustryFragment : Fragment() {
                 items.addAll(industries)
                 notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun initAdapter(industries: ArrayList<Industry>) {
+        industriesAdapter = FilterAdapter(industries) { industry, position, notifyItemChanged ->
+
+            industriesAdapter!!.items[position].isChecked = !industry.isChecked
+            notifyItemChanged.invoke()
+
+            val previousAreaPosition = if (previousIndustryClicked != null)
+                industriesAdapter!!.items.indexOf(previousIndustryClicked) else -1
+            if (previousAreaPosition != -1) {
+                industriesAdapter!!.items[previousAreaPosition].isChecked = false
+                industriesAdapter!!.notifyItemChanged(previousAreaPosition)
+            }
+
+            val areaClicked = industriesAdapter!!.items[position]
+            if (previousAreaPosition != -1) previousIndustryClicked =
+                industriesAdapter!!.items[previousAreaPosition]
+
+            viewModel.onIndustryClicked(areaClicked, previousIndustryClicked)
+
+            previousIndustryClicked =
+                if (previousIndustryClicked != areaClicked) areaClicked else null
+            binding.chooseIndustryApproveButton.visibility =
+                if (industries[position].isChecked) View.VISIBLE else View.GONE
         }
     }
 

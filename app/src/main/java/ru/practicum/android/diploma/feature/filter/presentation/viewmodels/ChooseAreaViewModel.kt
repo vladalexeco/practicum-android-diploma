@@ -121,9 +121,14 @@ class ChooseAreaViewModel(
         }
     }
 
-    fun onAreaClicked(area: Area, position: Int) {
-        filteredAreas[position].isChecked = area.isChecked
-        _dataArea.postValue(area)
+    fun onAreaClicked(areaClicked: Area, previousAreaClicked: Area?) {
+        val areaPosition = areas.indexOf(areaClicked)
+        val previousAreaPosition = if (previousAreaClicked!= null) areas.indexOf(previousAreaClicked) else -1
+
+        areas[areaPosition] = areaClicked
+        if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
+
+        _dataArea.postValue(areaClicked)
     }
 
     fun onAreaTextChanged(filterText: String) {

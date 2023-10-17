@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.feature.filter.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,7 @@ class ChooseAreaFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ChooseAreaViewModel by viewModel()
     private var areasAdapter: FilterAdapter<Area>? = null
+    private var previousAreaClicked: Area? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +50,7 @@ class ChooseAreaFragment : Fragment() {
             }
         }
 
-        viewModel.dataArea.observe(viewLifecycleOwner) {area ->
+        viewModel.dataArea.observe(viewLifecycleOwner) { area ->
             if (area.isChecked) {
                 binding.chooseAreaApproveButton.visibility = View.VISIBLE
                 currentAreaPlain = area.mapToAreaPlain()
@@ -81,14 +83,7 @@ class ChooseAreaFragment : Fragment() {
             errorAreasLayout.visibility = View.GONE
         }
         if (areasAdapter == null) {
-            areasAdapter = FilterAdapter(areas) { area, position, notifyItemChanged, setPositionChecked ->
-                areas[position] = (area as Area).copy(isChecked = !area.isChecked)
-                viewModel.onAreaClicked(areas[position], position)
-                notifyItemChanged.invoke()
-                setPositionChecked.invoke(areas[position].isChecked)
-                binding.chooseAreaApproveButton.visibility =
-                    if (areas[position].isChecked) View.VISIBLE else View.GONE
-            }
+            initAdapter(areas)
             binding.chooseAreaListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = areasAdapter
@@ -99,6 +94,32 @@ class ChooseAreaFragment : Fragment() {
                 items.addAll(areas)
                 notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun initAdapter(areas: ArrayList<Area>) {
+        areasAdapter = FilterAdapter(areas) { area, position, notifyItemChanged ->
+
+            areasAdapter!!.items[position].isChecked = !area.isChecked
+            notifyItemChanged.invoke()
+
+            val previousAreaPosition = if (previousAreaClicked != null)
+                areasAdapter!!.items.indexOf(previousAreaClicked) else -1
+            if (previousAreaPosition != -1) {
+                areasAdapter!!.items[previousAreaPosition].isChecked = false
+                areasAdapter!!.notifyItemChanged(previousAreaPosition)
+            }
+
+            val areaClicked = areasAdapter!!.items[position]
+            if (previousAreaPosition != -1) previousAreaClicked =
+                areasAdapter!!.items[previousAreaPosition]
+
+            viewModel.onAreaClicked(areaClicked, previousAreaClicked)
+
+            previousAreaClicked =
+                if (previousAreaClicked != areaClicked) areaClicked else null
+            binding.chooseAreaApproveButton.visibility =
+                if (areas[position].isChecked) View.VISIBLE else View.GONE
         }
     }
 

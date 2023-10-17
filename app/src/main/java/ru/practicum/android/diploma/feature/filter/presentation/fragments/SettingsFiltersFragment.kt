@@ -87,7 +87,6 @@ class SettingsFiltersFragment : Fragment() {
 
             renderWorkplaceTextInputLayout("")
             renderIndustryTextInputLayout("")
-
         }
 
         binding.workPlaceTextInputEditText.setOnClickListener {
@@ -158,8 +157,6 @@ class SettingsFiltersFragment : Fragment() {
             binding.workPlaceTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
-        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
-
         binding.apply {
             workplaceClear.setOnClickListener {
                 binding.workPlaceTextInputEditText.setText("")
@@ -215,6 +212,12 @@ class SettingsFiltersFragment : Fragment() {
         DataTransmitter.postIndustryPlain(null)
         DataTransmitter.postCountry(null)
         DataTransmitter.postAreaPlain(null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        renderIndustryTextInputLayout(binding.industryTextInputEditText.text.toString())
+        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
     }
 
     override fun onDestroyView() {

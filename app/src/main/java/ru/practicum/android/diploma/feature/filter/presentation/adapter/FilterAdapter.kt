@@ -11,8 +11,6 @@ class FilterAdapter<T : IndustryAreaModel>(
     private val clickListener: ClickListener
 ) : RecyclerView.Adapter<FilterViewHolder>() {
 
-    private var positionChecked = -1
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder =
         FilterViewHolder(
             LayoutInflater.from(parent.context)
@@ -24,25 +22,14 @@ class FilterAdapter<T : IndustryAreaModel>(
             items[holder.adapterPosition],
             holder.adapterPosition,
             clickListener,
-            { notifyItemChanged(holder.adapterPosition) },
-            { isChecked: Boolean -> setPositionChecked(holder.adapterPosition, isChecked) })
+        ) { notifyItemChanged(holder.adapterPosition) }
 
         holder.itemView.setOnClickListener {
             clickListener.onItemClicked(
                 items[holder.adapterPosition],
                 holder.adapterPosition,
-                { notifyItemChanged(holder.adapterPosition) },
-                { isChecked: Boolean -> setPositionChecked(holder.adapterPosition, isChecked) }
-            )
+            ) { notifyItemChanged(holder.adapterPosition) }
         }
-    }
-
-    private fun setPositionChecked(position: Int, isChecked: Boolean) {
-        if (positionChecked > -1) {
-            items[positionChecked].isChecked = false
-            notifyItemChanged(positionChecked)
-        }
-        positionChecked = if (isChecked) position else -1
     }
 
     override fun getItemCount(): Int = items.size
@@ -52,7 +39,6 @@ class FilterAdapter<T : IndustryAreaModel>(
             model: IndustryAreaModel,
             position: Int,
             notifyItemChanged: () -> Unit,
-            setPositionChecked: (Boolean) -> Unit
         )
     }
 }
