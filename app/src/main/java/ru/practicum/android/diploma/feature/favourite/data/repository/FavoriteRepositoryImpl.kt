@@ -30,4 +30,9 @@ class FavoriteRepositoryImpl(private val appDatabase: AppDatabase): FavoriteRepo
         val listId= appDatabase.getVacancyDao().getAllVacancyIds()
         emit(listId)
     }
+
+    override suspend fun getVacancyById(id: String): VacancyFull? {
+        val vacancyEntity = appDatabase.getVacancyDao().getVacancyById(id)
+        return vacancyEntity?.toVacancyFull()
+    }
 }

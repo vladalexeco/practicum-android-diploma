@@ -18,4 +18,6 @@ interface FavoriteRepository {
 
     fun getAllVacancyIds(): Flow<List<String>>
 
+    suspend fun getVacancyById(id: String): VacancyFull?
+
 }

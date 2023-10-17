@@ -12,6 +12,8 @@ import ru.practicum.android.diploma.feature.details.domain.usecases.ShareVacancy
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.AddVacancyToFavouriteUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.RemoveVacancyFromFavouriteUseCase
+import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetVacancyByIdUseCase
+
 
 val detailsModule = module {
     viewModelOf(::VacancyViewModel)
@@ -20,6 +22,7 @@ val detailsModule = module {
     singleOf(::SendEmailUseCase)
     singleOf(::AddVacancyToFavouriteUseCase)
     singleOf(::RemoveVacancyFromFavouriteUseCase)
+    singleOf(::GetVacancyByIdUseCase)
     singleOf(::ExternalNavigatorImpl) bind ExternalNavigator::class
 
 }

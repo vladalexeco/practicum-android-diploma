@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFavouriteBinding
 import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFullEntity
 import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyShort
@@ -67,7 +69,9 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
     }
 
     override fun onClick(vacancy: VacancyShort) {
-
+        val bundle = Bundle()
+        bundle.putString("vacancyId", vacancy.id)
+        findNavController().navigate(R.id.action_favouriteFragment_to_vacancyFragment, bundle)
     }
 
     override fun onResume() {
