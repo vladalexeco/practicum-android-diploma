@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.favourite.domain.repository
 
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.feature.favourite.data.model.VacancyFullEntity
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
@@ -13,7 +14,7 @@ interface FavoriteRepository {
     suspend fun deleteVacancy(vacancyFull: VacancyFull)
 
 
-    fun getAllVacancy(): Flow<List<VacancyFull>>
+    fun getAllVacancy(): Flow<PagingData<VacancyFull>>
 
 
     fun getAllVacancyIds(): Flow<List<String>>

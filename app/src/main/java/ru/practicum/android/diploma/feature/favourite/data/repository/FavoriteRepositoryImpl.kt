@@ -1,5 +1,8 @@
 package ru.practicum.android.diploma.feature.favourite.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -20,9 +23,11 @@ class FavoriteRepositoryImpl(private val appDatabase: AppDatabase): FavoriteRepo
 
     }
 
-    override fun getAllVacancy(): Flow<List<VacancyFull>> = flow {
-        val listVacancies =appDatabase.getVacancyDao().getAllVacancy()
-        emit(listVacancies.map { it.toVacancyFull() })
+    override fun getAllVacancy(): Flow<PagingData<VacancyFull>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
+            pagingSourceFactory = { appDatabase.getVacancyDao().getAllVacancy() }
+        ).flow
     }
 
 
