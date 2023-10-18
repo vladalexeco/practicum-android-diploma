@@ -10,13 +10,21 @@ import ru.practicum.android.diploma.core.util.token
 
 interface HeadHunterApi {
 
-    @Headers("Authorization: Bearer $token",
-        "HH-User-Agent: HeadHunterApi (maximus616161@gmail.com)")
+    @Headers(
+        "Authorization: Bearer $token",
+        "HH-User-Agent: HeadHunterApi (maximus616161@gmail.com)"
+    )
 
-    // Данна функция является тестовой и не имеет фильтрации
     @GET("/vacancies?describe_arguments=true")
-    suspend fun getVacancies(@Query("text") text: String,
-                             @QueryMap options: Map<String, Int>): VacanciesDtoResponse
+    suspend fun getVacancies(
+        @Query("text") text: String,
+        @QueryMap options: Map<String, Int>,
+        @Query("area") area: String?,
+        @Query("area") region: String?,
+        @Query("industry") industry: String?,
+        @Query("salary") salary: Int?,
+        @Query("only_with_salary") withSalary: Boolean
+    ): VacanciesDtoResponse
 
     @GET("/vacancies/{vacancy_id}")
     suspend fun getVacancy(@Path("vacancy_id") id: String): VacancyDtoFull

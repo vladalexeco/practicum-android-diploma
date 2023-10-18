@@ -3,13 +3,13 @@ package ru.practicum.android.diploma.feature.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
+import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.Response
 
@@ -22,7 +22,8 @@ class RetrofitNetworkClient(
         dto: SearchRequest,
         pages: Int,
         perPage: Int,
-        page: Int
+        page: Int,
+        filterSettings: FilterSettings
     ): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
@@ -34,7 +35,15 @@ class RetrofitNetworkClient(
                     "per_page" to perPage,
                     "page" to page
                 )
-                val response = hhApi.getVacancies(dto.data, options)
+                val response = hhApi.getVacancies(
+                    dto.data,
+                    options,
+                    filterSettings.country?.id,
+                    filterSettings.areaPlain?.id,
+                    filterSettings.industryPlain?.id,
+                    if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
+                    filterSettings.notShowWithoutSalary
+                )
                 response.apply { resultCode = STATUS_CODE_SUCCESS }
             } catch (e: Throwable) {
                 Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }

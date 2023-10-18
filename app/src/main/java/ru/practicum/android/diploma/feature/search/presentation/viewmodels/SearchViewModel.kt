@@ -9,10 +9,14 @@ import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.debounce
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 
-class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : ViewModel() {
+class SearchViewModel(
+    private val getVacanciesUseCase: GetVacanciesUseCase,
+    private val filter: GetFilterSettingsUseCase
+) : ViewModel() {
 
     var currentPage = 0
     var totalPages = 0
@@ -47,11 +51,17 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
             renderState(VacanciesSearchState.Loading)
             viewModelScope.launch {
                 getVacanciesUseCase
-                    .getVacancies(newSearchText, pages, perPage, page)
+                    .getVacancies(newSearchText, pages, perPage, page, filter.invoke())
                     .collect { pair ->
                         when {
-                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(VacanciesSearchState.Error)
-                            pair.second == STATUS_CODE_SERVER_ERROR -> renderState(VacanciesSearchState.ServerError)
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(
+                                VacanciesSearchState.Error
+                            )
+
+                            pair.second == STATUS_CODE_SERVER_ERROR -> renderState(
+                                VacanciesSearchState.ServerError
+                            )
+
                             pair.first?.items.isNullOrEmpty() -> renderState(VacanciesSearchState.Empty)
                             else -> {
                                 currentPage = page
