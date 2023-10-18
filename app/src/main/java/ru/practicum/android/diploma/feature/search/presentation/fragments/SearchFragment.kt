@@ -48,7 +48,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             if (!isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
-                    && !viewModel.isLastPage()
+                    && !viewModel.isLastPage() && IsLastPage.IS_LAST_PAGE
                 ) {
                     viewModel.loadNextPage()
                 }
