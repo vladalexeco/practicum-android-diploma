@@ -22,9 +22,7 @@ class VacanciesAdapter(
         }
 
     fun setVacancyList(list: List<VacancyShort>) {
-        val vacanciesTmp = vacancies.toMutableList()
-        vacanciesTmp.addAll(list)
-        vacancies = vacanciesTmp
+        vacancies = list
     }
 
     fun clear() {

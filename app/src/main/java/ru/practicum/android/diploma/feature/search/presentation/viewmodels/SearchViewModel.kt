@@ -8,12 +8,14 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.core.util.debounce
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
+import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 
 class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : ViewModel() {
 
-    private var currentPage = 0
-    private var totalPages = 0
+    var currentPage = 0
+    var totalPages = 0
+    var vacanciesList: MutableSet<VacancyShort> = mutableSetOf()
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -74,6 +76,7 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
                                         response = pair.first!!,
                                     )
                                 )
+                                vacanciesList.addAll(pair.first!!.items)
                                 _isLoading.postValue(false)
                             }
                         }
@@ -83,18 +86,18 @@ class SearchViewModel(private val getVacanciesUseCase: GetVacanciesUseCase) : Vi
     }
 
     fun loadNextPage() {
-        IsLastPage.IS_LAST_PAGE = true
         if (!isLastPage()) {
+            IsLastPage.IS_LAST_PAGE = false
             val nextPage = currentPage + 1
             _isFirstLoad.postValue(false)
             _isLoading.postValue(true)
             searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
-            IsLastPage.IS_LAST_PAGE = false
         }
     }
 
     fun isLastPage(): Boolean {
-        IsLastPage.IS_LAST_PAGE = true // работает отсюда точно
+        IsLastPage.IS_LAST_PAGE = true
+        _isLoading.postValue(false)
         return currentPage == totalPages - 1
     }
 
