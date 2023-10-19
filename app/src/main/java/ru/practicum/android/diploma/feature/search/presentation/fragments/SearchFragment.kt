@@ -1,6 +1,8 @@
 package ru.practicum.android.diploma.feature.search.presentation.fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,15 +16,17 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.COUNTRY_KEY
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.LoadingItemBinding
+import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
-class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
+class SearchFragment() : Fragment(), VacanciesAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
 
@@ -32,7 +36,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     private var isLoading = false
     private var isFirstLoad = true
     private var lastVisibleItemPosition: Int = 0
-
 
     private var vacanciesAdapter: VacanciesAdapter? = null
 
@@ -50,12 +53,12 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && !viewModel.isLastPage()
-         ) {
-                viewModel.loadNextPage()
+                ) {
+                    viewModel.loadNextPage()
+                }
             }
         }
     }
-}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +67,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,6 +115,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
         binding.searchRecycler.addOnScrollListener(onScrollListener)
 
+        renderFilter()
     }
 
     private fun render(state: VacanciesSearchState) {
@@ -197,7 +202,9 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     private fun showVacanciesNumber(vacanciesSearchState: VacanciesSearchState) {
         if (vacanciesSearchState is VacanciesSearchState.Content) {
             binding.amountTextView.text = requireContext().resources.getQuantityString(
-                R.plurals.plural_vacancies, vacanciesSearchState.response.found, vacanciesSearchState.response.found
+                R.plurals.plural_vacancies,
+                vacanciesSearchState.response.found,
+                vacanciesSearchState.response.found
             )
         }
     }
@@ -211,5 +218,20 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     override fun onClick(vacancy: VacancyShort) {
         DataTransmitter.postId(vacancy.id)
         findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
+    }
+
+    private fun renderFilter() {
+        if (
+            viewModel.getFilters().country != null
+            || viewModel.getFilters().industryPlain != null
+            || viewModel.getFilters().areaPlain != null
+            || viewModel.getFilters().notShowWithoutSalary
+            || viewModel.getFilters().expectedSalary != NEGATIVE_BALANCE
+        )
+            binding.filterButtonImageView.setImageResource(R.drawable.ic_filter_on)
+    }
+
+    companion object {
+        const val NEGATIVE_BALANCE = -1
     }
 }
