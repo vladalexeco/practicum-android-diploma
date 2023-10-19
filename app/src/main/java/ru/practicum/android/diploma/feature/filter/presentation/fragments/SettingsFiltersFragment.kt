@@ -16,6 +16,9 @@ import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.Country
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -149,17 +152,19 @@ class SettingsFiltersFragment : Fragment() {
 
         }
 
-        if (DataTransmitter.getIndustryPlain() != null) {
+        if (DataTransmitter.getIndustryPlain() != null &&
+            DataTransmitter.getIndustryPlain()?.id?.isNotEmpty() == true) {
             val industryName = DataTransmitter.getIndustryPlain()?.name
             binding.industryTextInputEditText.setText(industryName)
             renderIndustryTextInputLayout(industryName!!)
             showConfirmAndClearButtons(true)
         }
 
-        if (DataTransmitter.getCountry() != null) {
+        if (DataTransmitter.getCountry() != null &&
+            DataTransmitter.getCountry()?.id?.isNotEmpty() == true) {
             val countryName = DataTransmitter.getCountry()!!.name
-            var workplaceText: String
-            var areaName: String
+            val workplaceText: String
+            val areaName: String
             if (DataTransmitter.getAreaPlain() != null) {
                 areaName = DataTransmitter.getAreaPlain()!!.name
                 workplaceText = "$countryName, $areaName"
@@ -202,13 +207,13 @@ class SettingsFiltersFragment : Fragment() {
         binding.apply {
             workplaceClear.setOnClickListener {
                 binding.workPlaceTextInputEditText.setText("")
-                DataTransmitter.postAreaPlain(null)
-                DataTransmitter.postCountry(null)
+                DataTransmitter.postAreaPlain(AreaPlain(id = "", name = ""))
+                DataTransmitter.postCountry(Country(id = "", name = ""))
                 renderWorkplaceTextInputLayout("")
             }
             industryClear.setOnClickListener {
                 binding.industryTextInputEditText.setText("")
-                DataTransmitter.postIndustryPlain(null)
+                DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
                 renderIndustryTextInputLayout("")
             }
         }
