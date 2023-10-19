@@ -13,7 +13,6 @@ import ru.practicum.android.diploma.feature.details.domain.usecases.MakeCallUseC
 import ru.practicum.android.diploma.feature.details.domain.usecases.SendEmailUseCase
 import ru.practicum.android.diploma.feature.details.domain.usecases.ShareVacancyUseCase
 import ru.practicum.android.diploma.feature.details.presentation.DataState
-import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFullEntity
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.AddVacancyToFavouriteUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetFavoriteIdsUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetVacancyByIdUseCase
@@ -31,6 +30,8 @@ class VacancyViewModel(
     private val getFavoriteIdsUseCase: GetFavoriteIdsUseCase,
     private val getVacancyByIdUseCase: GetVacancyByIdUseCase,
 ) : ViewModel() {
+
+    var currentVacancyFull: VacancyFull? = null
 
     private var _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState

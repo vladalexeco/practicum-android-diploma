@@ -26,8 +26,6 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class VacancyFragment : Fragment() {
 
-    private var currentVacancyFull: VacancyFull? = null
-
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
 
@@ -77,15 +75,15 @@ class VacancyFragment : Fragment() {
 
     private fun initListeners() {
         binding.vacancyContactEmailValue.setOnClickListener {
-            currentVacancyFull?.contacts?.email?.let { email ->
+            viewModel.currentVacancyFull?.contacts?.email?.let { email ->
                 viewModel.onContactEmailClicked(email)
             }
         }
         binding.vacancyContactPhoneValue.setOnClickListener {
-            currentVacancyFull?.contacts?.phones?.get(0)
+            viewModel.currentVacancyFull?.contacts?.phones?.get(0)
                 ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
         }
-        binding.sharingIcon.setOnClickListener { currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
+        binding.sharingIcon.setOnClickListener { viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
             viewModel.onShareVacancyClicked(alternateUrl)
             }
         }
@@ -99,7 +97,7 @@ class VacancyFragment : Fragment() {
         }
 
         binding.favoritesIcon.setOnClickListener {
-            currentVacancyFull?.let { vacancyFull ->
+            viewModel.currentVacancyFull?.let { vacancyFull ->
                 viewModel.onFavoriteButtonClick(vacancyFull)
             }
         }
@@ -138,7 +136,7 @@ class VacancyFragment : Fragment() {
     @SuppressLint("ResourceAsColor")
     private fun setContentToViews(vacancyFull: VacancyFull) {
 
-        currentVacancyFull = vacancyFull
+        viewModel.currentVacancyFull = vacancyFull
 
         // Наименование вакансии
         binding.vacancyName.text = vacancyFull.name
@@ -270,6 +268,6 @@ class VacancyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
+        viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 }
