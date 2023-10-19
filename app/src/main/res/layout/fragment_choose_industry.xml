@@ -72,10 +72,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/placeholder_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_placeholder" />
+            android:id="@+id/industries_error_image"
+            android:layout_width="@dimen/dimens_328"
+            android:layout_height="@dimen/dimens_224" />
 
         <TextView
             android:id="@+id/industry_error_text"
@@ -85,7 +84,7 @@
             android:layout_marginTop="@dimen/dimens_16"
             android:fontFamily="@font/ys_display_medium"
             android:textColor="@color/blackDayWhiteNight"
-            android:textSize="@dimen/textSize_16" />
+            android:textSize="@dimen/textSize_22" />
 
     </LinearLayout>
 

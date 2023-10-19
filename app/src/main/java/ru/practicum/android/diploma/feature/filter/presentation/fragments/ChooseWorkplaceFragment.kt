@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -40,7 +42,6 @@ class ChooseWorkplaceFragment : Fragment() {
                 DataTransmitter.postCountry(null)
                 DataTransmitter.postAreaPlain(null)
             }
-
         })
 
         viewModel.dataAreaPlain.observe(viewLifecycleOwner) { areaPlain ->
@@ -54,6 +55,18 @@ class ChooseWorkplaceFragment : Fragment() {
             }
         }
 
+        viewModel.initScreenData()
+
+        viewModel.dataCountry.observe(viewLifecycleOwner) {
+            binding.chooseCountryTextInputEditText.setText(it)
+            renderCountryTextInputLayout(it)
+        }
+
+        viewModel.dataArea.observe(viewLifecycleOwner) {
+            binding.areaTextInputEditText.setText(it)
+            renderAreaTextInputLayout(it)
+        }
+
         binding.chooseWorkplaceBackArrowImageview.setOnClickListener {
             findNavController().popBackStack(R.id.settingsFiltersFragment, false)
             DataTransmitter.postCountry(null)
@@ -64,24 +77,35 @@ class ChooseWorkplaceFragment : Fragment() {
             findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseCountryFragment)
         }
 
-        binding.regionTextInputEditText.setOnClickListener {
+        binding.areaTextInputEditText.setOnClickListener {
+            findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseRegionFragment)
+        }
+
+        binding.countryArrowForward.setOnClickListener {
+            findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseCountryFragment)
+        }
+
+        binding.areaArrowForward.setOnClickListener {
             findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_chooseRegionFragment)
         }
 
         binding.chooseButton.setOnClickListener {
             if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
-                binding.regionTextInputEditText.text?.isEmpty() == true) {
+                binding.areaTextInputEditText.text?.isEmpty() == true
+            ) {
 
                 DataTransmitter.postAreaPlain(AreaPlain(id = "", name = ""))
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
 
-            } else if(binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
+            } else if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true &&
 
-                binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+                binding.areaTextInputEditText.text?.isNotEmpty() == true
+            ) {
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
 
             } else if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
-                binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+                binding.areaTextInputEditText.text?.isNotEmpty() == true
+            ) {
                 DataTransmitter.postCountry(Country(id = "", name = ""))
                 findNavController().navigate(R.id.action_chooseWorkplaceFragment_to_settingsFiltersFragment)
             }
@@ -92,14 +116,70 @@ class ChooseWorkplaceFragment : Fragment() {
         }
 
         if (DataTransmitter.getAreaPlain() != null) {
-            binding.regionTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
+            binding.areaTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
         }
 
         if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
-            binding.regionTextInputEditText.text?.isNotEmpty() == true) {
+            binding.areaTextInputEditText.text?.isNotEmpty() == true
+        ) {
 
             DataTransmitter.getAreaPlain()?.id?.let { viewModel.getAreaPlain(it) }
 
+        }
+
+        binding.countryClear.setOnClickListener {
+            viewModel.onCountryCleared()
+            viewModel.onAreaCleared()
+        }
+
+        binding.areaClear.setOnClickListener {
+            viewModel.onAreaCleared()
+        }
+
+        binding.chooseCountryTextInputEditText.doOnTextChanged { text, _, _, _ ->
+            renderCountryTextInputLayout(text.toString())
+        }
+    }
+
+    private fun renderAreaTextInputLayout(areaName: String) {
+        if (areaName.isNotEmpty()) {
+            binding.apply {
+                areaTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.black_to_white_color
+                    )
+                areaClear.visibility = View.VISIBLE
+                areaArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                areaTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                areaClear.visibility = View.GONE
+                areaArrowForward.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun renderCountryTextInputLayout(countryName: String) {
+        if (countryName.isNotEmpty()) {
+            binding.apply {
+                chooseCountryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.black_to_white_color
+                    )
+                countryClear.visibility = View.VISIBLE
+                countryArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                chooseCountryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                countryClear.visibility = View.GONE
+                countryArrowForward.visibility = View.VISIBLE
+            }
         }
     }
 
