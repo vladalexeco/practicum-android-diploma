@@ -9,7 +9,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -39,7 +38,7 @@ class SettingsFiltersFragment : Fragment() {
         var filterSettings: FilterSettings = viewModel.getFilterSettings()
 
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
-            var plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
+            var plainText = "${filterSettings.country!!.name}, ${filterSettings.areaPlain!!.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
             showConfirmAndClearButtons(true)
@@ -56,8 +55,10 @@ class SettingsFiltersFragment : Fragment() {
         if (filterSettings.expectedSalary != -1) {
             binding.filterSettingsExpectedSalaryEditText.setText(filterSettings.expectedSalary.toString())
             showConfirmAndClearButtons(true)
+            binding.clearSalaryImageView.visibility = View.VISIBLE
         } else {
             binding.filterSettingsExpectedSalaryEditText.setText("")
+            binding.clearSalaryImageView.visibility = View.GONE
         }
 
         if (filterSettings.notShowWithoutSalary) {
@@ -155,14 +156,18 @@ class SettingsFiltersFragment : Fragment() {
             showConfirmAndClearButtons(true)
         }
 
-        if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            var plainText =
-                "${DataTransmitter.getCountry()?.name}, ${DataTransmitter.getAreaPlain()?.name}"
-            plainText = plainText.trim()
-            binding.workPlaceTextInputEditText.setText(plainText)
-            showConfirmAndClearButtons(true)
-        } else if (DataTransmitter.getCountry() != null) {
-            binding.workPlaceTextInputEditText.setText(DataTransmitter.getCountry()?.name)
+        if (DataTransmitter.getCountry() != null) {
+            val countryName = DataTransmitter.getCountry()!!.name
+            var workplaceText: String
+            var areaName: String
+            if (DataTransmitter.getAreaPlain() != null) {
+                areaName = DataTransmitter.getAreaPlain()!!.name
+                workplaceText = "$countryName, $areaName"
+            } else {
+                workplaceText = countryName
+            }
+            binding.workPlaceTextInputEditText.setText(workplaceText)
+            renderIndustryTextInputLayout(workplaceText)
             showConfirmAndClearButtons(true)
         }
 
@@ -177,6 +182,7 @@ class SettingsFiltersFragment : Fragment() {
                     showConfirmAndClearButtons(false)
                 }
             }
+            clearButtonVisibility(text)
         }
 
         binding.doNotShowWithoutSalaryCheckBox.setOnClickListener {
@@ -205,10 +211,6 @@ class SettingsFiltersFragment : Fragment() {
                 DataTransmitter.postIndustryPlain(null)
                 renderIndustryTextInputLayout("")
             }
-        }
-
-        binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
-            clearButtonVisibility(text)
         }
 
         binding.clearSalaryImageView.setOnClickListener {

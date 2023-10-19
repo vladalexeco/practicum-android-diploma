@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -128,10 +129,15 @@ class ChooseWorkplaceFragment : Fragment() {
 
         binding.countryClear.setOnClickListener {
             viewModel.onCountryCleared()
+            viewModel.onAreaCleared()
         }
 
         binding.areaClear.setOnClickListener {
             viewModel.onAreaCleared()
+        }
+
+        binding.chooseCountryTextInputEditText.doOnTextChanged { text, _, _, _ ->
+            renderCountryTextInputLayout(text.toString())
         }
     }
 

@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.core.util
 
-import android.util.Log
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
@@ -23,31 +22,25 @@ object DataTransmitter {
 
     fun postAreaPlain(areaPlain: AreaPlain?) {
         currentAreaPlain = areaPlain
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentAreaPlain")
     }
 
     fun getAreaPlain(): AreaPlain? {
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentAreaPlain")
         return currentAreaPlain
     }
 
     fun postCountry(country: Country?) {
         currentCountry = country
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentCountry")
     }
 
     fun getCountry(): Country? {
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentCountry")
         return currentCountry
     }
 
     fun postIndustryPlain(industryPlain: IndustryPlain?) {
         currentIndustryPlain = industryPlain
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentIndustryPlain")
     }
 
     fun getIndustryPlain(): IndustryPlain? {
-        Log.d("!@#", "${object{}.javaClass.enclosingMethod?.name} $currentIndustryPlain")
         return currentIndustryPlain
     }
 

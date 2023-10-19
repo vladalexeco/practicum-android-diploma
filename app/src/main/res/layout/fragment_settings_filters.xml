@@ -50,7 +50,7 @@
         app:boxStrokeWidthFocused="0dp"
         app:errorEnabled="false"
         app:hintTextColor="@color/blackDayWhiteNight"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/workplace_arrow_forward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/settings_header_textview">
 
@@ -107,7 +107,7 @@
         app:boxStrokeWidthFocused="0dp"
         app:errorEnabled="false"
         app:hintTextColor="@color/blackDayWhiteNight"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/industry_arrow_forward"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/work_place_textInputLayout">
 
