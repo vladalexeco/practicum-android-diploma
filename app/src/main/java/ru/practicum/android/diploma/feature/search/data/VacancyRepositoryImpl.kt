@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.core.util.Resource
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
+import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.search.data.network.SearchRequest
 import ru.practicum.android.diploma.feature.search.data.network.VacanciesDtoResponse
 import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoResponse
@@ -17,9 +18,16 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
         expression: String,
         pages: Int,
         perPage: Int,
-        page: Int
+        page: Int,
+        filterSettings: FilterSettings
     ): Flow<Resource<VacanciesResponse>> = flow {
-        val response = networkClient.getVacancies(SearchRequest(expression), page, perPage, page)
+        val response = networkClient.getVacancies(
+            SearchRequest(expression),
+            page,
+            perPage,
+            page,
+            filterSettings
+        )
         when (response.resultCode) {
             STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(errorCode = response.resultCode))
             STATUS_CODE_SUCCESS ->
