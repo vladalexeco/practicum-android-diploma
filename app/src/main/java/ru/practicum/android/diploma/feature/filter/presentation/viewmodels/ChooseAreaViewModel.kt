@@ -28,7 +28,7 @@ class ChooseAreaViewModel(
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
 
     private var areas = arrayListOf<Area>()
-    private lateinit var filteredAreas: List<Area>
+    private var filteredAreas: List<Area>? = null
 
     init {
         initScreen()
@@ -82,9 +82,17 @@ class ChooseAreaViewModel(
                 clear()
                 addAll(getAreasList(result.data))
             }
-            filteredAreas = areas
-            areasStateLiveData.value =
-                AreasState.DisplayAreas(filteredAreas)
+            if (areas.isNotEmpty()) {
+                filteredAreas = areas
+                areasStateLiveData.value =
+                    AreasState.DisplayAreas(filteredAreas!!)
+            } else {
+                areasStateLiveData.value =
+                    AreasState.Error(
+                        "Не удалось получить список",
+                        R.drawable.areas_placeholder_can_not_receive_list
+                    )
+            }
         } else {
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> areasStateLiveData.value =
@@ -123,7 +131,8 @@ class ChooseAreaViewModel(
 
     fun onAreaClicked(areaClicked: Area, previousAreaClicked: Area?) {
         val areaPosition = areas.indexOf(areaClicked)
-        val previousAreaPosition = if (previousAreaClicked!= null) areas.indexOf(previousAreaClicked) else -1
+        val previousAreaPosition =
+            if (previousAreaClicked != null) areas.indexOf(previousAreaClicked) else -1
 
         areas[areaPosition] = areaClicked
         if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
@@ -136,15 +145,22 @@ class ChooseAreaViewModel(
     }
 
     private fun filterAreas(filterText: String?) {
+        if (filteredAreas == null) {
+            areasStateLiveData.value = AreasState.Error(
+                "Не удалось получить список",
+                R.drawable.areas_placeholder_can_not_receive_list
+            )
+            return
+        }
         if (filterText.isNullOrEmpty()) {
             filteredAreas = areas
-            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas)
+            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
         } else {
             filteredAreas = areas.filter {
                 it.name.contains(filterText, true)
             }
-            if (filteredAreas.isNotEmpty()) {
-                areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas)
+            if (filteredAreas!!.isNotEmpty()) {
+                areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
             } else {
                 areasStateLiveData.value = AreasState.Error(
                     "Такого региона нет",
