@@ -20,7 +20,7 @@ import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAn
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
-class SearchFragment() : Fragment(), VacanciesAdapter.ClickListener {
+class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
 

@@ -28,8 +28,7 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.searchFragment,
                 R.id.favouriteFragment,
-                R.id.commandFragment,
-                -> {
+                R.id.commandFragment -> {
                     binding?.bottomNavigationView?.isVisible = true
                 }
 
