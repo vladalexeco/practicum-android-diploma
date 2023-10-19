@@ -130,7 +130,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             binding.progressBar.visibility = View.VISIBLE
         } else {
             binding.progressBar.visibility = View.GONE
-            IsLastPage.IS_LAST_PAGE = true
         }
     }
 
