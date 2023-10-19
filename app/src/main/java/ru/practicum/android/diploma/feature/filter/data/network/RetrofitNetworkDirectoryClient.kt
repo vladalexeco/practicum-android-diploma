@@ -71,9 +71,9 @@ class RetrofitNetworkDirectoryClient(
                 is Request.AreaPlainRequest -> {
                     try {
                         val response = directoryService.getAreaPlain(dto.areaId)
-                        response.apply { resultCode = 200 }
+                        response.apply { resultCode = STATUS_CODE_SUCCESS }
                     }catch (e: Throwable) {
-                        Response().apply { resultCode = 500 }
+                        Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
                     }
                 }
             }
@@ -87,13 +87,10 @@ class RetrofitNetworkDirectoryClient(
         val connectivityManager = context.getSystemService(
             Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-            }
-        }
-        return false
+        return capabilities?.run {
+            hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } ?: false
     }
 }
