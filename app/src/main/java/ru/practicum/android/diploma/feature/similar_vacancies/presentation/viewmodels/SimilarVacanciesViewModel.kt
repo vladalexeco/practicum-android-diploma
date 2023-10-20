@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
@@ -18,16 +17,12 @@ class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimil
     private val _stateLiveData = MutableLiveData<SimilarSearchState>()
     val stateLiveData : LiveData<SimilarSearchState> = _stateLiveData
 
-    init {
-        searchSimilarVacancies()
-    }
-
-    private fun searchSimilarVacancies() {
+    fun searchSimilarVacancies(vacancyId: String) {
             renderState(SimilarSearchState.Loading)
 
             viewModelScope.launch (Dispatchers.IO) {
                 getSimilarVacanciesUseCase
-                    .getSimilarVacancies(DataTransmitter.getId())
+                    .getSimilarVacancies(vacancyId)
                     .collect { pair ->
                         when {
                             pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(SimilarSearchState.Error)

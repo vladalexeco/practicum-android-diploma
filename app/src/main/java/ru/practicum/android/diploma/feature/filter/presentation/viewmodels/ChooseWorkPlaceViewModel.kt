@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +35,6 @@ class ChooseWorkPlaceViewModel(
                 if (result.first != null) {
                     _dataAreaPlain.postValue(result.first)
                 } else {
-                    Log.d("CHECK_AREA_PLAIN", result.second.toString())
                 }
 
             }

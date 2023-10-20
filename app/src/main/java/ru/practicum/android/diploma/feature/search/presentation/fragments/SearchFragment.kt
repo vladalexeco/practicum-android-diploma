@@ -9,22 +9,23 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.core.util.IsLastPage
-import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
+import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
+    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -215,7 +216,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        DataTransmitter.postId(vacancy.id)
+        sharedViewModel.vacancyId = vacancy.id
         findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
     }
 
