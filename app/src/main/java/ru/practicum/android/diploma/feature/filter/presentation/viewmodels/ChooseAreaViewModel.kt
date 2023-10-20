@@ -7,19 +7,28 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
+import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAllAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCase
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 
-class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel() {
+class ChooseAreaViewModel(
+    private val areasUseCase: GetAreasUseCase,
+    private val areasAllUseCase: GetAllAreasUseCase
+) : ViewModel() {
 
-    //todo замемнить на реальный areaId
-    private val areaId = "113"
+    private var _dataArea = MutableLiveData<Area>()
+    val dataArea: LiveData<Area> = _dataArea
 
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
+
+    private var areas = arrayListOf<Area>()
+    private var filteredAreas: List<Area>? = null
 
     init {
         initScreen()
@@ -27,24 +36,76 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
 
     private fun initScreen() {
         viewModelScope.launch {
-            areasUseCase.invoke(areaId).collect { result ->
-                processResult(result)
+            if (DataTransmitter.getCountry() != null) {
+                areasUseCase.invoke(DataTransmitter.getCountry()!!.id).collect { result ->
+                    processResult(result)
+                }
+            } else {
+                areasAllUseCase.invoke().collect { result ->
+
+                    val networkError: NetworkError? = result.networkError
+
+                    if (networkError != null) {
+                        processResult(result)
+                    } else {
+
+                        var data: List<Area>? = result.data
+
+                        data = data?.filter { area -> area.name != "Другие регионы" }
+
+                        val totalAreas: ArrayList<Area> = ArrayList()
+
+                        if (data != null) {
+                            for (country in data) {
+                                country.areas.forEach { area ->
+                                    totalAreas.add(area)
+                                }
+                            }
+                        }
+
+                        val dataResponse: DataResponse<Area> =
+                            DataResponse(data = totalAreas, networkError = null)
+
+                        processResult(dataResponse)
+
+                    }
+
+                }
             }
+
         }
     }
 
     private suspend fun processResult(result: DataResponse<Area>) {
-
         if (result.data != null) {
-            areasStateLiveData.value =
-                AreasState.DisplayAreas(getAreasList(result.data))
-        }
-        else {
+            areas.apply {
+                clear()
+                addAll(getAreasList(result.data))
+            }
+            if (areas.isNotEmpty()) {
+                filteredAreas = areas
+                areasStateLiveData.value =
+                    AreasState.DisplayAreas(filteredAreas!!)
+            } else {
+                areasStateLiveData.value =
+                    AreasState.Error(
+                        "Не удалось получить список",
+                        R.drawable.areas_placeholder_can_not_receive_list
+                    )
+            }
+        } else {
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> areasStateLiveData.value =
-                    AreasState.Error("Проверьте подключение к интернету")
+                    AreasState.Error(
+                        "Нет интернета",
+                        R.drawable.search_placeholder_internet_problem
+                    )
+
                 NetworkError.SERVER_ERROR -> areasStateLiveData.value =
-                    AreasState.Error("Ошибка сервера")
+                    AreasState.Error(
+                        "Ошибка сервера",
+                        R.drawable.search_placeholder_server_not_responding
+                    )
             }
         }
     }
@@ -68,7 +129,44 @@ class ChooseAreaViewModel(private val areasUseCase: GetAreasUseCase) : ViewModel
         }
     }
 
-    fun onAreaClicked(area: Area) {
-        //todo
+    fun onAreaClicked(areaClicked: Area, previousAreaClicked: Area?) {
+        val areaPosition = areas.indexOf(areaClicked)
+        val previousAreaPosition =
+            if (previousAreaClicked != null) areas.indexOf(previousAreaClicked) else -1
+
+        areas[areaPosition] = areaClicked
+        if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
+
+        _dataArea.postValue(areaClicked)
+    }
+
+    fun onAreaTextChanged(filterText: String) {
+        filterAreas(filterText)
+    }
+
+    private fun filterAreas(filterText: String?) {
+        if (filteredAreas == null) {
+            areasStateLiveData.value = AreasState.Error(
+                "Не удалось получить список",
+                R.drawable.areas_placeholder_can_not_receive_list
+            )
+            return
+        }
+        if (filterText.isNullOrEmpty()) {
+            filteredAreas = areas
+            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+        } else {
+            filteredAreas = areas.filter {
+                it.name.contains(filterText, true)
+            }
+            if (filteredAreas!!.isNotEmpty()) {
+                areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+            } else {
+                areasStateLiveData.value = AreasState.Error(
+                    "Такого региона нет",
+                    R.drawable.search_placeholder_nothing_found
+                )
+            }
+        }
     }
 }

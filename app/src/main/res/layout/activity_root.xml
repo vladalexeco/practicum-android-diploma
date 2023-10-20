@@ -31,6 +31,7 @@
         style="@style/NavigationViewStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:itemRippleColor="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

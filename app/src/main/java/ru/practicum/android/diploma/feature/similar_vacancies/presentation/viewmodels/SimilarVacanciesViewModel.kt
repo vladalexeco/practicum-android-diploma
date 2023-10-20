@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.DataTransmitter
+import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.feature.similar_vacancies.domain.GetSimilarVacanciesUseCase
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 
@@ -27,36 +30,13 @@ class SimilarVacanciesViewModel(private val getSimilarVacanciesUseCase: GetSimil
                     .getSimilarVacancies(DataTransmitter.getId())
                     .collect { pair ->
                         when {
-                            pair.second == -1 || pair.second == 400 -> {
-                                renderState(
-                                    SimilarSearchState.Error
-                                )
-                            }
-
-                            pair.second == 500 -> {
-                                renderState(
-                                    SimilarSearchState.ServerError
-                                )
-                            }
-
-                            pair.first?.items.isNullOrEmpty() -> {
-                                renderState(
-                                    SimilarSearchState.Empty
-                                )
-                            }
-
-                            else -> {
-                                renderState(
-                                    SimilarSearchState.Content(
-                                        response = pair.first!!
-                                    )
-                                )
-
-                            }
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(SimilarSearchState.Error)
+                            pair.second == STATUS_CODE_SERVER_ERROR -> renderState(SimilarSearchState.ServerError)
+                            pair.first?.items.isNullOrEmpty() -> renderState(SimilarSearchState.Empty)
+                            else -> renderState(SimilarSearchState.Content(response = pair.first!!))
                         }
                     }
             }
-
     }
 
     private fun renderState(state: SimilarSearchState) {

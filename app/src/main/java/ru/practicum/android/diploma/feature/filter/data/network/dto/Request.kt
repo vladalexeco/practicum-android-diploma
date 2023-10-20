@@ -5,5 +5,10 @@ sealed class Request {
 
     object CountryRequest : Request()
 
+    object AllAreasRequest : Request()
+
     class AreaRequest(val areaId: String) : Request()
+
+    class AreaPlainRequest(val areaId: String) : Request()
+
 }

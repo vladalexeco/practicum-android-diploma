@@ -1,8 +1,13 @@
 package ru.practicum.android.diploma.feature.details.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,12 +44,34 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentVacancyFull?.id?.let{DataTransmitter.postId(it)}
+        val vacancyId = arguments?.getString("vacancyId")
+
+
+        if (!isNetworkAvailable(requireContext())) {
+            if (vacancyId != null) {
+                viewModel.getVacancyById(vacancyId).observe(viewLifecycleOwner) { vacancy ->
+                    Log.d("id", "${vacancy?.id}")
+                    if (vacancy != null) {
+                        render(DataState.DataReceived(vacancy))
+                        viewModel.checkFavoriteStatus(vacancy)
+                        binding.similarVacanciesButton.visibility=View.GONE
+                    }
+                }
+            }
+        }
+
+        //currentVacancyFull?.id?.let{DataTransmitter.postId(it)}
+        if (vacancyId != null) {
+            DataTransmitter.postId(vacancyId)
+        }
 
         initListeners()
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
             render(dataState)
+            if (dataState is DataState.DataReceived) {
+                viewModel.checkFavoriteStatus(dataState.data)
+            }
         }
     }
 
@@ -70,6 +97,16 @@ class VacancyFragment : Fragment() {
         binding.similarVacanciesButton.setOnClickListener {
             findNavController().navigate(R.id.action_vacancyFragment_to_similarVacanciesFragment)
         }
+
+        binding.favoritesIcon.setOnClickListener {
+            currentVacancyFull?.let { vacancyFull ->
+                viewModel.onFavoriteButtonClick(vacancyFull)
+            }
+        }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            setFabIcon(isFavorite)
+        }
     }
 
     override fun onDestroy() {
@@ -92,6 +129,7 @@ class VacancyFragment : Fragment() {
             is DataState.DataReceived -> {
                 setContentToViews(vacancyFull = dataState.data)
                 showContent()
+                viewModel.checkFavoriteStatus(dataState.data)
             }
         }
 
@@ -186,19 +224,52 @@ class VacancyFragment : Fragment() {
 
     private fun showLoader() {
         binding.detailsLoaderProgressBar.visibility = View.VISIBLE
-        binding.detailsMainScreenScrollView.visibility = View.GONE
-        binding.detailsErrorMessageTextView.visibility = View.GONE
+        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
+        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
     }
 
     private fun showContent() {
         binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenScrollView.visibility = View.VISIBLE
-        binding.detailsErrorMessageTextView.visibility = View.GONE
+        binding.detailsMainScreenConstraintLayout.visibility = View.VISIBLE
+        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
     }
 
     private fun showErrorMessage() {
         binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenScrollView.visibility = View.GONE
-        binding.detailsErrorMessageTextView.visibility = View.VISIBLE
+        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
+        binding.detailsErrorMessageLinearLayout.visibility = View.VISIBLE
+    }
+
+    private fun setFabIcon(isFavorite: Boolean) {
+        binding.favoritesIcon.setImageResource(
+            if (isFavorite) R.drawable.ic_favorite_on else R.drawable.ic_favorite_off
+        )
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities =
+                connectivityManager.activeNetwork ?: return false
+            val activeNetwork =
+                connectivityManager.getNetworkCapabilities(networkCapabilities)
+                    ?: return false
+
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 }
