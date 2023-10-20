@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseIndustryBinding
@@ -25,6 +28,7 @@ class ChooseIndustryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
     private var industriesAdapter: FilterAdapter<Industry>? = null
+    private var previousIndustryClicked: Industry? = null
 
     private var currentIndustryPlain: IndustryPlain? = null
 
@@ -42,8 +46,8 @@ class ChooseIndustryFragment : Fragment() {
 
         viewModel.observeIndustriesState().observe(viewLifecycleOwner) { state ->
             when (state) {
-                is IndustriesState.DisplayIndustries -> displayIndustries(state.industries)
-                is IndustriesState.Error -> displayError(state.errorText)
+                is IndustriesState.DisplayIndustries -> displayIndustries(ArrayList(state.industries))
+                is IndustriesState.Error -> displayError(state)
                 else -> {}
             }
         }
@@ -70,6 +74,10 @@ class ChooseIndustryFragment : Fragment() {
         binding.chooseIndustryBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.chooseIndustryEnterFieldEdittext.doOnTextChanged { text, _, _, _ ->
+            viewModel.onIndustryTextChanged(text.toString())
+        }
     }
 
     private fun displayIndustries(industries: ArrayList<Industry>) {
@@ -78,28 +86,57 @@ class ChooseIndustryFragment : Fragment() {
             errorIndustryLayout.visibility = View.GONE
         }
         if (industriesAdapter == null) {
-            industriesAdapter =
-                FilterAdapter(industries) { industry, position, notifyItemChanged, setPositionChecked ->
-                    industries[position] = (industry as Industry).copy(isChecked = !industry.isChecked)
-                    viewModel.onIndustryClicked(industries[position])
-                    notifyItemChanged.invoke()
-                    setPositionChecked.invoke(industries[position].isChecked)
-                }
+            initAdapter(industries)
             binding.chooseIndustryListRecycleView.apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = industriesAdapter
             }
         } else {
-            //todo
+            industriesAdapter!!.apply {
+                items.clear()
+                items.addAll(industries)
+                notifyDataSetChanged()
+            }
         }
     }
 
-    private fun displayError(errorText: String) {
+    private fun initAdapter(industries: ArrayList<Industry>) {
+        industriesAdapter = FilterAdapter(industries) { industry, position, notifyItemChanged ->
+
+            industriesAdapter!!.items[position].isChecked = !industry.isChecked
+            notifyItemChanged.invoke()
+
+            val previousAreaPosition = if (previousIndustryClicked != null)
+                industriesAdapter!!.items.indexOf(previousIndustryClicked) else -1
+            if (previousAreaPosition != -1) {
+                industriesAdapter!!.items[previousAreaPosition].isChecked = false
+                industriesAdapter!!.notifyItemChanged(previousAreaPosition)
+            }
+
+            val areaClicked = industriesAdapter!!.items[position]
+            if (previousAreaPosition != -1) previousIndustryClicked =
+                industriesAdapter!!.items[previousAreaPosition]
+
+            viewModel.onIndustryClicked(areaClicked, previousIndustryClicked)
+
+            previousIndustryClicked =
+                if (previousIndustryClicked != areaClicked) areaClicked else null
+            binding.chooseIndustryApproveButton.visibility =
+                if (industries[position].isChecked) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun displayError(state: IndustriesState.Error) {
         binding.apply {
             chooseIndustryListRecycleView.visibility = View.INVISIBLE
             errorIndustryLayout.visibility = View.VISIBLE
-            industryErrorText.text = errorText
+            industryErrorText.text = state.errorText
         }
+        Glide
+            .with(requireContext())
+            .load(state.drawableId)
+            .transform(CenterCrop())
+            .into(binding.industriesErrorImage)
     }
 
     override fun onDestroyView() {

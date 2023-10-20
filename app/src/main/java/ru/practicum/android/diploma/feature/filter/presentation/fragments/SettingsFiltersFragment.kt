@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.widget.doOnTextChanged
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
@@ -15,6 +16,9 @@ import ru.practicum.android.diploma.databinding.FragmentSettingsFiltersBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.SettingsFiltersViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.Country
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 class SettingsFiltersFragment : Fragment() {
 
@@ -37,7 +41,7 @@ class SettingsFiltersFragment : Fragment() {
         var filterSettings: FilterSettings = viewModel.getFilterSettings()
 
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
-            var plainText = "${filterSettings.country!!.name}\n${filterSettings.areaPlain!!.name}"
+            var plainText = "${filterSettings.country!!.name}, ${filterSettings.areaPlain!!.name}"
             plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
             showConfirmAndClearButtons(true)
@@ -54,8 +58,10 @@ class SettingsFiltersFragment : Fragment() {
         if (filterSettings.expectedSalary != -1) {
             binding.filterSettingsExpectedSalaryEditText.setText(filterSettings.expectedSalary.toString())
             showConfirmAndClearButtons(true)
+            binding.clearSalaryImageView.visibility = View.VISIBLE
         } else {
             binding.filterSettingsExpectedSalaryEditText.setText("")
+            binding.clearSalaryImageView.visibility = View.GONE
         }
 
         if (filterSettings.notShowWithoutSalary) {
@@ -89,11 +95,15 @@ class SettingsFiltersFragment : Fragment() {
 
             showConfirmAndClearButtons(false)
 
+            DataTransmitter.postAreaPlain(null)
+            DataTransmitter.postCountry(null)
+            DataTransmitter.postIndustryPlain(null)
+
+            renderWorkplaceTextInputLayout("")
+            renderIndustryTextInputLayout("")
         }
 
         binding.workPlaceTextInputEditText.setOnClickListener {
-            DataTransmitter.postCountry(null)
-            DataTransmitter.postAreaPlain(null)
             findNavController().navigate(R.id.action_settingsFiltersFragment_to_chooseWorkplaceFragment)
         }
 
@@ -142,19 +152,27 @@ class SettingsFiltersFragment : Fragment() {
 
         }
 
-        if (DataTransmitter.getIndustryPlain() != null) {
-            binding.industryTextInputEditText.setText(DataTransmitter.getIndustryPlain()?.name)
+        if (DataTransmitter.getIndustryPlain() != null &&
+            DataTransmitter.getIndustryPlain()?.id?.isNotEmpty() == true) {
+            val industryName = DataTransmitter.getIndustryPlain()?.name
+            binding.industryTextInputEditText.setText(industryName)
+            renderIndustryTextInputLayout(industryName!!)
             showConfirmAndClearButtons(true)
         }
 
-        if (DataTransmitter.getCountry() != null && DataTransmitter.getAreaPlain() != null) {
-            var plainText =
-                "${DataTransmitter.getCountry()?.name}\n${DataTransmitter.getAreaPlain()?.name}"
-            plainText = plainText.trim()
-            binding.workPlaceTextInputEditText.setText(plainText)
-            showConfirmAndClearButtons(true)
-        } else if (DataTransmitter.getCountry() != null) {
-            binding.workPlaceTextInputEditText.setText(DataTransmitter.getCountry()?.name)
+        if (DataTransmitter.getCountry() != null &&
+            DataTransmitter.getCountry()?.id?.isNotEmpty() == true) {
+            val countryName = DataTransmitter.getCountry()!!.name
+            val workplaceText: String
+            val areaName: String
+            if (DataTransmitter.getAreaPlain() != null) {
+                areaName = DataTransmitter.getAreaPlain()!!.name
+                workplaceText = "$countryName, $areaName"
+            } else {
+                workplaceText = countryName
+            }
+            binding.workPlaceTextInputEditText.setText(workplaceText)
+            renderIndustryTextInputLayout(workplaceText)
             showConfirmAndClearButtons(true)
         }
 
@@ -169,6 +187,7 @@ class SettingsFiltersFragment : Fragment() {
                     showConfirmAndClearButtons(false)
                 }
             }
+            clearButtonVisibility(text)
         }
 
         binding.doNotShowWithoutSalaryCheckBox.setOnClickListener {
@@ -185,14 +204,26 @@ class SettingsFiltersFragment : Fragment() {
             }
         }
 
-        binding.filterSettingsExpectedSalaryEditText.doOnTextChanged { text, _, _, _ ->
-            clearButtonVisibility(text)
+        binding.apply {
+            workplaceClear.setOnClickListener {
+                binding.workPlaceTextInputEditText.setText("")
+                DataTransmitter.postAreaPlain(AreaPlain(id = "", name = ""))
+                DataTransmitter.postCountry(Country(id = "", name = ""))
+                renderWorkplaceTextInputLayout("")
+            }
+            industryClear.setOnClickListener {
+                binding.industryTextInputEditText.setText("")
+                DataTransmitter.postIndustryPlain(IndustryPlain(id = "", name = ""))
+                renderIndustryTextInputLayout("")
+            }
         }
 
         binding.clearSalaryImageView.setOnClickListener {
             clearSearch()
         }
 
+        renderIndustryTextInputLayout(binding.industryTextInputEditText.text.toString())
+        renderWorkplaceTextInputLayout(binding.workPlaceTextInputEditText.text.toString())
     }
 
     private fun clearSearch() {
@@ -203,6 +234,42 @@ class SettingsFiltersFragment : Fragment() {
 
     private fun clearButtonVisibility(s: CharSequence?) {
         binding.clearSalaryImageView.isVisible = !s.isNullOrEmpty()
+    }
+
+    private fun renderIndustryTextInputLayout(industry: String) {
+        if (industry.isNotEmpty()) {
+            binding.apply {
+                industryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.black_to_white_color)
+                industryClear.visibility = View.VISIBLE
+                industryArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                industryTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                industryClear.visibility = View.GONE
+                industryArrowForward.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun renderWorkplaceTextInputLayout(workplace: String) {
+        if (workplace.isNotEmpty()) {
+            binding.apply {
+                workPlaceTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.black_to_white_color)
+                workplaceClear.visibility = View.VISIBLE
+                workplaceArrowForward.visibility = View.GONE
+            }
+        } else {
+            binding.apply {
+                workPlaceTextInputLayout.defaultHintTextColor =
+                    ContextCompat.getColorStateList(requireContext(), R.color.gray_color)
+                workplaceClear.visibility = View.GONE
+                workplaceArrowForward.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun clearFields() {

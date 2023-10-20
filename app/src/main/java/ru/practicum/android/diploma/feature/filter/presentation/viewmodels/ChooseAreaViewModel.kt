@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAllAreasUseCase
@@ -15,7 +16,7 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 
-class  ChooseAreaViewModel(
+class ChooseAreaViewModel(
     private val areasUseCase: GetAreasUseCase,
     private val areasAllUseCase: GetAllAreasUseCase
 ) : ViewModel() {
@@ -25,6 +26,9 @@ class  ChooseAreaViewModel(
 
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
+
+    private var areas = arrayListOf<Area>()
+    private var filteredAreas: List<Area>? = null
 
     init {
         initScreen()
@@ -59,7 +63,8 @@ class  ChooseAreaViewModel(
                             }
                         }
 
-                        val dataResponse: DataResponse<Area> = DataResponse(data = totalAreas, networkError = null)
+                        val dataResponse: DataResponse<Area> =
+                            DataResponse(data = totalAreas, networkError = null)
 
                         processResult(dataResponse)
 
@@ -72,17 +77,35 @@ class  ChooseAreaViewModel(
     }
 
     private suspend fun processResult(result: DataResponse<Area>) {
-
         if (result.data != null) {
-            areasStateLiveData.value =
-                AreasState.DisplayAreas(getAreasList(result.data))
-        }
-        else {
+            areas.apply {
+                clear()
+                addAll(getAreasList(result.data))
+            }
+            if (areas.isNotEmpty()) {
+                filteredAreas = areas
+                areasStateLiveData.value =
+                    AreasState.DisplayAreas(filteredAreas!!)
+            } else {
+                areasStateLiveData.value =
+                    AreasState.Error(
+                        "Не удалось получить список",
+                        R.drawable.areas_placeholder_can_not_receive_list
+                    )
+            }
+        } else {
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> areasStateLiveData.value =
-                    AreasState.Error("Проверьте подключение к интернету")
+                    AreasState.Error(
+                        "Нет интернета",
+                        R.drawable.search_placeholder_internet_problem
+                    )
+
                 NetworkError.SERVER_ERROR -> areasStateLiveData.value =
-                    AreasState.Error("Ошибка сервера")
+                    AreasState.Error(
+                        "Ошибка сервера",
+                        R.drawable.search_placeholder_server_not_responding
+                    )
             }
         }
     }
@@ -106,7 +129,44 @@ class  ChooseAreaViewModel(
         }
     }
 
-    fun onAreaClicked(area: Area) {
-        _dataArea.postValue(area)
+    fun onAreaClicked(areaClicked: Area, previousAreaClicked: Area?) {
+        val areaPosition = areas.indexOf(areaClicked)
+        val previousAreaPosition =
+            if (previousAreaClicked != null) areas.indexOf(previousAreaClicked) else -1
+
+        areas[areaPosition] = areaClicked
+        if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
+
+        _dataArea.postValue(areaClicked)
+    }
+
+    fun onAreaTextChanged(filterText: String) {
+        filterAreas(filterText)
+    }
+
+    private fun filterAreas(filterText: String?) {
+        if (filteredAreas == null) {
+            areasStateLiveData.value = AreasState.Error(
+                "Не удалось получить список",
+                R.drawable.areas_placeholder_can_not_receive_list
+            )
+            return
+        }
+        if (filterText.isNullOrEmpty()) {
+            filteredAreas = areas
+            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+        } else {
+            filteredAreas = areas.filter {
+                it.name.contains(filterText, true)
+            }
+            if (filteredAreas!!.isNotEmpty()) {
+                areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+            } else {
+                areasStateLiveData.value = AreasState.Error(
+                    "Такого региона нет",
+                    R.drawable.search_placeholder_nothing_found
+                )
+            }
+        }
     }
 }

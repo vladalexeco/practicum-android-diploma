@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
@@ -37,7 +38,7 @@ class ChooseCountryFragment : Fragment() {
         viewModel.observeCountriesState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is CountriesState.DisplayCountries -> displayCountries(state.countries)
-                is CountriesState.Error -> displayError(state.errorText)
+                is CountriesState.Error -> displayError(state)
                 else -> {}
             }
         }
@@ -45,7 +46,8 @@ class ChooseCountryFragment : Fragment() {
         viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
             DataTransmitter.postCountry(country)
             DataTransmitter.postAreaPlain(null)
-            findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
+            //findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
+            findNavController().popBackStack()
         }
 
         binding.chooseCountryBackArrowImageview.setOnClickListener {
@@ -69,12 +71,17 @@ class ChooseCountryFragment : Fragment() {
         }
     }
 
-    private fun displayError(errorText: String) {
+    private fun displayError(state: CountriesState.Error) {
         binding.apply {
             countryListRecyclerView.visibility = View.INVISIBLE
             errorCountriesLayout.visibility = View.VISIBLE
-            countriesErrorText.text = errorText
+            countriesErrorText.text = state.errorText
         }
+        Glide
+            .with(requireContext())
+            .load(state.drawableId)
+            .transform(CenterCrop())
+            .into(binding.countriesErrorImage)
     }
 
     override fun onDestroyView() {
