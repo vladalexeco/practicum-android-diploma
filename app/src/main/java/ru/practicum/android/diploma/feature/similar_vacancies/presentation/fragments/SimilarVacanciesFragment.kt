@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentSimilarVacanciesBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
+import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.viewmodels.SimilarVacanciesViewModel
 import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.SimilarVacanciesAdapter
@@ -19,6 +20,7 @@ import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesa
 class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListener {
 
     private val viewModel: SimilarVacanciesViewModel by viewModel()
+    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
 
     private var _binding: FragmentSimilarVacanciesBinding? = null
     private val binding get() = _binding!!
@@ -41,6 +43,10 @@ class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListen
 
         binding.similarVacanciesBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        sharedViewModel.observeVacancyId().observe(viewLifecycleOwner) {
+            viewModel.searchSimilarVacancies(it)
         }
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {
@@ -93,7 +99,7 @@ class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListen
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        DataTransmitter.postId(vacancy.id)
+        sharedViewModel.vacancyId = vacancy.id
         findNavController().navigate(R.id.action_similarVacanciesFragment_to_vacancyFragment)
     }
 
