@@ -7,22 +7,22 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
-import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
 import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 import ru.practicum.android.diploma.feature.search.domain.models.Salary
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
+import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 
 class VacancyFragment : Fragment() {
 
@@ -32,6 +32,7 @@ class VacancyFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: VacancyViewModel by viewModel()
+    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,25 +45,12 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val vacancyId = arguments?.getString("vacancyId")
+        var vacancyId: String?
 
-
-        if (!isNetworkAvailable(requireContext())) {
-            if (vacancyId != null) {
-                viewModel.getVacancyById(vacancyId).observe(viewLifecycleOwner) { vacancy ->
-                    Log.d("id", "${vacancy?.id}")
-                    if (vacancy != null) {
-                        render(DataState.DataReceived(vacancy))
-                        viewModel.checkFavoriteStatus(vacancy)
-                        binding.similarVacanciesButton.visibility=View.GONE
-                    }
-                }
-            }
-        }
-
-        //currentVacancyFull?.id?.let{DataTransmitter.postId(it)}
-        if (vacancyId != null) {
-            DataTransmitter.postId(vacancyId)
+        sharedViewModel.observeVacancyId().observe(viewLifecycleOwner) {
+            vacancyId = it
+            viewModel.getDetailedVacancyData(vacancyId)
+            getVacancy(vacancyId)
         }
 
         initListeners()
@@ -71,6 +59,20 @@ class VacancyFragment : Fragment() {
             render(dataState)
             if (dataState is DataState.DataReceived) {
                 viewModel.checkFavoriteStatus(dataState.data)
+            }
+        }
+    }
+
+    private fun getVacancy(vacancyId: String?) {
+        if (!isNetworkAvailable(requireContext())) {
+            if (vacancyId != null) {
+                viewModel.getVacancyById(vacancyId).observe(viewLifecycleOwner) { vacancy ->
+                    if (vacancy != null) {
+                        render(DataState.DataReceived(vacancy))
+                        viewModel.checkFavoriteStatus(vacancy)
+                        binding.similarVacanciesButton.visibility=View.GONE
+                    }
+                }
             }
         }
     }
@@ -149,7 +151,7 @@ class VacancyFragment : Fragment() {
         } else {
             val salary: Salary = vacancyFull.salary
 
-            var currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
+            val currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
 
             val message = if (salary.to == null && salary.from != null) {
                 "от ${salary.from} $currencySymbol"
@@ -176,7 +178,8 @@ class VacancyFragment : Fragment() {
         binding.requiredExperienceValue.text = vacancyFull.experience?.name
 
         // Трудоустройство
-        binding.scheduleValue.text = "${vacancyFull.employment?.name}, ${vacancyFull.schedule?.name}"
+        val schedule = "${vacancyFull.employment?.name}, ${vacancyFull.schedule?.name}"
+        binding.scheduleValue.text = schedule
 
         // Описание вакансии
         binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT))

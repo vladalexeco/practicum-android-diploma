@@ -18,8 +18,6 @@ object DataTransmitter {
     private var currentCountry: Country? = null
     private var currentAreaPlain: AreaPlain? = null
 
-    private var vacancyId: String = ""
-
     fun postAreaPlain(areaPlain: AreaPlain?) {
         currentAreaPlain = areaPlain
     }
@@ -42,13 +40,5 @@ object DataTransmitter {
 
     fun getIndustryPlain(): IndustryPlain? {
         return currentIndustryPlain
-    }
-
-    fun postId(id: String) {
-        vacancyId = id
-    }
-
-    fun getId(): String {
-        return vacancyId
     }
 }
