@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.debounce
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
+import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 
 class SearchViewModel(
@@ -20,6 +22,7 @@ class SearchViewModel(
 
     var currentPage = 0
     var totalPages = 0
+    var vacanciesList: MutableSet<VacancyShort> = mutableSetOf()
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -66,6 +69,12 @@ class SearchViewModel(
                             else -> {
                                 currentPage = page
                                 totalPages = pair.first!!.pages
+                                renderState(
+                                    VacanciesSearchState.Content(
+                                        response = pair.first!!,
+                                    )
+                                )
+                                vacanciesList.addAll(pair.first!!.items)
                                 renderState(VacanciesSearchState.Content(response = pair.first!!))
                                 _isLoading.postValue(false)
                             }
@@ -77,6 +86,7 @@ class SearchViewModel(
 
     fun loadNextPage() {
         if (!isLastPage()) {
+            IsLastPage.IS_LAST_PAGE = false
             val nextPage = currentPage + 1
             _isFirstLoad.postValue(false)
             _isLoading.postValue(true)
@@ -85,6 +95,8 @@ class SearchViewModel(
     }
 
     fun isLastPage(): Boolean {
+        IsLastPage.IS_LAST_PAGE = true
+        _isLoading.postValue(false)
         return currentPage == totalPages - 1
     }
 

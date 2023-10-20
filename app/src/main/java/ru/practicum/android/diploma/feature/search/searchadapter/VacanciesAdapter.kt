@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
@@ -21,9 +22,7 @@ class VacanciesAdapter(
         }
 
     fun setVacancyList(list: List<VacancyShort>) {
-        val vacanciesTmp = vacancies.toMutableList()
-        vacanciesTmp.addAll(list)
-        vacancies = vacanciesTmp
+        vacancies = list
     }
 
     fun clear() {
@@ -65,9 +64,8 @@ class VacanciesAdapter(
     override fun getItemViewType(position: Int): Int {
         return if (position < itemCount - 1) {
             ITEM_VIEW_TYPE_ITEM
-        }
-        else {
-            ITEM_VIEW_TYPE_LOADING
+        } else {
+            if (!IsLastPage.IS_LAST_PAGE) ITEM_VIEW_TYPE_LOADING else ITEM_VIEW_TYPE_ITEM
         }
     }
 
