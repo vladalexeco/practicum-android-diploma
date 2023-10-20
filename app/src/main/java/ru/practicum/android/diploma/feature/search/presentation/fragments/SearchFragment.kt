@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.feature.search.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +14,6 @@ import ru.practicum.android.diploma.feature.search.presentation.viewmodels.Searc
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
-import ru.practicum.android.diploma.core.util.IsLastPage
-import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
