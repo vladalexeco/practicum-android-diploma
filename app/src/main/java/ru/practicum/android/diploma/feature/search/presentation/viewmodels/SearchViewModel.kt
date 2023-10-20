@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.debounce
+import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetFilterSettingsUseCase
 import ru.practicum.android.diploma.feature.search.domain.GetVacanciesUseCase
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
@@ -113,6 +114,10 @@ class SearchViewModel(
 
     fun showClearScreen() {
         renderState(VacanciesSearchState.ClearScreen)
+    }
+
+    fun getFilters(): FilterSettings {
+        return filter.invoke()
     }
 
     companion object {

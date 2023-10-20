@@ -48,7 +48,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             if (!isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
-                    && !viewModel.isLastPage() && IsLastPage.IS_LAST_PAGE
+                    && !viewModel.isLastPage()
                 ) {
                     viewModel.loadNextPage()
                 }
@@ -63,6 +63,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,6 +112,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
         binding.searchRecycler.addOnScrollListener(onScrollListener)
 
+        renderFilter()
     }
 
     private fun render(state: VacanciesSearchState) {
@@ -215,5 +217,20 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     override fun onClick(vacancy: VacancyShort) {
         DataTransmitter.postId(vacancy.id)
         findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
+    }
+
+    private fun renderFilter() {
+        if (
+            viewModel.getFilters().country != null
+            || viewModel.getFilters().industryPlain != null
+            || viewModel.getFilters().areaPlain != null
+            || viewModel.getFilters().notShowWithoutSalary
+            || viewModel.getFilters().expectedSalary != NEGATIVE_BALANCE
+        )
+            binding.filterButtonImageView.setImageResource(R.drawable.ic_filter_on)
+    }
+
+    companion object {
+        const val NEGATIVE_BALANCE = -1
     }
 }
