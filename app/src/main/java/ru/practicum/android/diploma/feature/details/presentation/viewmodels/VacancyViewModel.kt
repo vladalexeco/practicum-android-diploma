@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.details.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.details.domain.usecases.MakeCallUseCase
 import ru.practicum.android.diploma.feature.details.domain.usecases.SendEmailUseCase
 import ru.practicum.android.diploma.feature.details.domain.usecases.ShareVacancyUseCase
 import ru.practicum.android.diploma.feature.details.presentation.DataState
-import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFullEntity
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.AddVacancyToFavouriteUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetFavoriteIdsUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetVacancyByIdUseCase
@@ -38,10 +35,6 @@ class VacancyViewModel(
     private var _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    init {
-        getDetailedVacancyData()
-    }
-
     fun onContactEmailClicked(email: String) {
         emailUseCase.invoke(email)
     }
@@ -54,12 +47,12 @@ class VacancyViewModel(
         sharingUseCase.invoke(vacancy)
     }
 
-    fun getDetailedVacancyData() {
+    fun getDetailedVacancyData(vacancyId: String?) {
 
         _dataState.postValue(DataState.Loading)
 
         viewModelScope.launch {
-            getVacancyUseCase.getVacancy(DataTransmitter.getId()).collect { serverResponse ->
+            getVacancyUseCase.getVacancy(vacancyId ?: "").collect { serverResponse ->
 
                 if (serverResponse.first != null) {
                     val vacancyFull: VacancyFull = serverResponse.first!!.vacancy
@@ -79,15 +72,11 @@ class VacancyViewModel(
     fun onFavoriteButtonClick(vacancyFull: VacancyFull) {
         viewModelScope.launch(Dispatchers.IO) {
             val vacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
-            Log.d("ids", "$vacancyIds")
             val vacancyId = vacancyFull.id
-            Log.d("id", "$vacancyId")
             if (vacancyIds?.contains(vacancyId) == true) {
-                val vacancyEntity = vacancyFull
-                removeVacancyFromFavouriteUseCase.removeVacancy(vacancyEntity)
+                removeVacancyFromFavouriteUseCase.removeVacancy(vacancyFull)
             } else {
-                val vacancyEntity = vacancyFull
-                addVacancyToFavouriteUseCase.addVacancy(vacancyEntity)
+                addVacancyToFavouriteUseCase.addVacancy(vacancyFull)
             }
 
             val updatedVacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
