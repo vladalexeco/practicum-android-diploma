@@ -148,7 +148,7 @@ class SettingsFiltersFragment : Fragment() {
 
             viewModel.saveFilterSettings(filterSettings)
 
-            findNavController().navigateUp()
+            findNavController().popBackStack(R.id.searchFragment, false)
 
         }
 
