@@ -9,12 +9,12 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.processNextEventInCurrentThread
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
+import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.databinding.LoadingItemBinding
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
@@ -33,7 +33,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     private var isFirstLoad = true
     private var lastVisibleItemPosition: Int = 0
 
-
     private var vacanciesAdapter: VacanciesAdapter? = null
 
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
@@ -49,13 +48,13 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             if (!isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
-                    && !viewModel.isLastPage()
-         ) {
-                viewModel.loadNextPage()
+                    && !viewModel.isLastPage() && IsLastPage.IS_LAST_PAGE
+                ) {
+                    viewModel.loadNextPage()
+                }
             }
         }
     }
-}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,6 +106,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
         binding.clearSearchImageView.setOnClickListener {
             clearSearch()
+            viewModel.vacanciesList.clear()
         }
 
         binding.searchRecycler.addOnScrollListener(onScrollListener)
@@ -149,7 +149,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         clearContent()
         binding.amountTextView.visibility = View.VISIBLE
         binding.amountTextView.text = response.found.toString()
-        vacanciesAdapter?.setVacancyList(response.items)
+        vacanciesAdapter?.setVacancyList(viewModel.vacanciesList.toList())
         binding.searchRecycler.visibility = View.VISIBLE
         val itemAnimator = SlideInBottomAnimator()
         binding.searchRecycler.itemAnimator = itemAnimator
@@ -192,12 +192,16 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchInputEditText.clearFocus()
         clearContent()
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
+        viewModel.currentPage = 0
+        viewModel.totalPages = 0
     }
 
     private fun showVacanciesNumber(vacanciesSearchState: VacanciesSearchState) {
         if (vacanciesSearchState is VacanciesSearchState.Content) {
             binding.amountTextView.text = requireContext().resources.getQuantityString(
-                R.plurals.plural_vacancies, vacanciesSearchState.response.found, vacanciesSearchState.response.found
+                R.plurals.plural_vacancies,
+                vacanciesSearchState.response.found,
+                vacanciesSearchState.response.found
             )
         }
     }
