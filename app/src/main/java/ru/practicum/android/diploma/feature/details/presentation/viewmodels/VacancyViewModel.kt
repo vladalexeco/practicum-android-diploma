@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.details.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -73,15 +72,11 @@ class VacancyViewModel(
     fun onFavoriteButtonClick(vacancyFull: VacancyFull) {
         viewModelScope.launch(Dispatchers.IO) {
             val vacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
-            Log.d("ids", "$vacancyIds")
             val vacancyId = vacancyFull.id
-            Log.d("id", "$vacancyId")
             if (vacancyIds?.contains(vacancyId) == true) {
-                val vacancyEntity = vacancyFull
-                removeVacancyFromFavouriteUseCase.removeVacancy(vacancyEntity)
+                removeVacancyFromFavouriteUseCase.removeVacancy(vacancyFull)
             } else {
-                val vacancyEntity = vacancyFull
-                addVacancyToFavouriteUseCase.addVacancy(vacancyEntity)
+                addVacancyToFavouriteUseCase.addVacancy(vacancyFull)
             }
 
             val updatedVacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()

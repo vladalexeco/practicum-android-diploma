@@ -45,29 +45,12 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var vacancyId: String? = null
+        var vacancyId: String?
 
         sharedViewModel.observeVacancyId().observe(viewLifecycleOwner) {
             vacancyId = it
-        }
-
-        viewModel.getDetailedVacancyData(vacancyId)
-
-        if (!isNetworkAvailable(requireContext())) {
-            if (vacancyId != null) {
-                viewModel.getVacancyById(vacancyId!!).observe(viewLifecycleOwner) { vacancy ->
-                    if (vacancy != null) {
-                        render(DataState.DataReceived(vacancy))
-                        viewModel.checkFavoriteStatus(vacancy)
-                        binding.similarVacanciesButton.visibility=View.GONE
-                    }
-                }
-            }
-        }
-
-        //currentVacancyFull?.id?.let{DataTransmitter.postId(it)}
-        if (vacancyId != null) {
-            sharedViewModel.vacancyId = vacancyId
+            viewModel.getDetailedVacancyData(vacancyId)
+            getVacancy(vacancyId)
         }
 
         initListeners()
@@ -76,6 +59,20 @@ class VacancyFragment : Fragment() {
             render(dataState)
             if (dataState is DataState.DataReceived) {
                 viewModel.checkFavoriteStatus(dataState.data)
+            }
+        }
+    }
+
+    private fun getVacancy(vacancyId: String?) {
+        if (!isNetworkAvailable(requireContext())) {
+            if (vacancyId != null) {
+                viewModel.getVacancyById(vacancyId).observe(viewLifecycleOwner) { vacancy ->
+                    if (vacancy != null) {
+                        render(DataState.DataReceived(vacancy))
+                        viewModel.checkFavoriteStatus(vacancy)
+                        binding.similarVacanciesButton.visibility=View.GONE
+                    }
+                }
             }
         }
     }
@@ -154,7 +151,7 @@ class VacancyFragment : Fragment() {
         } else {
             val salary: Salary = vacancyFull.salary
 
-            var currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
+            val currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
 
             val message = if (salary.to == null && salary.from != null) {
                 "от ${salary.from} $currencySymbol"
@@ -181,7 +178,8 @@ class VacancyFragment : Fragment() {
         binding.requiredExperienceValue.text = vacancyFull.experience?.name
 
         // Трудоустройство
-        binding.scheduleValue.text = "${vacancyFull.employment?.name}, ${vacancyFull.schedule?.name}"
+        val schedule = "${vacancyFull.employment?.name}, ${vacancyFull.schedule?.name}"
+        binding.scheduleValue.text = schedule
 
         // Описание вакансии
         binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT))
