@@ -48,7 +48,7 @@ class SearchViewModel(
         renderState(VacanciesSearchState.ClearScreen)
     }
 
-    private fun searchRequest(newSearchText: String, pages: Int, perPage: Int, page: Int) {
+    fun searchRequest(newSearchText: String, pages: Int, perPage: Int, page: Int) {
         if (newSearchText.isNotEmpty()) {
 
             _isLoading.postValue(true)

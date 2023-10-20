@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.feature.search.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -97,11 +98,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
                 binding.amountTextView.visibility = View.GONE
                 binding.searchPlaceholderImageView.visibility = View.GONE
                 binding.progressBar.visibility = View.VISIBLE
-                if (text.isBlank()) {
-                    binding.progressBar.visibility = View.GONE
-                    binding.searchPlaceholderImageView.visibility = View.VISIBLE
-                    binding.amountTextView.visibility = View.GONE
-                }
             }
         }
 
@@ -111,7 +107,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         }
 
         binding.searchRecycler.addOnScrollListener(onScrollListener)
-
         renderFilter()
     }
 
@@ -220,14 +215,21 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     private fun renderFilter() {
+        val filters = viewModel.getFilters()
         if (
-            viewModel.getFilters().country != null
-            || viewModel.getFilters().industryPlain != null
-            || viewModel.getFilters().areaPlain != null
-            || viewModel.getFilters().notShowWithoutSalary
-            || viewModel.getFilters().expectedSalary != NEGATIVE_BALANCE
+            filters.country != null
+            || filters.industryPlain != null
+            || filters.areaPlain != null
+            || filters.notShowWithoutSalary
+            || filters.expectedSalary != NEGATIVE_BALANCE
         )
             binding.filterButtonImageView.setImageResource(R.drawable.ic_filter_on)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.searchRequest(binding.searchInputEditText.text.toString(), 0 , 20, 0)
+        viewModel.vacanciesList.clear()
     }
 
     companion object {
