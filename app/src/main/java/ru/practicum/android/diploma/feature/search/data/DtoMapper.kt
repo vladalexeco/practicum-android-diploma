@@ -1,26 +1,22 @@
 package ru.practicum.android.diploma.feature.search.data
 
 import ru.practicum.android.diploma.feature.search.data.dtomodels.AreaDto
-import com.usunin1994.headhunterapi.data.dtomodels.BillingTypeDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.ContactsDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.EmployerDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.EmploymentDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.ExperienceDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.KeySkillDto
-import com.usunin1994.headhunterapi.data.dtomodels.LogoUrlsDto
-import com.usunin1994.headhunterapi.data.dtomodels.PhoneDto
-import com.usunin1994.headhunterapi.data.dtomodels.ProfessionalRoleDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.LogoUrlsDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.PhoneDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.SalaryDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.ScheduleDto
-import com.usunin1994.headhunterapi.data.dtomodels.TypeDto
 import ru.practicum.android.diploma.feature.search.data.dtomodels.VacancyDtoFull
-import com.usunin1994.headhunterapi.data.dtomodels.VacancyDtoShort
+import ru.practicum.android.diploma.feature.search.data.dtomodels.VacancyDtoShort
 import ru.practicum.android.diploma.feature.search.data.network.VacanciesDtoResponse
 import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoResponse
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.VacancyResponse
 import ru.practicum.android.diploma.feature.search.domain.models.Area
-import ru.practicum.android.diploma.feature.search.domain.models.BillingType
 import ru.practicum.android.diploma.feature.search.domain.models.Contacts
 import ru.practicum.android.diploma.feature.search.domain.models.Employer
 import ru.practicum.android.diploma.feature.search.domain.models.Employment
@@ -28,10 +24,8 @@ import ru.practicum.android.diploma.feature.search.domain.models.Experience
 import ru.practicum.android.diploma.feature.search.domain.models.KeySkill
 import ru.practicum.android.diploma.feature.search.domain.models.LogoUrls
 import ru.practicum.android.diploma.feature.search.domain.models.Phone
-import ru.practicum.android.diploma.feature.search.domain.models.ProfessionalRole
 import ru.practicum.android.diploma.feature.search.domain.models.Salary
 import ru.practicum.android.diploma.feature.search.domain.models.Schedule
-import ru.practicum.android.diploma.feature.search.domain.models.Type
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 

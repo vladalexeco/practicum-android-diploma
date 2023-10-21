@@ -1,8 +1,4 @@
-package com.usunin1994.headhunterapi.data.dtomodels
-
-import ru.practicum.android.diploma.feature.search.data.dtomodels.AreaDto
-import ru.practicum.android.diploma.feature.search.data.dtomodels.EmployerDto
-import ru.practicum.android.diploma.feature.search.data.dtomodels.SalaryDto
+package ru.practicum.android.diploma.feature.search.data.dtomodels
 
 data class VacancyDtoShort(
     val id: String,
