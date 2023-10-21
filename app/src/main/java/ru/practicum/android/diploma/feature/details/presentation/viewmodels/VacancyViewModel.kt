@@ -29,6 +29,8 @@ class VacancyViewModel(
     private val getVacancyByIdUseCase: GetVacancyByIdUseCase,
 ) : ViewModel() {
 
+    var currentVacancyFull: VacancyFull? = null
+
     private var _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
