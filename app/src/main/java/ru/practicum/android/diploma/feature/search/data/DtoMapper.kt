@@ -74,26 +74,12 @@ fun VacancyDtoFull.toVacancyFull(): VacancyFull{
         keySkills = this.keySkills?.map { it.toKeySkill() },
         name = this.name,
         salary = this.salary?.toSalary(),
-        schedule = this.schedule?.toSchedule(),
-    )
-}
-
-fun TypeDto.toType(): Type {
-    return Type(
-        id = this.id,
-        name = this.name
+        schedule = this.schedule?.toSchedule()
     )
 }
 
 fun ScheduleDto.toSchedule(): Schedule {
     return Schedule(
-        id = this.id,
-        name = this.name
-    )
-}
-
-fun ProfessionalRoleDto.toProfessionalRole(): ProfessionalRole {
-    return ProfessionalRole(
         id = this.id,
         name = this.name
     )
@@ -134,13 +120,6 @@ fun PhoneDto.toPhone(): Phone {
         country = this.country,
         formatted = this.formatted,
         number = this.number
-    )
-}
-
-fun BillingTypeDto.toBillingType(): BillingType {
-    return BillingType(
-        id = this.id,
-        name = this.name
     )
 }
 

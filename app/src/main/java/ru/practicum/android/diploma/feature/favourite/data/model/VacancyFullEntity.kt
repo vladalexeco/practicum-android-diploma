@@ -3,36 +3,32 @@ package ru.practicum.android.diploma.feature.favourite.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.practicum.android.diploma.feature.search.domain.models.Area
-
-import ru.practicum.android.diploma.feature.search.domain.models.BillingType
 import ru.practicum.android.diploma.feature.search.domain.models.Contacts
 import ru.practicum.android.diploma.feature.search.domain.models.Employer
 import ru.practicum.android.diploma.feature.search.domain.models.Employment
 import ru.practicum.android.diploma.feature.search.domain.models.Experience
 import ru.practicum.android.diploma.feature.search.domain.models.KeySkill
 import ru.practicum.android.diploma.feature.search.domain.models.LogoUrls
-import ru.practicum.android.diploma.feature.search.domain.models.ProfessionalRole
 import ru.practicum.android.diploma.feature.search.domain.models.Salary
 import ru.practicum.android.diploma.feature.search.domain.models.Schedule
-import ru.practicum.android.diploma.feature.search.domain.models.Type
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
 @Entity(tableName = "vacancy_table")
 data class VacancyFullEntity(
     @PrimaryKey
-    val id: String, //
-    val applyAlternateUrl: String?, //
-    val area: Area?, //
-    val contacts: Contacts?, //
-    val description: String?, // Содержит xml!!!
-    val employer: Employer?, //
-    val employment: Employment?, //
-    val experience: Experience?, //
-    val keySkills: List<KeySkill>?, //
-    val name: String?, //
-    val salary: Salary?, //
-    val schedule: Schedule?, //
+    val id: String,
+    val applyAlternateUrl: String?,
+    val area: Area?,
+    val contacts: Contacts?,
+    val description: String?,
+    val employer: Employer?,
+    val employment: Employment?,
+    val experience: Experience?,
+    val keySkills: List<KeySkill>?,
+    val name: String?,
+    val salary: Salary?,
+    val schedule: Schedule?
 )
 
 fun VacancyFull.toVacancyFullEntity(): VacancyFullEntity {
@@ -54,7 +50,7 @@ fun VacancyFull.toVacancyFullEntity(): VacancyFullEntity {
 
 fun VacancyFullEntity.toVacancyFull(): VacancyFull {
     return VacancyFull(
-        id = this.id!!,
+        id = this.id,
         applyAlternateUrl = this.applyAlternateUrl,
         area = this.area,
         contacts = this.contacts,
@@ -67,21 +63,6 @@ fun VacancyFullEntity.toVacancyFull(): VacancyFull {
         salary = this.salary,
         schedule = this.schedule,
     )
-}
-
-
-
-
-fun VacancyFullEntity.toVacancyShort(): VacancyShort {
-    return this.area?.toArea()?.let {
-        VacancyShort(
-            id = this.id ?: "",
-            area = it,
-            employer = this.employer?.toEmployer() ,
-            name = this.name ?: "",
-            salary = this.salary?.toSalaryDto()
-        )
-    }!!
 }
 
 fun VacancyFull.toVacancyShort(): VacancyShort {
