@@ -165,7 +165,8 @@ class SettingsFiltersFragment : Fragment() {
             val countryName = DataTransmitter.getCountry()!!.name
             val workplaceText: String
             val areaName: String
-            if (DataTransmitter.getAreaPlain() != null) {
+            if (DataTransmitter.getAreaPlain() != null &&
+                DataTransmitter.getAreaPlain()?.id?.isNotEmpty() == true) {
                 areaName = DataTransmitter.getAreaPlain()!!.name
                 workplaceText = "$countryName, $areaName"
             } else {
