@@ -1,6 +1,7 @@
-package com.usunin1994.headhunterapi.data.dtomodels
+package ru.practicum.android.diploma.feature.search.data.dtomodels
 
 import com.google.gson.annotations.SerializedName
+import com.usunin1994.headhunterapi.data.dtomodels.LogoUrlsDto
 
 data class EmployerDto (@SerializedName("accredited_it_employer")
                         val accreditedItEmployer: Boolean,

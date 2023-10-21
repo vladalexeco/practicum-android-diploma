@@ -1,19 +1,19 @@
 package ru.practicum.android.diploma.feature.search.data
 
-import com.usunin1994.headhunterapi.data.dtomodels.AreaDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.AreaDto
 import com.usunin1994.headhunterapi.data.dtomodels.BillingTypeDto
-import com.usunin1994.headhunterapi.data.dtomodels.ContactsDto
-import com.usunin1994.headhunterapi.data.dtomodels.EmployerDto
-import com.usunin1994.headhunterapi.data.dtomodels.EmploymentDto
-import com.usunin1994.headhunterapi.data.dtomodels.ExperienceDto
-import com.usunin1994.headhunterapi.data.dtomodels.KeySkillDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.ContactsDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.EmployerDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.EmploymentDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.ExperienceDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.KeySkillDto
 import com.usunin1994.headhunterapi.data.dtomodels.LogoUrlsDto
 import com.usunin1994.headhunterapi.data.dtomodels.PhoneDto
 import com.usunin1994.headhunterapi.data.dtomodels.ProfessionalRoleDto
-import com.usunin1994.headhunterapi.data.dtomodels.SalaryDto
-import com.usunin1994.headhunterapi.data.dtomodels.ScheduleDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.SalaryDto
+import ru.practicum.android.diploma.feature.search.data.dtomodels.ScheduleDto
 import com.usunin1994.headhunterapi.data.dtomodels.TypeDto
-import com.usunin1994.headhunterapi.data.dtomodels.VacancyDtoFull
+import ru.practicum.android.diploma.feature.search.data.dtomodels.VacancyDtoFull
 import com.usunin1994.headhunterapi.data.dtomodels.VacancyDtoShort
 import ru.practicum.android.diploma.feature.search.data.network.VacanciesDtoResponse
 import ru.practicum.android.diploma.feature.search.data.network.VacancyDtoResponse
@@ -63,53 +63,18 @@ fun VacancyDtoShort.toVacancyShort(): VacancyShort {
 
 fun VacancyDtoFull.toVacancyFull(): VacancyFull{
     return VacancyFull(
-        acceptHandicapped = this.acceptHandicapped,
-        acceptIncompleteResumes = this.acceptIncompleteResumes,
-        acceptKids = this.acceptKids,
-        acceptTemporary = this.acceptTemporary,
-        address = this.address,
-        allowMessages = this.allowMessages,
-        alternateUrl = this.alternateUrl,
         applyAlternateUrl = this.applyAlternateUrl,
-        archived = this.archived,
         area = this.area?.toArea(),
-        billingType = this.billingType?.toBillingType(),
-        brandedDescription = this.brandedDescription,
-        code = this.code,
         contacts = this.contacts?.toContacts(),
-        createdAt = this.createdAt,
-        department = this.department,
         description = this.description,
-        driverLicenseTypes = this.driverLicenseTypes,
         employer = this.employer?.toEmployer(),
         employment = this.employment?.toEmployment(),
         experience = this.experience?.toExperience(),
-        hasTest = this.hasTest,
-        hidden = this.hidden,
         id = this.id,
-        initialCreatedAt = this.initialCreatedAt,
-        insiderInterview = this.insiderInterview,
         keySkills = this.keySkills?.map { it.toKeySkill() },
-        languages = this.languages,
         name = this.name,
-        negotiationsUrl = this.negotiationsUrl,
-        premium = this.premium,
-        professionalRoles = this.professionalRoles?.map { it.toProfessionalRole() },
-        publishedAt = this.publishedAt,
-        quickResponsesAllowed = this.quickResponsesAllowed,
-        relations = this.relations,
-        responseLetterRequired = this.responseLetterRequired,
-        responseUrl = this.responseUrl,
         salary = this.salary?.toSalary(),
         schedule = this.schedule?.toSchedule(),
-        specializations = this.specializations,
-        suitableResumesUrl = this.suitableResumesUrl,
-        test = this.test,
-        type = this.type?.toType(),
-        vacancyConstructorTemplate = this.vacancyConstructorTemplate,
-        workingDays = this.workingDays,
-        workingTimeIntervals = this.workingTimeIntervals,
-        workingTimeModes = this.workingTimeModes
     )
 }
 
