@@ -12,8 +12,7 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 class VacancyViewHolder(
     private val binding: VacancyItemBinding,
     private val context: Context
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("StringFormatMatches")
     fun bind(

@@ -38,7 +38,7 @@ class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        similarVacanciesAdapter = SimilarVacanciesAdapter(this)
+        similarVacanciesAdapter = SimilarVacanciesAdapter(this, requireContext())
         binding.similarVacanciesRecyclerView.adapter = similarVacanciesAdapter
 
         binding.similarVacanciesBackArrowImageview.setOnClickListener {

@@ -28,7 +28,7 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
     private val viewModel: FavouriteFragmentViewModel by viewModel()
     private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
 
-    private val favoriteAdapter = SimilarVacanciesAdapter(this)
+    private var favoriteAdapter: SimilarVacanciesAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +40,8 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        favoriteAdapter = SimilarVacanciesAdapter(this, requireContext())
 
         binding.recyclerViewFavorite.layoutManager= LinearLayoutManager(requireActivity())
         binding.recyclerViewFavorite.adapter=favoriteAdapter
@@ -58,7 +60,7 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
                         binding.placeHolderFavorite.visibility = View.GONE
                         binding.recyclerViewFavorite.visibility=View.VISIBLE
                         val vacancy = state.vacancy.map { it.toVacancyShort() }
-                        favoriteAdapter.setVacancyList(vacancy)
+                        favoriteAdapter!!.setVacancyList(vacancy)
                     }
                 }
             }
