@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -180,7 +181,7 @@ class VacancyFragment : Fragment() {
         binding.scheduleValue.text = schedule
 
         // Описание вакансии
-        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT))
+        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description?.addSpaces(), FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM))
 
         // Ключевые навыки
         if (vacancyFull.keySkills.isNullOrEmpty()) {
@@ -215,6 +216,11 @@ class VacancyFragment : Fragment() {
         }
 
     }
+
+    private fun String.addSpaces(): String {
+        return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")
+    }
+
 
     private fun setLogoToImageView(logoUrl: String?) {
         Glide.with(requireContext())
