@@ -14,8 +14,6 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.util.DataTransmitter
-import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
@@ -229,8 +227,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     override fun onResume() {
         super.onResume()
-        viewModel.searchRequest(binding.searchInputEditText.text.toString(), 0 , 20, 0)
-        viewModel.vacanciesList.clear()
+        viewModel.doNewSearch(binding.searchInputEditText.text.toString())
     }
 
     companion object {
