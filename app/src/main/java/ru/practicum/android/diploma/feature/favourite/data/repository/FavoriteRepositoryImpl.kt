@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.feature.favourite.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.feature.favourite.data.db.AppDatabase
 import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFull
 import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyFullEntity

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.search.searchadapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,7 +11,8 @@ import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
 class VacanciesAdapter(
-    private val listener: ClickListener
+    private val listener: ClickListener,
+    private val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var vacancies = listOf<VacancyShort>()
@@ -38,7 +40,8 @@ class VacanciesAdapter(
             VacancyViewHolder(
                 VacancyItemBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                )
+                ),
+                context
             )
         } else {
             LoadingViewHolder(

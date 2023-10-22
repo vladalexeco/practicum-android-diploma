@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimens_16"
                 android:fontFamily="@font/ys_display_medium"
-                android:text="Вакансия"
+                android:text="@string/details_header_vacancy"
                 android:textColor="@color/blackDayWhiteNight"
                 android:textSize="@dimen/textSize_22" />
 
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ys_display_medium"
                     android:gravity="center"
-                    android:text="Ошибка сервера"
+                    android:text="@string/message_server_error"
                     android:textColor="@color/blackDayWhiteNight"
                     android:textSize="@dimen/textSize_22" />
             </LinearLayout>
@@ -381,7 +381,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/ys_display_medium"
                         android:gravity="center"
-                        android:text="Похожие вакансии"
+                        android:text="@string/details_button_similar_vacancies"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/textSize_16"

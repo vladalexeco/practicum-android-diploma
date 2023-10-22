@@ -146,18 +146,18 @@ class VacancyFragment : Fragment() {
 
         // Предлагаемая заработанная плата
         if (vacancyFull.salary == null) {
-            binding.salary.text = "Зарплата не указана"
+            binding.salary.text = getString(R.string.message_salary_not_pointed)
         } else {
             val salary: Salary = vacancyFull.salary
 
             val currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
 
             val message = if (salary.to == null && salary.from != null) {
-                "от ${salary.from} $currencySymbol"
+                getString(R.string.salary_template_from, salary.from, currencySymbol)
             } else if (salary.to != null && salary.from == null) {
-                "до ${salary.to} $currencySymbol"
+                getString(R.string.salary_template_to, salary.to, currencySymbol)
             } else {
-                "от ${salary.from} до ${salary.to} $currencySymbol"
+                getString(R.string.salary_template_from_to, salary.from, salary.to, currencySymbol)
             }
 
             binding.salary.text = message

@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.favourite.presentation
 
-import ru.practicum.android.diploma.feature.favourite.data.model.VacancyFullEntity
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 sealed class FavoriteVacancyState {
