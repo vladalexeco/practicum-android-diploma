@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetAllVacancyUseCase
 import ru.practicum.android.diploma.feature.favourite.presentation.FavoriteVacancyState
-import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class FavouriteFragmentViewModel(private val getAllVacancyUseCase: GetAllVacancyUseCase) : ViewModel() {
 

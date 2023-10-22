@@ -145,7 +145,7 @@ class VacancyFragment : Fragment() {
 
         // Предлагаемая заработанная плата
         if (vacancyFull.salary == null) {
-            binding.salary.text = getString(R.string.details_message_salary_not_pointed)
+            binding.salary.text = getString(R.string.message_salary_not_pointed)
         } else {
             val salary: Salary = vacancyFull.salary
 

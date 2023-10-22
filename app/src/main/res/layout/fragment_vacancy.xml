@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ys_display_medium"
                     android:gravity="center"
-                    android:text="Ошибка сервера"
+                    android:text="@string/message_server_error"
                     android:textColor="@color/blackDayWhiteNight"
                     android:textSize="@dimen/textSize_22" />
             </LinearLayout>

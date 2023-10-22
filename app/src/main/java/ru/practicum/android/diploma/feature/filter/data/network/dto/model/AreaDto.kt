@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.data.network.dto.model
 
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
-import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 
 data class AreaDto(
     val id: String,

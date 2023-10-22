@@ -42,7 +42,6 @@ class ChooseIndustryViewModel(
         }
     }
 
-    //todo Добавить strings из ресурсов
     private suspend fun processResult(result: DataResponse<Industry>) {
         if (result.data != null) {
             industries.apply {

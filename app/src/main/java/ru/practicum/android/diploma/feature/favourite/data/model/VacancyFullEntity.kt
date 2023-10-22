@@ -124,7 +124,7 @@ fun VacancyFull.toVacancyFullEntity(): VacancyFullEntity {
 
 fun VacancyFullEntity.toVacancyFull(): VacancyFull {
     return VacancyFull(
-        id = this.id!!,
+        id = this.id,
         acceptHandicapped = this.acceptHandicapped,
         acceptIncompleteResumes = this.acceptIncompleteResumes,
         acceptKids = this.acceptKids,
@@ -180,7 +180,7 @@ fun VacancyFullEntity.toVacancyFull(): VacancyFull {
 fun VacancyFullEntity.toVacancyShort(): VacancyShort {
     return this.area?.toArea()?.let {
         VacancyShort(
-            id = this.id ?: "",
+            id = this.id,
             area = it,
             employer = this.employer?.toEmployer() ,
             name = this.name ?: "",

@@ -20,7 +20,6 @@
     // Экран "Вакансия"
     <string name="details_header_vacancy">Вакансия</string>
     <string name="details_button_similar_vacancies">Похожие вакансии</string>
-    <string name="details_message_salary_not_pointed">Зарплата не указана</string>
 
     // Экран "Избранное"
     <string name="favourite_header_favourite">Избарнное</string>
@@ -63,9 +62,16 @@
     // Экран "Похожие вакансии"
     <string name="similar_header_similar_vacanies">Похожие вакансии</string>
 
+    // Нижнее навигационное меню
+    <string name="bottom_navigation_title_main">Главная</string>
+    <string name="bottom_navigation_title_favourite">Избранное</string>
+    <string name="bottom_navigation_title_command">Команда</string>
+
     // Общие ресурсы
     <string name="message_no_internet">Нет интернета</string>
     <string name="message_failed_get_vacancies">Не удалось получить \n список вакансий</string>
     <string name="message_server_error">Ошибка сервера</string>
+    <string name="text_button_choose">Выбрать</string>
+    <string name="message_salary_not_pointed">Зарплата не указана</string>
 
 </resources>

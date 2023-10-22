@@ -36,7 +36,6 @@ class ChooseCountryViewModel(
         }
     }
 
-    //todo Добавить strings из ресурсов
     private fun processResult(result: DataResponse<Country>) {
         if (result.data != null) {
             val countries: ArrayList<Country> = arrayListOf()

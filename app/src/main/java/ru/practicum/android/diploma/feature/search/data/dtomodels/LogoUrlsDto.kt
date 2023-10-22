@@ -1,4 +1,4 @@
-package com.usunin1994.headhunterapi.data.dtomodels
+package ru.practicum.android.diploma.feature.search.data.dtomodels
 
 import com.google.gson.annotations.SerializedName
 
