@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.search.data.dtomodels
 
-
 data class VacancyDtoShort(
     val id: String,
     val area: AreaDto,
