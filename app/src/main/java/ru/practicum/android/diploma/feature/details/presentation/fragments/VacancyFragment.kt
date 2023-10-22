@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -145,18 +146,18 @@ class VacancyFragment : Fragment() {
 
         // Предлагаемая заработанная плата
         if (vacancyFull.salary == null) {
-            binding.salary.text = "Зарплата не указана"
+            binding.salary.text = getString(R.string.message_salary_not_pointed)
         } else {
             val salary: Salary = vacancyFull.salary
 
             val currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
 
             val message = if (salary.to == null && salary.from != null) {
-                "от ${salary.from} $currencySymbol"
+                getString(R.string.salary_template_from, salary.from, currencySymbol)
             } else if (salary.to != null && salary.from == null) {
-                "до ${salary.to} $currencySymbol"
+                getString(R.string.salary_template_to, salary.to, currencySymbol)
             } else {
-                "от ${salary.from} до ${salary.to} $currencySymbol"
+                getString(R.string.salary_template_from_to, salary.from, salary.to, currencySymbol)
             }
 
             binding.salary.text = message
@@ -180,7 +181,7 @@ class VacancyFragment : Fragment() {
         binding.scheduleValue.text = schedule
 
         // Описание вакансии
-        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description, Html.FROM_HTML_MODE_COMPACT))
+        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description?.addSpaces(), FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM))
 
         // Ключевые навыки
         if (vacancyFull.keySkills.isNullOrEmpty()) {
@@ -215,6 +216,11 @@ class VacancyFragment : Fragment() {
         }
 
     }
+
+    private fun String.addSpaces(): String {
+        return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")
+    }
+
 
     private fun setLogoToImageView(logoUrl: String?) {
         Glide.with(requireContext())

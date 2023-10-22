@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,10 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 
-class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCase) : ViewModel() {
+class ChooseIndustryViewModel(
+    private val industriesUseCase: GetIndustriesUseCase,
+    private val resources: Resources
+) : ViewModel() {
 
 
     private var _dataIndustry = MutableLiveData<Industry>()
@@ -38,7 +42,6 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
         }
     }
 
-    //todo Добавить strings из ресурсов
     private suspend fun processResult(result: DataResponse<Industry>) {
         if (result.data != null) {
             industries.apply {
@@ -52,13 +55,13 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> industriesStateLiveData.value =
                     IndustriesState.Error(
-                        "Нет интернета",
+                        resources.getString(R.string.message_no_internet),
                         R.drawable.search_placeholder_internet_problem
                     )
 
                 NetworkError.SERVER_ERROR -> industriesStateLiveData.value =
                     IndustriesState.Error(
-                        "Ошибка сервера",
+                        resources.getString(R.string.message_server_error),
                         R.drawable.search_placeholder_server_not_responding
                     )
             }
@@ -104,7 +107,7 @@ class ChooseIndustryViewModel(private val industriesUseCase: GetIndustriesUseCas
             } else {
                 industriesStateLiveData.value =
                     IndustriesState.Error(
-                        "Такой отрасли нет",
+                        resources.getString(R.string.filter_message_no_industry),
                         R.drawable.search_placeholder_nothing_found
                     )
             }

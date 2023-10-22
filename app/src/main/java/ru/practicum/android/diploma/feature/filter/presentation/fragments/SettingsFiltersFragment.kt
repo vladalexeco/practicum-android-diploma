@@ -42,7 +42,6 @@ class SettingsFiltersFragment : Fragment() {
 
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
             var plainText = "${filterSettings.country!!.name}, ${filterSettings.areaPlain!!.name}"
-            plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
             showConfirmAndClearButtons(true)
         } else if (filterSettings.country != null) {
@@ -70,14 +69,16 @@ class SettingsFiltersFragment : Fragment() {
         }
 
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
 
-            override fun handleOnBackPressed() {
-                clearFields()
-                findNavController().popBackStack(R.id.searchFragment, false)
-            }
+                override fun handleOnBackPressed() {
+                    clearFields()
+                    findNavController().popBackStack(R.id.searchFragment, false)
+                }
 
-        })
+            })
 
         binding.settingsBackArrowImageview.setOnClickListener {
             clearFields()
@@ -148,7 +149,7 @@ class SettingsFiltersFragment : Fragment() {
 
             viewModel.saveFilterSettings(filterSettings)
 
-            findNavController().navigate(R.id.action_settingsFiltersFragment_to_searchFragment)
+            findNavController().popBackStack(R.id.searchFragment, false)
 
         }
 

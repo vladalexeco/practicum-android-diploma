@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.core.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -89,6 +90,11 @@ val filterModule = module {
 
     factory<ClearFilterSettingsUseCase> {
         ClearFilterSettingsUseCase(filterSettingsRepository = get())
+    }
+
+    // Resources
+    single<Resources> {
+        androidContext().resources
     }
 
 
