@@ -35,14 +35,16 @@ class ChooseWorkplaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
 
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack(R.id.settingsFiltersFragment, false)
-                DataTransmitter.postCountry(null)
-                DataTransmitter.postAreaPlain(null)
-            }
-        })
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack(R.id.settingsFiltersFragment, false)
+                    DataTransmitter.postCountry(null)
+                    DataTransmitter.postAreaPlain(null)
+                }
+            })
 
         viewModel.dataAreaPlain.observe(viewLifecycleOwner) { areaPlain ->
             if (areaPlain != null) {

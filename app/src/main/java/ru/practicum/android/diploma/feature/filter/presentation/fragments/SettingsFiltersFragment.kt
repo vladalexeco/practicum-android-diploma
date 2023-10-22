@@ -69,14 +69,16 @@ class SettingsFiltersFragment : Fragment() {
         }
 
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
 
-            override fun handleOnBackPressed() {
-                clearFields()
-                findNavController().popBackStack(R.id.searchFragment, false)
-            }
+                override fun handleOnBackPressed() {
+                    clearFields()
+                    findNavController().popBackStack(R.id.searchFragment, false)
+                }
 
-        })
+            })
 
         binding.settingsBackArrowImageview.setOnClickListener {
             clearFields()

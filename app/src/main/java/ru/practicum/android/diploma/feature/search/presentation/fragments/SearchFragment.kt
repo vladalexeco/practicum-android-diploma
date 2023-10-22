@@ -73,7 +73,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             findNavController().navigate(R.id.action_searchFragment_to_settingsFiltersFragment)
         }
 
-        vacanciesAdapter = VacanciesAdapter(this)
+        vacanciesAdapter = VacanciesAdapter(this, requireContext())
         binding.searchRecycler.adapter = vacanciesAdapter
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {

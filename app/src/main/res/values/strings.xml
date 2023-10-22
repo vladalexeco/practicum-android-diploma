@@ -21,6 +21,7 @@
     <string name="details_header_vacancy">Вакансия</string>
     <string name="details_button_similar_vacancies">Похожие вакансии</string>
 
+
     // Экран "Избранное"
     <string name="favourite_header_favourite">Избарнное</string>
     <string name="favourite_message_list_is_empty">Список пуст</string>
@@ -73,5 +74,9 @@
     <string name="message_server_error">Ошибка сервера</string>
     <string name="text_button_choose">Выбрать</string>
     <string name="message_salary_not_pointed">Зарплата не указана</string>
+
+    <string name="salary_template_from">от %1$d %2$s</string>
+    <string name="salary_template_from_to">от %1$d до %2$d %3$s</string>
+    <string name="salary_template_to">до %1$d %2$s</string>
 
 </resources>

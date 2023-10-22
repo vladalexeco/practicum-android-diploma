@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.feature.search.searchadapter
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.R
@@ -7,9 +9,13 @@ import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyViewHolder(private val binding: VacancyItemBinding) :
+class VacancyViewHolder(
+    private val binding: VacancyItemBinding,
+    private val context: Context
+) :
     RecyclerView.ViewHolder(binding.root) {
 
+    @SuppressLint("StringFormatMatches")
     fun bind(
         model: VacancyShort,
         listener: VacanciesAdapter.ClickListener
@@ -31,20 +37,20 @@ class VacancyViewHolder(private val binding: VacancyItemBinding) :
             when {
                 model.salary.from != null && model.salary.to != null -> {
                     binding.salaryTextView.text =
-                        "От ${model.salary.from} до ${model.salary.to} $text"
+                       context.getString(R.string.salary_template_from_to, model.salary.from, model.salary.to, text)
                 }
 
                 model.salary.from == null && model.salary.to != null -> {
-                    binding.salaryTextView.text = "До ${model.salary.to} $text"
+                    binding.salaryTextView.text = context.getString(R.string.salary_template_to, model.salary.to, text)
                 }
 
                 else -> {
-                    binding.salaryTextView.text = "От ${model.salary.from} $text"
+                    binding.salaryTextView.text = context.getString(R.string.salary_template_from, model.salary.from, text)
                 }
             }
 
         } else {
-            binding.salaryTextView.text = "Зарплата не указана"
+            binding.salaryTextView.text = context.getString(R.string.message_salary_not_pointed)
         }
     }
 }
