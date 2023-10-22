@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,10 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.CountriesState
 
-class ChooseCountryViewModel(private val countryUseCase: GetCountriesUseCase) : ViewModel() {
+class ChooseCountryViewModel(
+    private val countryUseCase: GetCountriesUseCase,
+    private val resources: Resources
+) : ViewModel() {
 
     private var _dataCountry = MutableLiveData<Country>()
     val dataCountry: LiveData<Country> = _dataCountry
@@ -44,13 +48,13 @@ class ChooseCountryViewModel(private val countryUseCase: GetCountriesUseCase) : 
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> countriesStateLiveData.value =
                     CountriesState.Error(
-                        "Нет интернета",
+                        resources.getString(R.string.message_no_internet),
                         R.drawable.search_placeholder_internet_problem
                     )
 
                 NetworkError.SERVER_ERROR -> countriesStateLiveData.value =
                     CountriesState.Error(
-                        "Ошибка сервера",
+                        resources.getString(R.string.message_server_error),
                         R.drawable.search_placeholder_server_not_responding
                     )
             }

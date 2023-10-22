@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.filter.presentation.viewmodels
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,8 @@ import ru.practicum.android.diploma.feature.filter.presentation.states.AreasStat
 
 class ChooseAreaViewModel(
     private val areasUseCase: GetAreasUseCase,
-    private val areasAllUseCase: GetAllAreasUseCase
+    private val areasAllUseCase: GetAllAreasUseCase,
+    private val resources: Resources
 ) : ViewModel() {
 
     private var _dataArea = MutableLiveData<Area>()
@@ -51,7 +53,9 @@ class ChooseAreaViewModel(
 
                         var data: List<Area>? = result.data
 
-                        data = data?.filter { area -> area.name != "Другие регионы" }
+                        data = data?.filter { area ->
+                            area.name != resources.getString(R.string.filter_message_another_regions)
+                        }
 
                         val totalAreas: ArrayList<Area> = ArrayList()
 
@@ -89,7 +93,7 @@ class ChooseAreaViewModel(
             } else {
                 areasStateLiveData.value =
                     AreasState.Error(
-                        "Не удалось получить список",
+                        resources.getString(R.string.filter_message_failed_to_get_list),
                         R.drawable.areas_placeholder_can_not_receive_list
                     )
             }
@@ -97,13 +101,13 @@ class ChooseAreaViewModel(
             when (result.networkError!!) {
                 NetworkError.BAD_CONNECTION -> areasStateLiveData.value =
                     AreasState.Error(
-                        "Нет интернета",
+                        resources.getString(R.string.message_no_internet),
                         R.drawable.search_placeholder_internet_problem
                     )
 
                 NetworkError.SERVER_ERROR -> areasStateLiveData.value =
                     AreasState.Error(
-                        "Ошибка сервера",
+                        resources.getString(R.string.message_server_error),
                         R.drawable.search_placeholder_server_not_responding
                     )
             }
@@ -147,7 +151,7 @@ class ChooseAreaViewModel(
     private fun filterAreas(filterText: String?) {
         if (filteredAreas == null) {
             areasStateLiveData.value = AreasState.Error(
-                "Не удалось получить список",
+                resources.getString(R.string.filter_message_failed_to_get_list),
                 R.drawable.areas_placeholder_can_not_receive_list
             )
             return
@@ -163,7 +167,7 @@ class ChooseAreaViewModel(
                 areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
             } else {
                 areasStateLiveData.value = AreasState.Error(
-                    "Такого региона нет",
+                    resources.getString(R.string.filter_message_no_region),
                     R.drawable.search_placeholder_nothing_found
                 )
             }

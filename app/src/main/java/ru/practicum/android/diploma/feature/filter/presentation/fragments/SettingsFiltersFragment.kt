@@ -42,7 +42,6 @@ class SettingsFiltersFragment : Fragment() {
 
         if (filterSettings.country != null && filterSettings.areaPlain != null) {
             var plainText = "${filterSettings.country!!.name}, ${filterSettings.areaPlain!!.name}"
-            plainText = plainText.trim()
             binding.workPlaceTextInputEditText.setText(plainText)
             showConfirmAndClearButtons(true)
         } else if (filterSettings.country != null) {
