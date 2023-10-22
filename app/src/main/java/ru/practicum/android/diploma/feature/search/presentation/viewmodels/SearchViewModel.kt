@@ -44,6 +44,8 @@ class SearchViewModel(
         searchRequest(searchText, totalPages, 20, currentPage)
     }
 
+    private var filters: FilterSettings? = null
+
     init {
         renderState(VacanciesSearchState.ClearScreen)
     }
@@ -81,6 +83,7 @@ class SearchViewModel(
                             }
                         }
                     }
+                filters = filter.invoke()
             }
         }
     }
@@ -118,6 +121,13 @@ class SearchViewModel(
 
     fun getFilters(): FilterSettings {
         return filter.invoke()
+    }
+
+    fun doNewSearch(request: String?) {
+        if (filters != filter.invoke() && request != null) {
+            vacanciesList.clear()
+            searchRequest(request, 0 , 20, 0)
+        }
     }
 
     companion object {
