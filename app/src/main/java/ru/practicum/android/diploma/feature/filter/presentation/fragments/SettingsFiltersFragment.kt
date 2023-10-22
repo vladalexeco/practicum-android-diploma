@@ -69,7 +69,7 @@ class SettingsFiltersFragment : Fragment() {
         }
 
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
                 clearFields()
