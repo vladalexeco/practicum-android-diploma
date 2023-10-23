@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.IsLastPage
 import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
@@ -80,6 +81,8 @@ class SearchViewModel(
                                 vacanciesList.addAll(pair.first!!.items)
                                 renderState(VacanciesSearchState.Content(response = pair.first!!))
                                 _isLoading.postValue(false)
+
+                                IsLastPage.IS_LAST_PAGE = currentPage < totalPages
                             }
                         }
                     }
