@@ -80,6 +80,8 @@ class SearchViewModel(
                                 vacanciesList.addAll(pair.first!!.items)
                                 renderState(VacanciesSearchState.Content(response = pair.first!!))
                                 _isLoading.postValue(false)
+
+                                IsLastPage.IS_LAST_PAGE = currentPage < totalPages
                             }
                         }
                     }
