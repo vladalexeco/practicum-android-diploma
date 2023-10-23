@@ -109,14 +109,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimens_8"
-        android:paddingHorizontal="@dimen/dimens_16"
-        android:paddingBottom="150dp"
         android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/dimens_16"
+        android:layout_marginBottom="@dimen/dimens_4"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amount_textView"
-        tools:listitem="@layout/vacancy_item" />
+        tools:itemCount="6"
+        tools:listitem="@layout/vacancy_item"/>
 
     <ImageView
         android:id="@+id/search_placeholder_imageView"
@@ -126,7 +128,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_frame_layout"
-        app:srcCompat="@drawable/search_placeholder" />
+        app:srcCompat="@drawable/search_placeholder"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
