@@ -43,7 +43,6 @@ class RetrofitNetworkClient(
                     } else {
                         filterSettings.areaPlain.id
                     },
-                    //filterSettings.areaPlain?.id,
                     industry = filterSettings.industryPlain?.id,
                     salary = if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
                     withSalary =  filterSettings.notShowWithoutSalary
