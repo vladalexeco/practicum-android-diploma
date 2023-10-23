@@ -36,13 +36,17 @@ class RetrofitNetworkClient(
                     "page" to page
                 )
                 val response = hhApi.getVacancies(
-                    dto.data,
-                    options,
-                    filterSettings.country?.id,
-                    filterSettings.areaPlain?.id,
-                    filterSettings.industryPlain?.id,
-                    if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
-                    filterSettings.notShowWithoutSalary
+                    text = dto.data,
+                    options = options,
+                    area = if (filterSettings.areaPlain?.id == null) {
+                        filterSettings.country?.id
+                    } else {
+                        filterSettings.areaPlain.id
+                    },
+                    //filterSettings.areaPlain?.id,
+                    industry = filterSettings.industryPlain?.id,
+                    salary = if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
+                    withSalary =  filterSettings.notShowWithoutSalary
                 )
                 response.apply { resultCode = STATUS_CODE_SUCCESS }
             } catch (e: Throwable) {

@@ -20,7 +20,7 @@ interface HeadHunterApi {
         @Query("text") text: String,
         @QueryMap options: Map<String, Int>,
         @Query("area") area: String?,
-        @Query("area") region: String?,
+        //@Query("area") region: String?,
         @Query("industry") industry: String?,
         @Query("salary") salary: Int?,
         @Query("only_with_salary") withSalary: Boolean
