@@ -132,15 +132,28 @@ class ChooseWorkplaceFragment : Fragment() {
         binding.countryClear.setOnClickListener {
             viewModel.onCountryCleared()
             viewModel.onAreaCleared()
+            setChooseButtonVisible(false)
         }
 
         binding.areaClear.setOnClickListener {
             viewModel.onAreaCleared()
+            if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true) {
+                setChooseButtonVisible(false)
+            }
         }
 
         binding.chooseCountryTextInputEditText.doOnTextChanged { text, _, _, _ ->
             renderCountryTextInputLayout(text.toString())
         }
+
+        if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true ||
+            binding.areaTextInputEditText.text?.isNotEmpty() == true) {
+            setChooseButtonVisible(true)
+        }
+    }
+
+    private fun setChooseButtonVisible(isVisible: Boolean) {
+        binding.chooseButton.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     private fun renderAreaTextInputLayout(areaName: String) {
