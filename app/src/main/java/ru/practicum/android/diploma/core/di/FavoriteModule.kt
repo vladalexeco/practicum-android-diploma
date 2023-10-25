@@ -12,15 +12,12 @@ import ru.practicum.android.diploma.feature.favourite.domain.repository.Favorite
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetAllVacancyUseCase
 import ru.practicum.android.diploma.feature.favourite.domain.usecase.GetFavoriteIdsUseCase
 import ru.practicum.android.diploma.feature.favourite.presentation.viewmodels.FavouriteFragmentViewModel
+
 val favoriteModule = module {
-
-
     viewModelOf(::FavouriteFragmentViewModel)
     singleOf(::GetAllVacancyUseCase)
     singleOf(::GetFavoriteIdsUseCase)
     singleOf(::FavoriteRepositoryImpl) bind FavoriteRepository::class
-
-
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "vacancy_database")
             .fallbackToDestructiveMigration()

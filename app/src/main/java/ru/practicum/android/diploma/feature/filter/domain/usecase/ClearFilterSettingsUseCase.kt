@@ -11,7 +11,5 @@ import ru.practicum.android.diploma.feature.filter.domain.api.FilterSettingsRepo
  * - параметр notShowWithoutSalary становится равен false
  */
 class ClearFilterSettingsUseCase(private val filterSettingsRepository: FilterSettingsRepository) {
-    operator fun invoke() {
-        filterSettingsRepository.clearFilterSettings()
-    }
+    operator fun invoke() { filterSettingsRepository.clearFilterSettings() }
 }

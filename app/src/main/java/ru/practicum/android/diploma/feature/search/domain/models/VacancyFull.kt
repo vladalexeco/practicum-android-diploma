@@ -8,7 +8,7 @@ data class VacancyFull(
     val employer: Employer?,
     val employment: Employment?,
     val experience: Experience?,
-    val id: String?,
+    val id: String,
     val keySkills: List<KeySkill>?,
     val name: String?,
     val salary: Salary?,

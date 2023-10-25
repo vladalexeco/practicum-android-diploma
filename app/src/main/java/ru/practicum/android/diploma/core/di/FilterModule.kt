@@ -33,7 +33,6 @@ import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.Choos
 
 
 val filterModule = module {
-
     // Network
     single<HeadHunterDirectoryApi> {
         Retrofit.Builder()
@@ -97,11 +96,9 @@ val filterModule = module {
         androidContext().resources
     }
 
-
     viewModelOf(::ChooseCountryViewModel)
     viewModelOf(::ChooseAreaViewModel)
     viewModelOf(::ChooseIndustryViewModel)
     viewModelOf(::SettingsFiltersViewModel)
     viewModelOf(::ChooseWorkPlaceViewModel)
-
 }

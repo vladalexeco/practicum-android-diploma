@@ -20,7 +20,6 @@ class DatabaseConverters {
     @TypeConverter
     fun toArea(value: String) = JsonConverter.jsonToItem<Area>(value)
 
-
     @TypeConverter
     fun fromEmployer(value: Employer) = JsonConverter.itemToJson(value)
 
@@ -51,14 +50,11 @@ class DatabaseConverters {
     @TypeConverter
     fun toSchedule(value: String) = JsonConverter.jsonToItem<Schedule>(value)
 
-
     @TypeConverter
     fun fromType(value: Type) = JsonConverter.itemToJson(value)
 
     @TypeConverter
     fun toType(value: String) = JsonConverter.jsonToItem<Type>(value)
-
-
 
     @TypeConverter
     fun fromBillingType(value: BillingType) = JsonConverter.itemToJson(value)
@@ -74,7 +70,6 @@ class DatabaseConverters {
 
     @TypeConverter
     fun fromAny(value: Any) = JsonConverter.itemToJson(value)
-
 
     @TypeConverter
     fun toAny(value: Any) = JsonConverter.jsonToItem<Any>(value.toString())
@@ -96,7 +91,6 @@ class DatabaseConverters {
     @TypeConverter
     fun toKeySkillsList(value: String) = JsonConverter.jsonToItemList<KeySkill>(value)
 
-
     @TypeConverter
     fun fromProfessionalRoleList(value: List<ProfessionalRole>?): String? {
         return JsonConverter.itemListToJson(value)
@@ -107,7 +101,4 @@ class DatabaseConverters {
     fun toProfessionalRoleList(value: String?): List<ProfessionalRole>? {
         return value?.let { JsonConverter.jsonToItemList(it) }
     }
-
-
-
 }

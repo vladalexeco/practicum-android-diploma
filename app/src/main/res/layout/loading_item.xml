@@ -4,4 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:indeterminateTint="@color/yp_blue"
-    android:visibility="visible"/>
+    android:visibility="visible" />
