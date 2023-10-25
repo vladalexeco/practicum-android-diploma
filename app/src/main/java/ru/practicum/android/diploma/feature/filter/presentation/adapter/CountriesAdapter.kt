@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
 
 class CountriesAdapter(
-    val countries: ArrayList<Country>,
+    private val countries: ArrayList<Country>,
     private val clickListener: ClickListener
 ) : RecyclerView.Adapter<CountriesViewHolder>() {
 

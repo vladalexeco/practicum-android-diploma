@@ -23,123 +23,71 @@ import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 
 class DirectoryRepositoryImpl(
     private val networkDirectoryClient: NetworkDirectoryClient
-) : DirectoryRepository  {
+) : DirectoryRepository {
+
     override fun getIndustries(): Flow<Resource<List<Industry>>> = flow {
+        val response = networkDirectoryClient.doRequest(Request.IndustryRequest)
+        when (response.resultCode) {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            STATUS_CODE_SUCCESS -> emit(Resource.Success((response as IndustryResponse).industries.map { industryDto ->
+                industryDto.mapToIndustry()
+            }))
 
-        val response =networkDirectoryClient.doRequest(Request.IndustryRequest)
-
-        when(response.resultCode) {
-
-            STATUS_CODE_NO_NETWORK_CONNECTION -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            STATUS_CODE_SUCCESS -> {
-                emit(Resource.Success((response as IndustryResponse).industries.map { industryDto ->
-                    industryDto.mapToIndustry()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
 
     override fun getCountries(): Flow<Resource<List<Country>>> = flow {
-
         val response = networkDirectoryClient.doRequest(Request.CountryRequest)
+        when (response.resultCode) {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            STATUS_CODE_SUCCESS -> emit(Resource.Success((response as CountryResponse).countries.map { countryDto ->
+                countryDto.mapToCountry()
+            }))
 
-        when(response.resultCode) {
-
-            STATUS_CODE_NO_NETWORK_CONNECTION -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            STATUS_CODE_SUCCESS -> {
-                emit(Resource.Success((response as CountryResponse).countries.map { countryDto ->
-                    countryDto.mapToCountry()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
     }
 
     override fun getAreas(areaId: String): Flow<Resource<List<Area>>> = flow {
-
         val response = networkDirectoryClient.doRequest(Request.AreaRequest(areaId))
+        when (response.resultCode) {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            STATUS_CODE_SUCCESS -> emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
+                areaDto.mapToArea()
+            }))
 
-        when(response.resultCode) {
-
-            STATUS_CODE_NO_NETWORK_CONNECTION -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            STATUS_CODE_SUCCESS -> {
-                emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
-                    areaDto.mapToArea()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
 
     override fun getAllAreas(): Flow<Resource<List<Area>>> = flow {
-
         val response = networkDirectoryClient.doRequest(Request.AllAreasRequest)
+        when (response.resultCode) {
+            STATUS_CODE_NO_NETWORK_CONNECTION -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            STATUS_CODE_SUCCESS -> emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
+                areaDto.mapToArea()
+            }))
 
-        when(response.resultCode) {
-
-            STATUS_CODE_NO_NETWORK_CONNECTION -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            STATUS_CODE_SUCCESS -> {
-                emit(Resource.Success((response as AreaResponse).areas.map { areaDto ->
-                    areaDto.mapToArea()
-                }))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
-
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
 
     override fun getAreaPlain(areaId: String): Flow<Resource<AreaPlain>> = flow {
-
         val response = networkDirectoryClient.doRequest(Request.AreaPlainRequest(areaId))
+        when (response.resultCode) {
+            -1 -> emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
+            200 -> emit(
+                Resource.Success(
+                    data = AreaPlain(
+                        id = (response as AreaPlainResponse).id,
+                        parentId = response.parent_id,
+                        name = response.name
+                    )
+                )
+            )
 
-        when(response.resultCode) {
-
-            -1 -> {
-                emit(Resource.Error(networkError = NetworkError.BAD_CONNECTION))
-            }
-
-            200 -> {
-                emit(Resource.Success(data = AreaPlain(
-                    id = (response as AreaPlainResponse).id,
-                    parent_id = response.parent_id,
-                    name = response.name
-                )))
-            }
-
-            else -> {
-                emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
-            }
-
+            else -> emit(Resource.Error(networkError = NetworkError.SERVER_ERROR))
         }
-
     }
-
 }

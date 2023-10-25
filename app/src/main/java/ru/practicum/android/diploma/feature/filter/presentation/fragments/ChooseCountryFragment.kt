@@ -39,14 +39,12 @@ class ChooseCountryFragment : Fragment() {
             when (state) {
                 is CountriesState.DisplayCountries -> displayCountries(state.countries)
                 is CountriesState.Error -> displayError(state)
-                else -> {}
             }
         }
 
         viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
             DataTransmitter.postCountry(country)
             DataTransmitter.postAreaPlain(null)
-            //findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
             findNavController().popBackStack()
         }
 
