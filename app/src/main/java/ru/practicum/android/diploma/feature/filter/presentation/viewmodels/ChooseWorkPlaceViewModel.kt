@@ -9,7 +9,6 @@ import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreaPlainUseCase
 
-
 class ChooseWorkPlaceViewModel(
     private val getAreaPlainUseCase: GetAreaPlainUseCase
 ) : ViewModel() {
@@ -23,7 +22,7 @@ class ChooseWorkPlaceViewModel(
     private var _dataArea = MutableLiveData<String>()
     val dataArea: LiveData<String> = _dataArea
 
-    fun initScreenData() {
+    fun initData() {
         setCountryData()
         setAreaData()
     }
@@ -31,12 +30,7 @@ class ChooseWorkPlaceViewModel(
     fun getAreaPlain(areaId: String) {
         viewModelScope.launch {
             getAreaPlainUseCase(areaId).collect { result ->
-
-                if (result.first != null) {
-                    _dataAreaPlain.postValue(result.first)
-                } else {
-                }
-
+                if (result.first != null) _dataAreaPlain.postValue(result.first)
             }
         }
     }

@@ -13,7 +13,5 @@ import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
  * - notShowWithoutSalary = false
  */
 class GetFilterSettingsUseCase(private val filterSettingsRepository: FilterSettingsRepository) {
-    operator fun invoke(): FilterSettings {
-        return filterSettingsRepository.getFilterSettings()
-    }
+    operator fun invoke(): FilterSettings = filterSettingsRepository.getFilterSettings()
 }

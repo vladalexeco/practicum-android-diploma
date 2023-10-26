@@ -16,20 +16,17 @@ import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 class FilterSettingsRepositoryImpl(
     private val sharedPreferences: SharedPreferences?
 ) : FilterSettingsRepository  {
+
     override fun getFilterSettings(): FilterSettings {
-
         val gson = Gson()
-
         val countryRawString = sharedPreferences?.getString(COUNTRY_KEY, null) ?: "null"
         val areaPlainRawString = sharedPreferences?.getString(AREA_KEY, null) ?: "null"
         val industryPlainRawString = sharedPreferences?.getString(INDUSTRY_KEY, null) ?: "null"
         val expectedSalary = sharedPreferences?.getInt(EXPECTED_SALARY_KEY, -1) ?: -1
         val notShowWithoutSalary = sharedPreferences?.getBoolean(NOT_SHOW_WITHOUT_SALARY_KEY, false) ?: false
-
         val country: Country? = gson.fromJson(countryRawString, Country::class.java)
         val area: AreaPlain? = gson.fromJson(areaPlainRawString, AreaPlain::class.java)
         val industry: IndustryPlain? = gson.fromJson(industryPlainRawString, IndustryPlain::class.java)
-
         return FilterSettings(
             country = country,
             areaPlain = area,
@@ -40,13 +37,10 @@ class FilterSettingsRepositoryImpl(
     }
 
     override fun saveFilterSettings(filterSettings: FilterSettings) {
-
         val gson = Gson()
-
         val countryGson: String = gson.toJson(filterSettings.country)
         val areaPlainGson: String = gson.toJson(filterSettings.areaPlain)
         val industryPlainGson: String = gson.toJson(filterSettings.industryPlain)
-
         sharedPreferences?.edit()
             ?.putString(COUNTRY_KEY, countryGson)
             ?.putString(AREA_KEY, areaPlainGson)

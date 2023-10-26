@@ -20,9 +20,8 @@ class ChooseIndustryViewModel(
     private val resources: Resources
 ) : ViewModel() {
 
-
     private var _dataIndustry = MutableLiveData<Industry>()
-    val dataIndustry: LiveData<Industry> = _dataIndustry
+    fun dataIndustry(): LiveData<Industry> = _dataIndustry
 
     private val industriesStateLiveData = MutableLiveData<IndustriesState>()
     fun observeIndustriesState(): LiveData<IndustriesState> = industriesStateLiveData
@@ -31,10 +30,12 @@ class ChooseIndustryViewModel(
     private lateinit var filteredIndustries: List<Industry>
 
     init {
-        initScreen()
+        initIndustriesData()
     }
 
-    private fun initScreen() {
+    private var previousIndustryClicked: Industry? = null
+
+    private fun initIndustriesData() {
         viewModelScope.launch {
             industriesUseCase.invoke().collect { result ->
                 processResult(result)
@@ -52,18 +53,9 @@ class ChooseIndustryViewModel(
             industriesStateLiveData.value =
                 IndustriesState.DisplayIndustries(filteredIndustries)
         } else {
-            when (result.networkError!!) {
-                NetworkError.BAD_CONNECTION -> industriesStateLiveData.value =
-                    IndustriesState.Error(
-                        resources.getString(R.string.message_no_internet),
-                        R.drawable.search_placeholder_internet_problem
-                    )
-
-                NetworkError.SERVER_ERROR -> industriesStateLiveData.value =
-                    IndustriesState.Error(
-                        resources.getString(R.string.message_server_error),
-                        R.drawable.search_placeholder_server_not_responding
-                    )
+            industriesStateLiveData.value = when (result.networkError!!) {
+                NetworkError.BAD_CONNECTION -> getBadConnectionErrorState()
+                NetworkError.SERVER_ERROR -> getServerErrorState()
             }
         }
     }
@@ -79,9 +71,24 @@ class ChooseIndustryViewModel(
             extendedIndustriesList
         }
 
+    private fun getBadConnectionErrorState(): IndustriesState.Error {
+        return IndustriesState.Error(
+            resources.getString(R.string.message_no_internet),
+            R.drawable.search_placeholder_internet_problem
+        )
+    }
+
+    private fun getServerErrorState(): IndustriesState.Error {
+        return IndustriesState.Error(
+            resources.getString(R.string.message_server_error),
+            R.drawable.search_placeholder_server_not_responding
+        )
+    }
+
     fun onIndustryClicked(industryClicked: Industry, previousIndustryClicked: Industry?) {
         val industryPosition = industries.indexOf(industryClicked)
-        val previousIndustryPosition = if (previousIndustryClicked!= null) industries.indexOf(previousIndustryClicked) else -1
+        val previousIndustryPosition =
+            if (previousIndustryClicked != null) industries.indexOf(previousIndustryClicked) else -1
 
         industries[industryPosition] = industryClicked
         if (previousIndustryPosition != -1) industries[previousIndustryPosition].isChecked = false

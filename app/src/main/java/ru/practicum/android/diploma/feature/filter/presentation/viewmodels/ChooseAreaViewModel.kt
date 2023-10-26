@@ -16,6 +16,7 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.GetAreasUseCas
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
+import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
 
 class ChooseAreaViewModel(
     private val areasUseCase: GetAreasUseCase,
@@ -23,8 +24,8 @@ class ChooseAreaViewModel(
     private val resources: Resources
 ) : ViewModel() {
 
-    private var _dataArea = MutableLiveData<Area>()
-    val dataArea: LiveData<Area> = _dataArea
+    private var _areaData = MutableLiveData<Area>()
+    fun areaData(): LiveData<Area> = _areaData
 
     private val areasStateLiveData = MutableLiveData<AreasState>()
     fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
@@ -33,10 +34,12 @@ class ChooseAreaViewModel(
     private var filteredAreas: List<Area>? = null
 
     init {
-        initScreen()
+        initAreaData()
     }
 
-    private fun initScreen() {
+    private var previousAreaClicked: Area? = null
+
+    private fun initAreaData() {
         viewModelScope.launch {
             if (DataTransmitter.getCountry() != null) {
                 areasUseCase.invoke(DataTransmitter.getCountry()!!.id).collect { result ->
@@ -44,21 +47,15 @@ class ChooseAreaViewModel(
                 }
             } else {
                 areasAllUseCase.invoke().collect { result ->
-
                     val networkError: NetworkError? = result.networkError
-
                     if (networkError != null) {
                         processResult(result)
                     } else {
-
                         var data: List<Area>? = result.data
-
                         data = data?.filter { area ->
                             area.name != resources.getString(R.string.filter_message_another_regions)
                         }
-
                         val totalAreas: ArrayList<Area> = ArrayList()
-
                         if (data != null) {
                             for (country in data) {
                                 country.areas.forEach { area ->
@@ -66,17 +63,12 @@ class ChooseAreaViewModel(
                                 }
                             }
                         }
-
                         val dataResponse: DataResponse<Area> =
                             DataResponse(data = totalAreas, networkError = null)
-
                         processResult(dataResponse)
-
                     }
-
                 }
             }
-
         }
     }
 
@@ -99,17 +91,8 @@ class ChooseAreaViewModel(
             }
         } else {
             when (result.networkError!!) {
-                NetworkError.BAD_CONNECTION -> areasStateLiveData.value =
-                    AreasState.Error(
-                        resources.getString(R.string.message_no_internet),
-                        R.drawable.search_placeholder_internet_problem
-                    )
-
-                NetworkError.SERVER_ERROR -> areasStateLiveData.value =
-                    AreasState.Error(
-                        resources.getString(R.string.message_server_error),
-                        R.drawable.search_placeholder_server_not_responding
-                    )
+                NetworkError.BAD_CONNECTION -> getBadConnectionErrorState()
+                NetworkError.SERVER_ERROR -> getServerErrorState()
             }
         }
     }
@@ -123,6 +106,20 @@ class ChooseAreaViewModel(
             extendedAreasList.sortBy { it.name }
             extendedAreasList
         }
+
+    private fun getBadConnectionErrorState(): IndustriesState.Error {
+        return IndustriesState.Error(
+            resources.getString(R.string.message_no_internet),
+            R.drawable.search_placeholder_internet_problem
+        )
+    }
+
+    private fun getServerErrorState(): IndustriesState.Error {
+        return IndustriesState.Error(
+            resources.getString(R.string.message_server_error),
+            R.drawable.search_placeholder_server_not_responding
+        )
+    }
 
     private fun getAreasRecursively(extendedAreasList: ArrayList<Area>, area: Area) {
         extendedAreasList.add(area)
@@ -141,7 +138,7 @@ class ChooseAreaViewModel(
         areas[areaPosition] = areaClicked
         if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
 
-        _dataArea.postValue(areaClicked)
+        _areaData.postValue(areaClicked)
     }
 
     fun onAreaTextChanged(filterText: String) {
