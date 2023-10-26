@@ -124,7 +124,7 @@ class SearchViewModel(
     fun doNewSearch(request: String?) {
         if (filters != filter.invoke() && request != null) {
             vacanciesList.clear()
-            searchRequest(request, 0 , 20, 0)
+            searchRequest(request, 0, 20, 0)
         }
     }
 
