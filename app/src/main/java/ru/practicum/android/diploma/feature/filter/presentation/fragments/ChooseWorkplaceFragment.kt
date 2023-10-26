@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import ru.practicum.android.diploma.R
@@ -34,7 +35,6 @@ class ChooseWorkplaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setOnBackPressedListener()
         setAreaPlainObserve()
         setDataCountryObserver()
@@ -62,6 +62,9 @@ class ChooseWorkplaceFragment : Fragment() {
         binding.chooseCountryTextInputEditText.doOnTextChanged { text, _, _, _ ->
             renderCountryTextInputLayout(text.toString())
         }
+        if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true ||
+            binding.areaTextInputEditText.text?.isNotEmpty() == true
+        ) setChooseButtonVisible(true)
     }
 
     private fun setOnBackPressedListener() {
@@ -146,11 +149,18 @@ class ChooseWorkplaceFragment : Fragment() {
             countryClear.setOnClickListener {
                 viewModel.onCountryCleared()
                 viewModel.onAreaCleared()
+                setChooseButtonVisible(false)
             }
             areaClear.setOnClickListener {
                 viewModel.onAreaCleared()
+                if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true)
+                    setChooseButtonVisible(false)
             }
         }
+    }
+
+    private fun setChooseButtonVisible(isVisible: Boolean) {
+        binding.chooseButton.isVisible = isVisible
     }
 
     private fun renderAreaTextInputLayout(areaName: String) {
