@@ -9,16 +9,15 @@ import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class SimilarVacanciesViewHolder(
+class VacanciesViewHolderCommon(
     private val binding: VacancyItemBinding,
     private val context: Context
-)
-    : RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("StringFormatMatches")
     fun bind(
         model: VacancyShort,
-        listener: SimilarVacanciesAdapter.ClickListener
+        listener: VacanciesAdapterCommon.ClickListener
     ) {
 
         itemView.setOnClickListener {
@@ -37,15 +36,22 @@ class SimilarVacanciesViewHolder(
             when {
                 (model.salary.from != null && model.salary.from != 0) && (model.salary.to != null && model.salary.to != 0) -> {
                     binding.salaryTextView.text =
-                        context.getString(R.string.salary_template_from_to, model.salary.from, model.salary.to, text)
+                        context.getString(
+                            R.string.salary_template_from_to,
+                            model.salary.from,
+                            model.salary.to,
+                            text
+                        )
                 }
 
                 (model.salary.from == null || model.salary.from == 0) && model.salary.to != null -> {
-                    binding.salaryTextView.text = context.getString(R.string.salary_template_to, model.salary.to, text)
+                    binding.salaryTextView.text =
+                        context.getString(R.string.salary_template_to, model.salary.to, text)
                 }
 
                 else -> {
-                    binding.salaryTextView.text = context.getString(R.string.salary_template_from, model.salary.from, text)
+                    binding.salaryTextView.text =
+                        context.getString(R.string.salary_template_from, model.salary.from, text)
                 }
             }
 
