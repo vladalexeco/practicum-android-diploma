@@ -23,13 +23,9 @@ class SearchViewModel(
 
     var currentPage = 0
     var totalPages = 0
+    var isLoading = false
+    var isFirstLoad = true
     var vacanciesList: MutableSet<VacancyShort> = mutableSetOf()
-
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    private val _isFirstLoad = MutableLiveData(true)
-    val isFirstLoad: LiveData<Boolean> = _isFirstLoad
 
     private var latestSearchText: String? = null
 
@@ -53,7 +49,7 @@ class SearchViewModel(
     private fun searchRequest(newSearchText: String, pages: Int, perPage: Int, page: Int) {
         if (newSearchText.isNotEmpty()) {
 
-            _isLoading.postValue(true)
+            isLoading = true
             renderState(VacanciesSearchState.Loading)
             viewModelScope.launch {
                 getVacanciesUseCase
@@ -79,7 +75,7 @@ class SearchViewModel(
                                 )
                                 vacanciesList.addAll(pair.first!!.items)
                                 renderState(VacanciesSearchState.Content(response = pair.first!!))
-                                _isLoading.postValue(false)
+                                isLoading = false
 
                                 IsLastPage.IS_LAST_PAGE = currentPage < totalPages
                             }
@@ -94,15 +90,15 @@ class SearchViewModel(
         if (!isLastPage()) {
             IsLastPage.IS_LAST_PAGE = false
             val nextPage = currentPage + 1
-            _isFirstLoad.postValue(false)
-            _isLoading.postValue(true)
+            isFirstLoad = false
+            isLoading = true
             searchRequest(latestSearchText!!, totalPages, perPage = PAGE_SIZE, nextPage)
         }
     }
 
     fun isLastPage(): Boolean {
         IsLastPage.IS_LAST_PAGE = true
-        _isLoading.postValue(false)
+        isLoading = false
         return currentPage == totalPages - 1
     }
 

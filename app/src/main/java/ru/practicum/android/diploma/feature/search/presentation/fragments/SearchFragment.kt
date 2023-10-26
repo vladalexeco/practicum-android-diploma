@@ -28,9 +28,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-
-    private var isLoading = false
-    private var isFirstLoad = true
     private var lastVisibleItemPosition: Int = 0
 
     private var vacanciesAdapter: VacanciesAdapter? = null
@@ -45,7 +42,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-            if (!isLoading) {
+            if (!viewModel.isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && !viewModel.isLastPage()
@@ -81,14 +78,6 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             showVacanciesNumber(it)
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            isLoading = it
-        }
-
-        viewModel.isFirstLoad.observe(viewLifecycleOwner) {
-            isFirstLoad = it
-        }
-
         binding.searchInputEditText.doOnTextChanged { text, _, _, _ ->
             vacanciesAdapter?.clear()
             clearButtonVisibility(text)
@@ -121,7 +110,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     private fun showLoading() {
-        if (isFirstLoad) {
+        if (viewModel.isFirstLoad) {
             clearContent()
             binding.progressBar.visibility = View.VISIBLE
         } else {
