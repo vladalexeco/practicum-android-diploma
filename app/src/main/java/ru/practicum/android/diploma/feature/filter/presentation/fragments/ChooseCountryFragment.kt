@@ -40,7 +40,6 @@ class ChooseCountryFragment : Fragment() {
             when (state) {
                 is CountriesState.DisplayCountries -> displayCountries(state.countries)
                 is CountriesState.Error -> displayError(state)
-                else -> {}
             }
         }
 

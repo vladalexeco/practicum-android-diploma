@@ -23,7 +23,7 @@
 
 
     // Экран "Избранное"
-    <string name="favourite_header_favourite">Избарнное</string>
+    <string name="favourite_header_favourite">Избранное</string>
     <string name="favourite_message_list_is_empty">Список пуст</string>
 
     // Экраны "Фильтры"
@@ -67,6 +67,10 @@
     <string name="bottom_navigation_title_main">Главная</string>
     <string name="bottom_navigation_title_favourite">Избранное</string>
     <string name="bottom_navigation_title_command">Команда</string>
+
+    // ExternalNavigatorImpl
+    <string name="external_nav_mail_to">mailto:</string>
+    <string name="external_nav_telephone">tel:</string>
 
     // Общие ресурсы
     <string name="message_no_internet">Нет интернета</string>

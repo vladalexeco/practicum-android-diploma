@@ -17,16 +17,11 @@ interface HeadHunterDirectoryApi {
     suspend fun getCountries(): List<CountryDto>
 
     @GET("/areas/{area_id}")
-    suspend fun getAreas(
-        @Path("area_id") areaId: String
-    ): AreaResponse
+    suspend fun getAreas(@Path("area_id") areaId: String): AreaResponse
 
     @GET("/areas")
     suspend fun getAllAreas(): List<AreaDto>
 
     @GET("/areas/{area_id}")
-    suspend fun getAreaPlain(
-        @Path("area_id") areaId: String
-    ): AreaPlainResponse
-
+    suspend fun getAreaPlain(@Path("area_id") areaId: String): AreaPlainResponse
 }

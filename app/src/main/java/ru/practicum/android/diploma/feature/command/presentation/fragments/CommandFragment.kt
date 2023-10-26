@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import ru.practicum.android.diploma.R
 
-
 class CommandFragment : Fragment() {
 
     override fun onCreateView(

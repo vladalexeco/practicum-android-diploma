@@ -23,8 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_2"
         android:background="@color/yp_gray"
-        app:layout_constraintTop_toBottomOf="@id/container_view"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@id/container_view" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

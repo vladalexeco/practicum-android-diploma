@@ -12,9 +12,7 @@ class SettingsFiltersViewModel(
     private val clearFilterSettingsUseCase: ClearFilterSettingsUseCase
 ) : ViewModel() {
 
-    fun getFilterSettings(): FilterSettings {
-        return getFilterSettingsUseCase()
-    }
+    fun getFilterSettings(): FilterSettings = getFilterSettingsUseCase()
 
     fun saveFilterSettings(filterSettings: FilterSettings) {
         saveFilterSettingsUseCase(filterSettings)
