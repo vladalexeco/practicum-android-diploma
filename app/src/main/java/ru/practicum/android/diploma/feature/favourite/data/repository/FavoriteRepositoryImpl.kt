@@ -16,14 +16,12 @@ class FavoriteRepositoryImpl(private val appDatabase: AppDatabase): FavoriteRepo
 
     override suspend fun deleteVacancy(vacancyFull: VacancyFull) {
         appDatabase.getVacancyDao().deleteVacancy(vacancyFull.toVacancyFullEntity())
-
     }
 
     override fun getAllVacancy(): Flow<List<VacancyFull>> = flow {
         val listVacancies =appDatabase.getVacancyDao().getAllVacancy()
         emit(listVacancies.map { it.toVacancyFull() })
     }
-
 
     override fun getAllVacancyIds(): Flow<List<String>> = flow{
         val listId= appDatabase.getVacancyDao().getAllVacancyIds()

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryAreaModel
 
-class FilterAdapter<T : IndustryAreaModel>(
+class AreaIndustriesAdapter<T : IndustryAreaModel>(
     val items: ArrayList<T>,
     private val clickListener: ClickListener
 ) : RecyclerView.Adapter<FilterViewHolder>() {

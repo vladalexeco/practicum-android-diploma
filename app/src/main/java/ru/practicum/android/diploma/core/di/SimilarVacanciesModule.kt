@@ -12,6 +12,5 @@ val similarVacanciesModule = module {
 
     factory<GetSimilarVacanciesUseCase>{
         GetSimilarVacanciesUseCase(get())
-
     }
 }

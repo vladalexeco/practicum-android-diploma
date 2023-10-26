@@ -25,10 +25,10 @@ class ChooseCountryViewModel(
     fun observeCountriesState(): LiveData<CountriesState> = countriesStateLiveData
 
     init {
-        initScreen()
+        initIndustries()
     }
 
-    private fun initScreen() {
+    private fun initIndustries() {
         viewModelScope.launch {
             countryUseCase.invoke().collect { result ->
                 processResult(result)

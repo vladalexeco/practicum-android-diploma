@@ -11,18 +11,14 @@ class GetAllAreasUseCase(private val directoryRepository: DirectoryRepository) {
 
     operator fun invoke(): Flow<DataResponse<Area>> {
         return directoryRepository.getAllAreas().map { result ->
-
             when(result) {
                 is Resource.Success -> {
                     DataResponse(data = result.data, networkError = null)
                 }
-
                 is Resource.Error -> {
                     DataResponse(data = null, networkError = result.networkError)
                 }
             }
-
         }
     }
-
 }

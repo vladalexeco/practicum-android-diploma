@@ -28,18 +28,14 @@ class GetAreasUseCase(private val directoryRepository: DirectoryRepository) {
 
     operator fun invoke(areaId: String): Flow<DataResponse<Area>> {
         return directoryRepository.getAreas(areaId).map { result ->
-
             when(result) {
                 is Resource.Success -> {
                     DataResponse(data = result.data, networkError = null)
                 }
-
                 is Resource.Error -> {
                     DataResponse(data = null, networkError = result.networkError)
                 }
             }
-
         }
     }
-
 }

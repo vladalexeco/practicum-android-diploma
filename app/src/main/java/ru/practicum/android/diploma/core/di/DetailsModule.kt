@@ -24,5 +24,4 @@ val detailsModule = module {
     singleOf(::RemoveVacancyFromFavouriteUseCase)
     singleOf(::GetVacancyByIdUseCase)
     singleOf(::ExternalNavigatorImpl) bind ExternalNavigator::class
-
 }
