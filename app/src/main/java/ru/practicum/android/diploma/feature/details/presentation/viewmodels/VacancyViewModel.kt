@@ -73,15 +73,15 @@ class VacancyViewModel(
 
     fun onFavoriteButtonClick(vacancyFull: VacancyFull) {
         viewModelScope.launch(Dispatchers.IO) {
-            val vacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
+            val vacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val vacancyId = vacancyFull.id
             if (vacancyIds?.contains(vacancyId) == true) {
-                removeVacancyFromFavouriteUseCase.removeVacancy(vacancyFull)
+                removeVacancyFromFavouriteUseCase(vacancyFull)
             } else {
-                addVacancyToFavouriteUseCase.addVacancy(vacancyFull)
+                addVacancyToFavouriteUseCase(vacancyFull)
             }
 
-            val updatedVacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
+            val updatedVacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val isFavorite = updatedVacancyIds?.contains(vacancyId) == true
             _isFavorite.postValue(isFavorite)
         }
@@ -89,7 +89,7 @@ class VacancyViewModel(
 
     fun checkFavoriteStatus(vacancyFull: VacancyFull) {
         viewModelScope.launch(Dispatchers.IO) {
-            val vacancyIds = getFavoriteIdsUseCase.getFavoriteIds().singleOrNull()
+            val vacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val vacancyId = vacancyFull.id
             val isFavorite = vacancyIds?.contains(vacancyId) == true
             _isFavorite.postValue(isFavorite)
@@ -99,7 +99,7 @@ class VacancyViewModel(
     fun getVacancyById(vacancyId: String): LiveData<VacancyFull?> {
         val vacancyLiveData = MutableLiveData<VacancyFull?>()
         viewModelScope.launch(Dispatchers.IO) {
-            val vacancy = getVacancyByIdUseCase.getVacancyById(vacancyId)
+            val vacancy = getVacancyByIdUseCase(vacancyId)
             vacancyLiveData.postValue(vacancy)
         }
         return vacancyLiveData

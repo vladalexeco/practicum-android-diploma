@@ -46,6 +46,13 @@ android {
         buildConfig = true
         viewBinding = true
     }
+    kotlin {
+        sourceSets.all {
+            languageSettings.apply {
+                enableLanguageFeature("DataObjects")
+            }
+        }
+    }
 }
 
 dependencies {
