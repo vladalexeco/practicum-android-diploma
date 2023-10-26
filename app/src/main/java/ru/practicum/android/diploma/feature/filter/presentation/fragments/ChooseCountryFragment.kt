@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
@@ -45,7 +46,7 @@ class ChooseCountryFragment : Fragment() {
         viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
             DataTransmitter.postCountry(country)
             DataTransmitter.postAreaPlain(null)
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
         }
 
         binding.chooseCountryBackArrowImageview.setOnClickListener {
