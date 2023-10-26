@@ -62,44 +62,54 @@ class VacancyFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun getVacancy(vacancyId: String?) {
         if (!isNetworkAvailable(requireContext())) {
-            if (vacancyId != null) {
-                viewModel.getVacancyById(vacancyId).observe(viewLifecycleOwner) { vacancy ->
-                    if (vacancy != null) {
-                        render(DataState.DataReceived(vacancy))
-                        viewModel.checkFavoriteStatus(vacancy)
-                        binding.similarVacanciesButton.visibility=View.GONE
+            vacancyId?.let { id ->
+                viewModel.getVacancyById(id).observe(viewLifecycleOwner) { vacancy ->
+                    vacancy?.also {
+                        render(DataState.DataReceived(it))
+                        viewModel.checkFavoriteStatus(it)
+                        binding.similarVacanciesButton.visibility = View.GONE
                     }
                 }
             }
         }
     }
 
-    private fun initListeners() {
-        binding.vacancyContactEmailValue.setOnClickListener {
+    private fun initListeners() = with(binding) {
+        vacancyContactEmailValue.setOnClickListener {
             viewModel.currentVacancyFull?.contacts?.email?.let { email ->
                 viewModel.onContactEmailClicked(email)
             }
         }
-        binding.vacancyContactPhoneValue.setOnClickListener {
+        vacancyContactPhoneValue.setOnClickListener {
             viewModel.currentVacancyFull?.contacts?.phones?.get(0)
                 ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
         }
-        binding.sharingIcon.setOnClickListener { viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
+        sharingIcon.setOnClickListener { viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
             viewModel.onShareVacancyClicked(alternateUrl)
             }
         }
 
-        binding.vacancyDetailsBackArrowImageview.setOnClickListener {
+        vacancyDetailsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding.similarVacanciesButton.setOnClickListener {
+        similarVacanciesButton.setOnClickListener {
             findNavController().navigate(R.id.action_vacancyFragment_to_similarVacanciesFragment)
         }
 
-        binding.favoritesIcon.setOnClickListener {
+        favoritesIcon.setOnClickListener {
             viewModel.currentVacancyFull?.let { vacancyFull ->
                 viewModel.onFavoriteButtonClick(vacancyFull)
             }
@@ -110,30 +120,17 @@ class VacancyFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     private fun render(dataState: DataState) {
 
         when(dataState) {
-
-            is DataState.Loading -> {
-                showLoader()
-            }
-
-            is DataState.Failed -> {
-                showErrorMessage()
-            }
-
+            is DataState.Loading -> showLoader()
+            is DataState.Failed -> showErrorMessage()
             is DataState.DataReceived -> {
                 setContentToViews(vacancyFull = dataState.data)
                 showContent()
                 viewModel.checkFavoriteStatus(dataState.data)
             }
         }
-
     }
 
     @SuppressLint("ResourceAsColor")
@@ -164,8 +161,7 @@ class VacancyFragment : Fragment() {
         }
 
         // Логотип работодателя
-        val logoUrl: String? = vacancyFull.employer?.logoUrls?.original
-        setLogoToImageView(logoUrl)
+        setLogoToImageView(vacancyFull.employer?.logoUrls?.original)
 
         // Имя работодателя
         binding.employerName.text = vacancyFull.employer?.name
@@ -221,7 +217,6 @@ class VacancyFragment : Fragment() {
         return this.replace(Regex("<li>\\s<p>|<li>"), "<li>\u00A0")
     }
 
-
     private fun setLogoToImageView(logoUrl: String?) {
         Glide.with(requireContext())
             .load(logoUrl)
@@ -273,10 +268,5 @@ class VacancyFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 }

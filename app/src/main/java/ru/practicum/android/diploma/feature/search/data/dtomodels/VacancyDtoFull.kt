@@ -12,7 +12,7 @@ data class VacancyDtoFull(
     val employer: EmployerDto?,
     val employment: EmploymentDto?,
     val experience: ExperienceDto?,
-    val id: String?,
+    val id: String,
     @SerializedName("key_skills")
     val keySkills: List<KeySkillDto>?,
     val name: String?,
