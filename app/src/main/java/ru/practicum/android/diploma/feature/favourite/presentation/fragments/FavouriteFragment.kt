@@ -20,7 +20,7 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.SimilarVacanciesAdapter
 
-class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
+class FavouriteFragment : Fragment(), SimilarVacanciesAdapter.ClickListener {
 
     private var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
@@ -43,33 +43,28 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
 
         favoriteAdapter = SimilarVacanciesAdapter(this, requireContext())
 
-        binding.recyclerViewFavorite.layoutManager= LinearLayoutManager(requireActivity())
-        binding.recyclerViewFavorite.adapter=favoriteAdapter
+        binding.recyclerViewFavorite.layoutManager = LinearLayoutManager(requireActivity())
+        binding.recyclerViewFavorite.adapter = favoriteAdapter
 
         viewModel.getAllVacancies()
 
-
         lifecycleScope.launch {
-            viewModel.state.collect{state->
-                when (state){
+            viewModel.state.collect { state ->
+                when (state) {
                     is FavoriteVacancyState.Empty -> {
                         binding.placeHolderFavorite.visibility = View.VISIBLE
-                        binding.recyclerViewFavorite.visibility=View.GONE
+                        binding.recyclerViewFavorite.visibility = View.GONE
                     }
+
                     is FavoriteVacancyState.VacancyLoaded -> {
                         binding.placeHolderFavorite.visibility = View.GONE
-                        binding.recyclerViewFavorite.visibility=View.VISIBLE
+                        binding.recyclerViewFavorite.visibility = View.VISIBLE
                         val vacancy = state.vacancy.map { it.toVacancyShort() }
                         favoriteAdapter!!.setVacancyList(vacancy)
                     }
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onClick(vacancy: VacancyShort) {
@@ -81,5 +76,10 @@ class FavouriteFragment : Fragment(),SimilarVacanciesAdapter.ClickListener {
     override fun onResume() {
         super.onResume()
         viewModel.getAllVacancies()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

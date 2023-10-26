@@ -23,7 +23,7 @@
 
 
     // Экран "Избранное"
-    <string name="favourite_header_favourite">Избарнное</string>
+    <string name="favourite_header_favourite">Избранное</string>
     <string name="favourite_message_list_is_empty">Список пуст</string>
 
     // Экраны "Фильтры"

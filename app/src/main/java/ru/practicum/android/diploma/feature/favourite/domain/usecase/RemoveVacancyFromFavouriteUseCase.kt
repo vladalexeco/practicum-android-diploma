@@ -5,7 +5,7 @@ import ru.practicum.android.diploma.feature.favourite.domain.repository.Favorite
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 class RemoveVacancyFromFavouriteUseCase(private val favoriteRepository: FavoriteRepository) {
-    suspend fun removeVacancy(vacancyFull: VacancyFull) {
+    suspend operator fun invoke(vacancyFull: VacancyFull) {
         favoriteRepository.deleteVacancy(vacancyFull)
     }
 }

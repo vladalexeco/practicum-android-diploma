@@ -6,5 +6,7 @@ import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
 
 
 class GetAllVacancyUseCase(private val favoriteRepository: FavoriteRepository) {
-    fun getAllVacancy(): Flow<List<VacancyFull>> = favoriteRepository.getAllVacancy()
+    operator fun invoke(): Flow<List<VacancyFull>> {
+        return favoriteRepository.getAllVacancy()
+    }
 }
