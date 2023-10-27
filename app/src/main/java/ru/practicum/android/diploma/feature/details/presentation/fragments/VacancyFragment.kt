@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
@@ -23,15 +23,13 @@ import ru.practicum.android.diploma.feature.details.presentation.DataState
 import ru.practicum.android.diploma.feature.details.presentation.viewmodels.VacancyViewModel
 import ru.practicum.android.diploma.feature.search.domain.models.Salary
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyFull
-import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
+import ru.practicum.android.diploma.feature.similar_vacancies.presentation.fragments.SimilarVacanciesFragment
 
 class VacancyFragment : Fragment() {
 
     private var _binding: FragmentVacancyBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: VacancyViewModel by viewModel()
-    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,13 +42,9 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var vacancyId: String?
-
-        sharedViewModel.observeVacancyId().observe(viewLifecycleOwner) {
-            vacancyId = it
-            viewModel.getDetailedVacancyData(vacancyId)
-            getVacancy(vacancyId)
-        }
+        val vacancyId = requireArguments().getString(VACANCY_ID)
+        viewModel.getDetailedVacancyData(vacancyId)
+        getVacancy(vacancyId)
 
         initListeners()
 
@@ -59,6 +53,13 @@ class VacancyFragment : Fragment() {
             if (dataState is DataState.DataReceived) {
                 viewModel.checkFavoriteStatus(dataState.data)
             }
+        }
+
+        binding.similarVacanciesButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_vacancyFragment_to_similarVacanciesFragment,
+                SimilarVacanciesFragment.createArgs(vacancyId)
+            )
         }
     }
 
@@ -96,17 +97,14 @@ class VacancyFragment : Fragment() {
             viewModel.currentVacancyFull?.contacts?.phones?.get(0)
                 ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
         }
-        sharingIcon.setOnClickListener { viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
-            viewModel.onShareVacancyClicked(alternateUrl)
+        sharingIcon.setOnClickListener {
+            viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
+                viewModel.onShareVacancyClicked(alternateUrl)
             }
         }
 
         vacancyDetailsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
-        }
-
-        similarVacanciesButton.setOnClickListener {
-            findNavController().navigate(R.id.action_vacancyFragment_to_similarVacanciesFragment)
         }
 
         favoritesIcon.setOnClickListener {
@@ -122,7 +120,7 @@ class VacancyFragment : Fragment() {
 
     private fun render(dataState: DataState) {
 
-        when(dataState) {
+        when (dataState) {
             is DataState.Loading -> showLoader()
             is DataState.Failed -> showErrorMessage()
             is DataState.DataReceived -> {
@@ -135,20 +133,23 @@ class VacancyFragment : Fragment() {
 
     @SuppressLint("ResourceAsColor")
     private fun setContentToViews(vacancyFull: VacancyFull) {
-
         viewModel.currentVacancyFull = vacancyFull
 
         // Наименование вакансии
         binding.vacancyName.text = vacancyFull.name
 
+        setSalaryData(vacancyFull)
+        setEmployerAndVacancyDescriptionData(vacancyFull)
+        setContactsData(vacancyFull)
+    }
+
+    private fun setSalaryData(vacancyFull: VacancyFull) {
         // Предлагаемая заработанная плата
         if (vacancyFull.salary == null) {
             binding.salary.text = getString(R.string.message_salary_not_pointed)
         } else {
             val salary: Salary = vacancyFull.salary
-
             val currencySymbol = CurrencyLogoCreator.getSymbol(salary.currency)
-
             val message = if (salary.to == null && salary.from != null) {
                 getString(R.string.salary_template_from, salary.from, currencySymbol)
             } else if (salary.to != null && salary.from == null) {
@@ -156,10 +157,11 @@ class VacancyFragment : Fragment() {
             } else {
                 getString(R.string.salary_template_from_to, salary.from, salary.to, currencySymbol)
             }
-
             binding.salary.text = message
         }
+    }
 
+    private fun setEmployerAndVacancyDescriptionData(vacancyFull: VacancyFull) {
         // Логотип работодателя
         setLogoToImageView(vacancyFull.employer?.logoUrls?.original)
 
@@ -177,7 +179,12 @@ class VacancyFragment : Fragment() {
         binding.scheduleValue.text = schedule
 
         // Описание вакансии
-        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description?.addSpaces(), FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM))
+        binding.vacancyDescriptionValue.setText(
+            Html.fromHtml(
+                vacancyFull.description?.addSpaces(),
+                FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
+            )
+        )
 
         // Ключевые навыки
         if (vacancyFull.keySkills.isNullOrEmpty()) {
@@ -185,32 +192,33 @@ class VacancyFragment : Fragment() {
         } else {
             val interpunct = "\u00B7"
             var message = ""
-
             vacancyFull.keySkills.forEach { keySkill ->
                 val singleLine = "$interpunct ${keySkill.name} \n"
                 message += singleLine
             }
-
             binding.vacancyKeySkillsValue.text = message.trimEnd()
-
         }
+    }
 
+    private fun setContactsData(vacancyFull: VacancyFull) {
         if (vacancyFull.contacts == null) {
             binding.contactsContainer.visibility = View.GONE
         } else {
-            // Контактное лицо
-            binding.vacancyContactPersonValue.text = vacancyFull.contacts.name
+            binding.apply {
+                // Контактное лицо
+                vacancyContactPersonValue.text = vacancyFull.contacts.name
 
-            // Email
-            binding.vacancyContactEmailValue.text = vacancyFull.contacts.email
+                // Email
+                vacancyContactEmailValue.text = vacancyFull.contacts.email
 
-            // Телефон
-            binding.vacancyContactPhoneValue.text = vacancyFull.contacts.phones[0].formatted
+                // Телефон
+                vacancyContactPhoneValue.text = vacancyFull.contacts.phones[0].formatted
 
-            // Комментарий
-            binding.vacancyPhoneCommentValue.text = vacancyFull.contacts.phones[0].comment.toString()
+                // Комментарий
+                vacancyPhoneCommentValue.text =
+                    vacancyFull.contacts.phones[0].comment.toString()
+            }
         }
-
     }
 
     private fun String.addSpaces(): String {
@@ -225,21 +233,27 @@ class VacancyFragment : Fragment() {
     }
 
     private fun showLoader() {
-        binding.detailsLoaderProgressBar.visibility = View.VISIBLE
-        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
-        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
+        binding.apply {
+            detailsLoaderProgressBar.visibility = View.VISIBLE
+            detailsMainScreenConstraintLayout.visibility = View.GONE
+            detailsErrorMessageLinearLayout.visibility = View.GONE
+        }
     }
 
     private fun showContent() {
-        binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenConstraintLayout.visibility = View.VISIBLE
-        binding.detailsErrorMessageLinearLayout.visibility = View.GONE
+        binding.apply {
+            detailsLoaderProgressBar.visibility = View.GONE
+            detailsMainScreenConstraintLayout.visibility = View.VISIBLE
+            detailsErrorMessageLinearLayout.visibility = View.GONE
+        }
     }
 
     private fun showErrorMessage() {
-        binding.detailsLoaderProgressBar.visibility = View.GONE
-        binding.detailsMainScreenConstraintLayout.visibility = View.GONE
-        binding.detailsErrorMessageLinearLayout.visibility = View.VISIBLE
+        binding.apply {
+            detailsLoaderProgressBar.visibility = View.GONE
+            detailsMainScreenConstraintLayout.visibility = View.GONE
+            detailsErrorMessageLinearLayout.visibility = View.VISIBLE
+        }
     }
 
     private fun setFabIcon(isFavorite: Boolean) {
@@ -258,7 +272,6 @@ class VacancyFragment : Fragment() {
             val activeNetwork =
                 connectivityManager.getNetworkCapabilities(networkCapabilities)
                     ?: return false
-
             return when {
                 activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
@@ -268,5 +281,10 @@ class VacancyFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
+    }
+
+    companion object {
+        fun createArgs(vacancyId: String?) = bundleOf(VACANCY_ID to vacancyId)
+        private const val VACANCY_ID = "VACANCY_ID"
     }
 }
