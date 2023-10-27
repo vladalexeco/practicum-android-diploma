@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.feature.filter.presentation.fragments
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -87,10 +86,8 @@ class ChooseWorkplaceFragment : Fragment() {
 
     private fun setDataWorkPlaceObserver() {
         viewModel.dataWorkplace.observe(viewLifecycleOwner) { liveDataResource ->
-            Log.d("!@#", liveDataResource.javaClass.toString())
             when (liveDataResource) {
                 is LiveDataResource.AreaPlainStorage -> {
-                    Log.d("!@#", "LiveDataResource.AreaPlainStorage")
                     val areaPlain: AreaPlain? = liveDataResource.data
                     if (areaPlain != null) {
                         if (areaPlain.parentId != null) {
@@ -104,14 +101,12 @@ class ChooseWorkplaceFragment : Fragment() {
                 }
 
                 is LiveDataResource.CountryNameStorage -> {
-                    Log.d("!@#", "LiveDataResource.CountryNameStorage")
                     val countryName: String = liveDataResource.data
                     binding.chooseCountryTextInputEditText.setText(countryName)
                     renderCountryTextInputLayout(countryName)
                 }
 
                 is LiveDataResource.AreaNameStorage -> {
-                    Log.d("!@#", "LiveDataResource.AreaNameStorage")
                     val areaName: String = liveDataResource.data
                     binding.areaTextInputEditText.setText(areaName)
                     renderAreaTextInputLayout(areaName)
@@ -163,6 +158,7 @@ class ChooseWorkplaceFragment : Fragment() {
         binding.apply {
             countryClear.setOnClickListener {
                 viewModel.onCountryCleared()
+                Thread.sleep(50)
                 viewModel.onAreaCleared()
                 setChooseButtonVisible(false)
             }
@@ -195,7 +191,6 @@ class ChooseWorkplaceFragment : Fragment() {
     }
 
     private fun renderCountryTextInputLayout(countryName: String) {
-        Log.d("!@#", "renderCountryTextInputLayout")
         if (countryName.isNotEmpty()) {
             binding.apply {
                 chooseCountryTextInputLayout.defaultHintTextColor =
