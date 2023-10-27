@@ -18,6 +18,7 @@ import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseWorkPlaceViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 
 class ChooseWorkplaceFragment : Fragment() {
 
@@ -36,9 +37,7 @@ class ChooseWorkplaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setOnBackPressedListener()
-        setAreaPlainObserve()
-        setDataCountryObserver()
-        setDataAreaObserver()
+        setDataWorkPlaceObserver()
         viewModel.initData()
         binding.chooseWorkplaceBackArrowImageview.setOnClickListener {
             findNavController().popBackStack(R.id.settingsFiltersFragment, false)
@@ -79,31 +78,36 @@ class ChooseWorkplaceFragment : Fragment() {
             })
     }
 
-    private fun setAreaPlainObserve() {
-        viewModel.dataAreaPlain.observe(viewLifecycleOwner) { areaPlain ->
-            if (areaPlain != null) {
-                if (areaPlain.parentId != null) {
-                    viewModel.getAreaPlain(areaPlain.parentId)
-                } else {
-                    val country = Country(areaPlain.id, areaPlain.name)
-                    DataTransmitter.postCountry(country)
-                    binding.chooseCountryTextInputEditText.setText(areaPlain.name)
+    private fun setDataWorkPlaceObserver() {
+        viewModel.dataWorkplace.observe(viewLifecycleOwner) { liveDataResource ->
+            when(liveDataResource) {
+                is LiveDataResource.AreaPlainStorage -> {
+                    val areaPlain: AreaPlain? = liveDataResource.data
+                    if (areaPlain != null) {
+                        if (areaPlain.parentId != null) {
+                            viewModel.getAreaPlain(areaPlain.parentId)
+                        } else {
+                            val country = Country(areaPlain.id, areaPlain.name)
+                            DataTransmitter.postCountry(country)
+                            binding.chooseCountryTextInputEditText.setText(areaPlain.name)
+                        }
+                    }
                 }
+
+                is LiveDataResource.CountryNameStorage -> {
+                    val countryName: String = liveDataResource.data
+                    binding.chooseCountryTextInputEditText.setText(countryName)
+                    renderCountryTextInputLayout(countryName)
+                }
+
+                is LiveDataResource.AreaNameStorage -> {
+                    val areaName: String = liveDataResource.data
+                    binding.areaTextInputEditText.setText(areaName)
+                    renderAreaTextInputLayout(areaName)
+                }
+
+                else -> throw Throwable(getString(R.string.bad_inheritor_error))
             }
-        }
-    }
-
-    private fun setDataCountryObserver() {
-        viewModel.dataCountry.observe(viewLifecycleOwner) {
-            binding.chooseCountryTextInputEditText.setText(it)
-            renderCountryTextInputLayout(it)
-        }
-    }
-
-    private fun setDataAreaObserver() {
-        viewModel.dataArea.observe(viewLifecycleOwner) {
-            binding.areaTextInputEditText.setText(it)
-            renderAreaTextInputLayout(it)
         }
     }
 
