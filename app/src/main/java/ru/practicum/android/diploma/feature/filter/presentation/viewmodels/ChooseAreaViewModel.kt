@@ -36,6 +36,7 @@ class ChooseAreaViewModel(
     }
 
     private var previousAreaClicked: Area? = null
+    private var previousAreaPositionInFullList = -1
 
     private fun initAreaData() {
         viewModelScope.launch {
@@ -85,7 +86,6 @@ class ChooseAreaViewModel(
                         )
                     )
                 )
-
             } else {
                 _areaData.postValue(
                     LiveDataResource.AreasStateStorage(
@@ -138,14 +138,37 @@ class ChooseAreaViewModel(
         }
     }
 
-    fun onAreaClicked(areaClicked: Area, previousAreaClicked: Area?) {
-        val areaPosition = areas.indexOf(areaClicked)
-        val previousAreaPosition =
-            if (previousAreaClicked != null) areas.indexOf(previousAreaClicked) else -1
+    fun onAreaClicked(
+        areaClickedPosition: Int,
+        areaClicked: Area,
+        notifyPreviousItemChanged: (Int) -> Unit
+    ) {
+        var previousAreaClickedPosition = -1
+        if (previousAreaClicked != null) {
+            for (i in filteredAreas!!.indices) {
+                if (filteredAreas!![i].id == previousAreaClicked!!.id) {
+                    previousAreaClickedPosition = i
+                    notifyPreviousItemChanged(previousAreaClickedPosition)
+                }
+            }
+        }
 
-        areas[areaPosition] = areaClicked
-        if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
+        var industryPositionInFullList = -1
+        for (i in areas.indices) {
+            if (areas[i].id == areaClicked.id) industryPositionInFullList = i
+        }
 
+        areas[industryPositionInFullList].isChecked = areaClicked.isChecked
+        if (previousAreaPositionInFullList != -1) areas[previousAreaPositionInFullList].isChecked =
+            false
+
+        if (previousAreaClickedPosition != areaClickedPosition) {
+            previousAreaClicked = areaClicked
+            previousAreaPositionInFullList = industryPositionInFullList
+        } else {
+            previousAreaClicked = null
+            previousAreaPositionInFullList = -1
+        }
         _areaData.postValue(LiveDataResource.AreaStorage(data = areaClicked))
     }
 

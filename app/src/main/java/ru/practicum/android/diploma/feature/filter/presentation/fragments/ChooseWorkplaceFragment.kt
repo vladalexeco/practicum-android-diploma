@@ -38,7 +38,6 @@ class ChooseWorkplaceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setOnBackPressedListener()
         setDataWorkPlaceObserver()
-        viewModel.initData()
         binding.chooseWorkplaceBackArrowImageview.setOnClickListener {
             findNavController().popBackStack(R.id.settingsFiltersFragment, false)
             DataTransmitter.postCountry(null)
@@ -46,17 +45,21 @@ class ChooseWorkplaceFragment : Fragment() {
         }
         setEditTextsClickListeners()
         chooseButtonCLickListener()
-        if (DataTransmitter.getCountry() != null) {
-            binding.chooseCountryTextInputEditText.setText(DataTransmitter.getCountry()?.name)
-        }
-        if (DataTransmitter.getAreaPlain() != null) {
-            binding.areaTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
-        }
+
+        if (DataTransmitter.getCountry() != null) binding.chooseCountryTextInputEditText.setText(
+            DataTransmitter.getCountry()?.name
+        )
+
+        if (DataTransmitter.getAreaPlain() != null) binding.areaTextInputEditText.setText(
+            DataTransmitter.getAreaPlain()?.name
+        )
+
         if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
             binding.areaTextInputEditText.text?.isNotEmpty() == true
         ) DataTransmitter.getAreaPlain()?.id?.let {
             viewModel.getAreaPlain(it)
         }
+
         setClearButtonsClickListeners()
         binding.chooseCountryTextInputEditText.doOnTextChanged { text, _, _, _ ->
             renderCountryTextInputLayout(text.toString())
@@ -64,6 +67,9 @@ class ChooseWorkplaceFragment : Fragment() {
         if (binding.chooseCountryTextInputEditText.text?.isNotEmpty() == true ||
             binding.areaTextInputEditText.text?.isNotEmpty() == true
         ) setChooseButtonVisible(true)
+        renderCountryTextInputLayout(binding.chooseCountryTextInputEditText.text.toString())
+        renderAreaTextInputLayout(binding.areaTextInputEditText.text.toString())
+        viewModel.initData()
     }
 
     private fun setOnBackPressedListener() {
@@ -80,7 +86,7 @@ class ChooseWorkplaceFragment : Fragment() {
 
     private fun setDataWorkPlaceObserver() {
         viewModel.dataWorkplace.observe(viewLifecycleOwner) { liveDataResource ->
-            when(liveDataResource) {
+            when (liveDataResource) {
                 is LiveDataResource.AreaPlainStorage -> {
                     val areaPlain: AreaPlain? = liveDataResource.data
                     if (areaPlain != null) {
@@ -152,6 +158,7 @@ class ChooseWorkplaceFragment : Fragment() {
         binding.apply {
             countryClear.setOnClickListener {
                 viewModel.onCountryCleared()
+                Thread.sleep(50)
                 viewModel.onAreaCleared()
                 setChooseButtonVisible(false)
             }

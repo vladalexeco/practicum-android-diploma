@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSimilarVacanciesBinding
+import ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.viewmodels.SimilarVacanciesViewModel
 import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.VacanciesAdapterCommon
@@ -20,8 +20,6 @@ import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesa
 class SimilarVacanciesFragment : Fragment(), VacanciesAdapterCommon.ClickListener {
 
     private val viewModel: SimilarVacanciesViewModel by viewModel()
-    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
-
     private var _binding: FragmentSimilarVacanciesBinding? = null
     private val binding get() = _binding!!
 
@@ -45,9 +43,8 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapterCommon.ClickListene
             findNavController().popBackStack()
         }
 
-        sharedViewModel.observeVacancyId().observe(viewLifecycleOwner) {
-            viewModel.searchSimilarVacancies(it)
-        }
+        val vacancyId = requireArguments().getString(VACANCY_ID)
+        viewModel.searchSimilarVacancies(vacancyId ?: "")
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {
             render(it)
@@ -91,21 +88,30 @@ class SimilarVacanciesFragment : Fragment(), VacanciesAdapterCommon.ClickListene
     }
 
     private fun clearContent() {
-        binding.similarVacanciesRecyclerView.visibility = View.GONE
-        binding.progressBarSimilar.visibility = View.GONE
-        binding.internetProblemLinearlayout.visibility = View.GONE
-        binding.nothingFoundLinearlayout.visibility = View.GONE
-        binding.serverNotRespondingLinearlayout.visibility = View.GONE
+        binding.apply {
+            similarVacanciesRecyclerView.visibility = View.GONE
+            progressBarSimilar.visibility = View.GONE
+            internetProblemLinearlayout.visibility = View.GONE
+            nothingFoundLinearlayout.visibility = View.GONE
+            serverNotRespondingLinearlayout.visibility = View.GONE
+        }
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        sharedViewModel.vacancyId = vacancy.id
-        findNavController().navigate(R.id.action_similarVacanciesFragment_to_vacancyFragment)
+        findNavController().navigate(
+            R.id.action_similarVacanciesFragment_to_vacancyFragment,
+            VacancyFragment.createArgs(vacancy.id)
+        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
         similarVacanciesAdapter = null
+    }
+
+    companion object {
+        fun createArgs(vacancyId: String?) = bundleOf(VACANCY_ID to vacancyId)
+        private const val VACANCY_ID = "VACANCY_ID"
     }
 }

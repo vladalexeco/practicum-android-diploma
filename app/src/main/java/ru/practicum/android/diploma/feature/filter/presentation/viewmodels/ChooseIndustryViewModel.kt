@@ -22,7 +22,7 @@ class ChooseIndustryViewModel(
 ) : ViewModel() {
 
     private var _dataIndustry = MutableLiveData<LiveDataResource>()
-    val  dataIndustry: LiveData<LiveDataResource> = _dataIndustry
+    val dataIndustry: LiveData<LiveDataResource> = _dataIndustry
 
     private var industries = arrayListOf<Industry>()
     private lateinit var filteredIndustries: List<Industry>
@@ -32,6 +32,7 @@ class ChooseIndustryViewModel(
     }
 
     private var previousIndustryClicked: Industry? = null
+    private var previousIndustryPositionInFullList = -1
 
     private fun initIndustriesData() {
         viewModelScope.launch {
@@ -96,14 +97,37 @@ class ChooseIndustryViewModel(
         )
     }
 
-    fun onIndustryClicked(industryClicked: Industry, previousIndustryClicked: Industry?) {
-        val industryPosition = industries.indexOf(industryClicked)
-        val previousIndustryPosition =
-            if (previousIndustryClicked != null) industries.indexOf(previousIndustryClicked) else -1
+    fun onIndustryClicked(
+        industryClickedPosition: Int,
+        industryClicked: Industry,
+        notifyPreviousItemChanged: (Int) -> Unit,
+    ) {
+        var previousIndustryClickedPosition = -1
+        if (previousIndustryClicked != null) {
+            for (i in filteredIndustries.indices) {
+                if (filteredIndustries[i].id == previousIndustryClicked!!.id) {
+                    previousIndustryClickedPosition = i
+                    notifyPreviousItemChanged(previousIndustryClickedPosition)
+                }
+            }
+        }
 
-        industries[industryPosition] = industryClicked
-        if (previousIndustryPosition != -1) industries[previousIndustryPosition].isChecked = false
+        var industryPositionInFullList = -1
+        for (i in industries.indices) {
+            if (industries[i].id == industryClicked.id) industryPositionInFullList = i
+        }
 
+        industries[industryPositionInFullList].isChecked = industryClicked.isChecked
+        if (previousIndustryPositionInFullList != -1) industries[previousIndustryPositionInFullList].isChecked =
+            false
+
+        if (previousIndustryClickedPosition != industryClickedPosition) {
+            previousIndustryClicked = industryClicked
+            previousIndustryPositionInFullList = industryPositionInFullList
+        } else {
+            previousIndustryClicked = null
+            previousIndustryPositionInFullList = -1
+        }
         _dataIndustry.postValue(LiveDataResource.IndustryStorage(data = industryClicked))
     }
 
@@ -122,7 +146,7 @@ class ChooseIndustryViewModel(
                 )
             )
         } else {
-            val filteredIndustries = (industries.filter {
+            filteredIndustries = (industries.filter {
                 it.name.contains(filterText, true)
             })
             if (filteredIndustries.isNotEmpty()) {

@@ -18,7 +18,7 @@ import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
 import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.mapToAreaPlain
-import ru.practicum.android.diploma.feature.filter.presentation.adapter.AreaIndustriesAdapter
+import ru.practicum.android.diploma.feature.filter.presentation.adapter.IndustriesAreasAdapter
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
@@ -29,8 +29,7 @@ class ChooseAreaFragment : Fragment() {
     private var _binding: FragmentChooseAreaBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChooseAreaViewModel by viewModel()
-    private var areasAdapter: AreaIndustriesAdapter<Area>? = null
-    private var previousAreaClicked: Area? = null
+    private var areasAdapter: IndustriesAreasAdapter<Area>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,28 +112,18 @@ class ChooseAreaFragment : Fragment() {
     }
 
     private fun initAdapter(areas: ArrayList<Area>) {
-        areasAdapter = AreaIndustriesAdapter(areas) { area, position, notifyItemChanged ->
+        areasAdapter = IndustriesAreasAdapter(areas) { area, position, notifyItemChanged ->
 
             areasAdapter!!.items[position].isChecked = !area.isChecked
             notifyItemChanged.invoke()
-
-            val previousAreaPosition = if (previousAreaClicked != null)
-                areasAdapter!!.items.indexOf(previousAreaClicked) else -1
-            if (previousAreaPosition != -1) {
-                areasAdapter!!.items[previousAreaPosition].isChecked = false
-                areasAdapter!!.notifyItemChanged(previousAreaPosition)
-            }
-
             val areaClicked = areasAdapter!!.items[position]
-            if (previousAreaPosition != -1) previousAreaClicked =
-                areasAdapter!!.items[previousAreaPosition]
 
-            viewModel.onAreaClicked(areaClicked, previousAreaClicked)
-
-            previousAreaClicked =
-                if (previousAreaClicked != areaClicked) areaClicked else null
-            binding.chooseAreaApproveButton.visibility =
-                if (areas[position].isChecked) View.VISIBLE else View.GONE
+            viewModel.onAreaClicked(position, areaClicked) { previousAreaPositionClicked: Int ->
+                areasAdapter!!.items[previousAreaPositionClicked].isChecked = false
+                areasAdapter!!.notifyItemChanged(
+                    previousAreaPositionClicked
+                )
+            }
         }
     }
 

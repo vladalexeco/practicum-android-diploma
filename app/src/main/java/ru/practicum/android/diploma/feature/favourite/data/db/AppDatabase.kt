@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.practicum.android.diploma.feature.favourite.data.model.VacancyFullEntity
 
-
 @Database(
     version = 1,
     entities = [VacancyFullEntity::class]
