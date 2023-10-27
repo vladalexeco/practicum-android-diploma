@@ -34,12 +34,12 @@ class ChooseWorkPlaceViewModel(
 
     private fun setCountryData() {
         val country = DataTransmitter.getCountry()
-        _dataWorkplace.postValue(LiveDataResource.CountryNameStorage(data = country?.name ?: ""))
+        _dataWorkplace.value = LiveDataResource.CountryNameStorage(data = country?.name ?: "")
     }
 
     private fun setAreaData() {
         val area = DataTransmitter.getAreaPlain()
-        _dataWorkplace.postValue(LiveDataResource.AreaNameStorage(data = area?.name ?: ""))
+        _dataWorkplace.value = LiveDataResource.AreaNameStorage(data = area?.name ?: "")
     }
 
     fun onCountryCleared() {
