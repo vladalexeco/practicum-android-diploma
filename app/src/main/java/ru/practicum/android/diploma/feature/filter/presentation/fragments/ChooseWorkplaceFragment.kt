@@ -48,9 +48,11 @@ class ChooseWorkplaceFragment : Fragment() {
         chooseButtonCLickListener()
         if (DataTransmitter.getCountry() != null) {
             binding.chooseCountryTextInputEditText.setText(DataTransmitter.getCountry()?.name)
+            DataTransmitter.getCountry()?.name?.let { renderCountryTextInputLayout(countryName = it) }
         }
         if (DataTransmitter.getAreaPlain() != null) {
             binding.areaTextInputEditText.setText(DataTransmitter.getAreaPlain()?.name)
+            DataTransmitter.getAreaPlain()?.name?.let { renderAreaTextInputLayout(it) }
         }
         if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true &&
             binding.areaTextInputEditText.text?.isNotEmpty() == true
@@ -153,10 +155,13 @@ class ChooseWorkplaceFragment : Fragment() {
             countryClear.setOnClickListener {
                 viewModel.onCountryCleared()
                 viewModel.onAreaCleared()
+                chooseCountryTextInputEditText.setText("")
+                areaTextInputEditText.setText("")
                 setChooseButtonVisible(false)
             }
             areaClear.setOnClickListener {
                 viewModel.onAreaCleared()
+                areaTextInputEditText.setText("")
                 if (binding.chooseCountryTextInputEditText.text?.isEmpty() == true)
                     setChooseButtonVisible(false)
             }
