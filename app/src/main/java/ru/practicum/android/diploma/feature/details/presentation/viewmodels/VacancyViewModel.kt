@@ -57,7 +57,12 @@ class VacancyViewModel(
                 if (serverResponse.first != null) {
                     val vacancyFull: VacancyFull = serverResponse.first!!.vacancy
                     val isFavorite = vacancyId?.contains(vacancyFull.id) == true
-                    _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
+                    _dataState.postValue(
+                        DataState.DataReceived(
+                            data = vacancyFull,
+                            isFavorite = isFavorite
+                        )
+                    )
                     checkFavoriteStatus(vacancyFull)
                 }
 
@@ -81,7 +86,12 @@ class VacancyViewModel(
             }
             val updatedVacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val isFavorite = updatedVacancyIds?.contains(vacancyId) == true
-            _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
+            _dataState.postValue(
+                DataState.DataReceived(
+                    data = vacancyFull,
+                    isFavorite = isFavorite
+                )
+            )
         }
     }
 
@@ -90,7 +100,12 @@ class VacancyViewModel(
             val vacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val vacancyId = vacancyFull.id
             val isFavorite = vacancyIds?.contains(vacancyId) == true
-            _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
+            _dataState.postValue(
+                DataState.DataReceived(
+                    data = vacancyFull,
+                    isFavorite = isFavorite
+                )
+            )
         }
     }
 
