@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.util.IsLastPage
-import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.debounce
@@ -60,7 +59,7 @@ class SearchViewModel(
                     .getVacancies(newSearchText, pages, perPage, page, filter.invoke())
                     .collect { pair ->
                         when {
-                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION || pair.second == STATUS_CODE_BAD_REQUEST -> renderState(
+                            pair.second == STATUS_CODE_NO_NETWORK_CONNECTION -> renderState(
                                 VacanciesSearchState.Error
                             )
 
