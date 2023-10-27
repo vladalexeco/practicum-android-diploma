@@ -50,35 +50,23 @@ class VacancyFragment : Fragment() {
             vacancyId = it
             viewModel.getDetailedVacancyData(vacancyId)
             getVacancy(vacancyId)
+            viewModel.getVacancyById(vacancyId)
         }
 
         initListeners()
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
             render(dataState)
-            if (dataState is DataState.DataReceived) {
-                viewModel.checkFavoriteStatus(dataState.data)
-            }
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     private fun getVacancy(vacancyId: String?) {
         if (!isNetworkAvailable(requireContext())) {
             vacancyId?.let { id ->
-                viewModel.getVacancyById(id).observe(viewLifecycleOwner) { vacancy ->
+                viewModel.dataState.observe(viewLifecycleOwner) { vacancy ->
                     vacancy?.also {
-                        render(DataState.DataReceived(it))
-                        viewModel.checkFavoriteStatus(it)
+                        viewModel.getVacancyById(id)
                         binding.similarVacanciesButton.visibility = View.GONE
                     }
                 }
@@ -96,8 +84,9 @@ class VacancyFragment : Fragment() {
             viewModel.currentVacancyFull?.contacts?.phones?.get(0)
                 ?.let { phone -> viewModel.onContactPhoneClicked(phone.number) }
         }
-        sharingIcon.setOnClickListener { viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
-            viewModel.onShareVacancyClicked(alternateUrl)
+        sharingIcon.setOnClickListener {
+            viewModel.currentVacancyFull?.applyAlternateUrl?.let { alternateUrl ->
+                viewModel.onShareVacancyClicked(alternateUrl)
             }
         }
 
@@ -115,20 +104,18 @@ class VacancyFragment : Fragment() {
             }
         }
 
-        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            setFabIcon(isFavorite)
-        }
     }
 
     private fun render(dataState: DataState) {
 
-        when(dataState) {
+        when (dataState) {
             is DataState.Loading -> showLoader()
             is DataState.Failed -> showErrorMessage()
+            is DataState.VacancyByIdReceived -> dataState.vacancy?.let { setContentToViews(it) }
             is DataState.DataReceived -> {
                 setContentToViews(vacancyFull = dataState.data)
                 showContent()
-                viewModel.checkFavoriteStatus(dataState.data)
+                setFabIcon(dataState.isFavorite)
             }
         }
     }
@@ -177,7 +164,12 @@ class VacancyFragment : Fragment() {
         binding.scheduleValue.text = schedule
 
         // Описание вакансии
-        binding.vacancyDescriptionValue.setText(Html.fromHtml(vacancyFull.description?.addSpaces(), FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM))
+        binding.vacancyDescriptionValue.setText(
+            Html.fromHtml(
+                vacancyFull.description?.addSpaces(),
+                FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM
+            )
+        )
 
         // Ключевые навыки
         if (vacancyFull.keySkills.isNullOrEmpty()) {
@@ -208,7 +200,8 @@ class VacancyFragment : Fragment() {
             binding.vacancyContactPhoneValue.text = vacancyFull.contacts.phones[0].formatted
 
             // Комментарий
-            binding.vacancyPhoneCommentValue.text = vacancyFull.contacts.phones[0].comment.toString()
+            binding.vacancyPhoneCommentValue.text =
+                vacancyFull.contacts.phones[0].comment.toString()
         }
 
     }
@@ -268,5 +261,10 @@ class VacancyFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

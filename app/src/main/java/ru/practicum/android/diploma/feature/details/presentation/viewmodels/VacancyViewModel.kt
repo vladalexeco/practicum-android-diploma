@@ -34,8 +34,6 @@ class VacancyViewModel(
     private var _dataState = MutableLiveData<DataState>()
     val dataState: LiveData<DataState> = _dataState
 
-    private var _isFavorite = MutableLiveData<Boolean>()
-    val isFavorite: LiveData<Boolean> = _isFavorite
 
     fun onContactEmailClicked(email: String) {
         emailUseCase.invoke(email)
@@ -58,7 +56,9 @@ class VacancyViewModel(
 
                 if (serverResponse.first != null) {
                     val vacancyFull: VacancyFull = serverResponse.first!!.vacancy
-                    _dataState.postValue(DataState.DataReceived(data = vacancyFull))
+                    val isFavorite = vacancyId?.contains(vacancyFull.id) == true
+                    _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
+                    checkFavoriteStatus(vacancyFull)
                 }
 
                 if (serverResponse.second != null) {
@@ -68,7 +68,6 @@ class VacancyViewModel(
 
             }
         }
-
     }
 
     fun onFavoriteButtonClick(vacancyFull: VacancyFull) {
@@ -80,10 +79,9 @@ class VacancyViewModel(
             } else {
                 addVacancyToFavouriteUseCase(vacancyFull)
             }
-
             val updatedVacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val isFavorite = updatedVacancyIds?.contains(vacancyId) == true
-            _isFavorite.postValue(isFavorite)
+            _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
         }
     }
 
@@ -92,16 +90,17 @@ class VacancyViewModel(
             val vacancyIds = getFavoriteIdsUseCase().singleOrNull()
             val vacancyId = vacancyFull.id
             val isFavorite = vacancyIds?.contains(vacancyId) == true
-            _isFavorite.postValue(isFavorite)
+            _dataState.postValue(DataState.DataReceived(data = vacancyFull, isFavorite = isFavorite))
         }
     }
 
-    fun getVacancyById(vacancyId: String): LiveData<VacancyFull?> {
-        val vacancyLiveData = MutableLiveData<VacancyFull?>()
+    fun getVacancyById(vacancyId: String?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val vacancy = getVacancyByIdUseCase(vacancyId)
-            vacancyLiveData.postValue(vacancy)
+            val vacancy = vacancyId?.let { getVacancyByIdUseCase(it) }
+            if (vacancy != null) {
+                checkFavoriteStatus(vacancy)
+            }
+            _dataState.postValue(DataState.VacancyByIdReceived(vacancy))
         }
-        return vacancyLiveData
     }
 }
