@@ -20,7 +20,7 @@ import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.Choos
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.mapToIndustryPlain
-import ru.practicum.android.diploma.feature.filter.presentation.adapter.AreaIndustriesAdapter
+import ru.practicum.android.diploma.feature.filter.presentation.adapter.IndustriesAreasAdapter
 import kotlin.collections.ArrayList
 
 class ChooseIndustryFragment : Fragment() {
@@ -28,8 +28,7 @@ class ChooseIndustryFragment : Fragment() {
     private var _binding: FragmentChooseIndustryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
-    private var industriesAdapter: AreaIndustriesAdapter<Industry>? = null
-    private var previousIndustryClicked: Industry? = null
+    private var industriesAdapter: IndustriesAreasAdapter<Industry>? = null
     private var currentIndustryPlain: IndustryPlain? = null
 
     override fun onCreateView(
@@ -106,28 +105,20 @@ class ChooseIndustryFragment : Fragment() {
 
     private fun initAdapter(industries: ArrayList<Industry>) {
         industriesAdapter =
-            AreaIndustriesAdapter(industries) { industry, position, notifyItemChanged ->
-
+            IndustriesAreasAdapter(industries) { industry, position, notifyItemChanged ->
                 industriesAdapter!!.items[position].isChecked = !industry.isChecked
                 notifyItemChanged.invoke()
+                val industryClicked = industriesAdapter!!.items[position]
 
-                val previousAreaPosition = if (previousIndustryClicked != null)
-                    industriesAdapter!!.items.indexOf(previousIndustryClicked) else -1
-                if (previousAreaPosition != -1) {
-                    industriesAdapter!!.items[previousAreaPosition].isChecked = false
-                    industriesAdapter!!.notifyItemChanged(previousAreaPosition)
+                viewModel.onIndustryClicked(
+                    position,
+                    industryClicked,
+                ) { previousIndustryPositionClicked: Int ->
+                    industriesAdapter!!.items[previousIndustryPositionClicked].isChecked = false
+                    industriesAdapter!!.notifyItemChanged(
+                        previousIndustryPositionClicked
+                    )
                 }
-
-                val areaClicked = industriesAdapter!!.items[position]
-                if (previousAreaPosition != -1) previousIndustryClicked =
-                    industriesAdapter!!.items[previousAreaPosition]
-
-                viewModel.onIndustryClicked(areaClicked, previousIndustryClicked)
-
-                previousIndustryClicked =
-                    if (previousIndustryClicked != areaClicked) areaClicked else null
-                binding.chooseIndustryApproveButton.visibility =
-                    if (industries[position].isChecked) View.VISIBLE else View.GONE
             }
     }
 
