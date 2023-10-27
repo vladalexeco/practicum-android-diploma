@@ -7,5 +7,6 @@ data class VacanciesResponse(
     val found: Int,
     val pages: Int,
     val perPage: Int,
-    val page: Int)
+    val page: Int
+)
 
