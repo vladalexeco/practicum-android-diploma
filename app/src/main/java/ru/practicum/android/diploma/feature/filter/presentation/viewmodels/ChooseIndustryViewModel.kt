@@ -14,17 +14,15 @@ import ru.practicum.android.diploma.feature.filter.domain.usecase.GetIndustriesU
 import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 
 class ChooseIndustryViewModel(
     private val industriesUseCase: GetIndustriesUseCase,
     private val resources: Resources
 ) : ViewModel() {
 
-    private var _dataIndustry = MutableLiveData<Industry>()
-    fun dataIndustry(): LiveData<Industry> = _dataIndustry
-
-    private val industriesStateLiveData = MutableLiveData<IndustriesState>()
-    fun observeIndustriesState(): LiveData<IndustriesState> = industriesStateLiveData
+    private var _dataIndustry = MutableLiveData<LiveDataResource>()
+    val  dataIndustry: LiveData<LiveDataResource> = _dataIndustry
 
     private var industries = arrayListOf<Industry>()
     private lateinit var filteredIndustries: List<Industry>
@@ -50,12 +48,25 @@ class ChooseIndustryViewModel(
                 addAll(getFullIndustriesList(result.data))
             }
             filteredIndustries = industries
-            industriesStateLiveData.value =
-                IndustriesState.DisplayIndustries(filteredIndustries)
+            _dataIndustry.postValue(
+                LiveDataResource.IndustryStateStorage(
+                    data = IndustriesState.DisplayIndustries(
+                        filteredIndustries
+                    )
+                )
+            )
         } else {
-            industriesStateLiveData.value = when (result.networkError!!) {
-                NetworkError.BAD_CONNECTION -> getBadConnectionErrorState()
-                NetworkError.SERVER_ERROR -> getServerErrorState()
+            when (result.networkError!!) {
+                NetworkError.BAD_CONNECTION -> _dataIndustry.postValue(
+                    LiveDataResource.IndustryStateStorage(
+                        data = getBadConnectionErrorState()
+                    )
+                )
+                NetworkError.SERVER_ERROR -> _dataIndustry.postValue(
+                    LiveDataResource.IndustryStateStorage(
+                        data = getServerErrorState()
+                    )
+                )
             }
         }
     }
@@ -93,7 +104,7 @@ class ChooseIndustryViewModel(
         industries[industryPosition] = industryClicked
         if (previousIndustryPosition != -1) industries[previousIndustryPosition].isChecked = false
 
-        _dataIndustry.postValue(industryClicked)
+        _dataIndustry.postValue(LiveDataResource.IndustryStorage(data = industryClicked))
     }
 
     fun onIndustryTextChanged(filterText: String?) {
@@ -103,20 +114,34 @@ class ChooseIndustryViewModel(
     private fun filterIndustries(filterText: String?) {
         if (filterText.isNullOrEmpty()) {
             filteredIndustries = industries
-            industriesStateLiveData.value = IndustriesState.DisplayIndustries(filteredIndustries)
+            _dataIndustry.postValue(
+                LiveDataResource.IndustryStateStorage(
+                    data = IndustriesState.DisplayIndustries(
+                        filteredIndustries
+                    )
+                )
+            )
         } else {
             val filteredIndustries = (industries.filter {
                 it.name.contains(filterText, true)
             })
             if (filteredIndustries.isNotEmpty()) {
-                industriesStateLiveData.value =
-                    IndustriesState.DisplayIndustries(filteredIndustries)
-            } else {
-                industriesStateLiveData.value =
-                    IndustriesState.Error(
-                        resources.getString(R.string.filter_message_no_industry),
-                        R.drawable.search_placeholder_nothing_found
+                _dataIndustry.postValue(
+                    LiveDataResource.IndustryStateStorage(
+                        data = IndustriesState.DisplayIndustries(
+                            filteredIndustries
+                        )
                     )
+                )
+            } else {
+                _dataIndustry.postValue(
+                    LiveDataResource.IndustryStateStorage(
+                        data = IndustriesState.Error(
+                            resources.getString(R.string.filter_message_no_industry),
+                            R.drawable.search_placeholder_nothing_found
+                        )
+                    )
+                )
             }
         }
     }

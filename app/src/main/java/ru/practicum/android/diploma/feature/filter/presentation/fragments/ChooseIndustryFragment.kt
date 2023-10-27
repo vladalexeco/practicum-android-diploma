@@ -21,6 +21,7 @@ import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.mapToIndustryPlain
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.AreaIndustriesAdapter
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 import kotlin.collections.ArrayList
 
 class ChooseIndustryFragment : Fragment() {
@@ -66,19 +67,27 @@ class ChooseIndustryFragment : Fragment() {
 
     private fun initObservers() {
         viewModel.apply {
-            observeIndustriesState().observe(viewLifecycleOwner) { state ->
-                when (state) {
-                    is IndustriesState.DisplayIndustries -> displayIndustries(ArrayList(state.industries))
-                    is IndustriesState.Error -> displayError(state)
-                }
-            }
-            dataIndustry().observe(viewLifecycleOwner) { industry ->
-                if (industry.isChecked) {
-                    binding.chooseIndustryApproveButton.visibility = View.VISIBLE
-                    currentIndustryPlain = industry.mapToIndustryPlain()
-                } else {
-                    binding.chooseIndustryApproveButton.visibility = View.GONE
-                    currentIndustryPlain = null
+            dataIndustry.observe(viewLifecycleOwner) { liveDataResource ->
+                when(liveDataResource) {
+                    is LiveDataResource.IndustryStorage -> {
+                        val industry: Industry = liveDataResource.data
+                        if (industry.isChecked) {
+                            binding.chooseIndustryApproveButton.visibility = View.VISIBLE
+                            currentIndustryPlain = industry.mapToIndustryPlain()
+                        } else {
+                            binding.chooseIndustryApproveButton.visibility = View.GONE
+                            currentIndustryPlain = null
+                        }
+                    }
+
+                    is LiveDataResource.IndustryStateStorage -> {
+                        when (val state = liveDataResource.data) {
+                            is IndustriesState.DisplayIndustries -> displayIndustries(ArrayList(state.industries))
+                            is IndustriesState.Error -> displayError(state)
+                        }
+                    }
+
+                    else ->  throw Throwable(getString(R.string.bad_inheritor_error))
                 }
             }
         }

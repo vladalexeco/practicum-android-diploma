@@ -17,6 +17,7 @@ import ru.practicum.android.diploma.feature.filter.domain.util.DataResponse
 import ru.practicum.android.diploma.feature.filter.domain.util.NetworkError
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
 import ru.practicum.android.diploma.feature.filter.presentation.states.IndustriesState
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 
 class ChooseAreaViewModel(
     private val areasUseCase: GetAreasUseCase,
@@ -24,11 +25,8 @@ class ChooseAreaViewModel(
     private val resources: Resources
 ) : ViewModel() {
 
-    private var _areaData = MutableLiveData<Area>()
-    fun areaData(): LiveData<Area> = _areaData
-
-    private val areasStateLiveData = MutableLiveData<AreasState>()
-    fun observeAreasState(): LiveData<AreasState> = areasStateLiveData
+    private var _areaData = MutableLiveData<LiveDataResource>()
+    val areaData: LiveData<LiveDataResource> = _areaData
 
     private var areas = arrayListOf<Area>()
     private var filteredAreas: List<Area>? = null
@@ -80,14 +78,24 @@ class ChooseAreaViewModel(
             }
             if (areas.isNotEmpty()) {
                 filteredAreas = areas
-                areasStateLiveData.value =
-                    AreasState.DisplayAreas(filteredAreas!!)
-            } else {
-                areasStateLiveData.value =
-                    AreasState.Error(
-                        resources.getString(R.string.filter_message_failed_to_get_list),
-                        R.drawable.areas_placeholder_can_not_receive_list
+                _areaData.postValue(
+                    LiveDataResource.AreasStateStorage(
+                        data = AreasState.DisplayAreas(
+                            filteredAreas!!
+                        )
                     )
+                )
+
+            } else {
+                _areaData.postValue(
+                    LiveDataResource.AreasStateStorage(
+                        data = AreasState.Error(
+                            resources.getString(R.string.filter_message_failed_to_get_list),
+                            R.drawable.areas_placeholder_can_not_receive_list
+                        )
+                    )
+                )
+
             }
         } else {
             when (result.networkError!!) {
@@ -138,7 +146,7 @@ class ChooseAreaViewModel(
         areas[areaPosition] = areaClicked
         if (previousAreaPosition != -1) areas[previousAreaPosition].isChecked = false
 
-        _areaData.postValue(areaClicked)
+        _areaData.postValue(LiveDataResource.AreaStorage(data = areaClicked))
     }
 
     fun onAreaTextChanged(filterText: String) {
@@ -147,25 +155,45 @@ class ChooseAreaViewModel(
 
     private fun filterAreas(filterText: String?) {
         if (filteredAreas == null) {
-            areasStateLiveData.value = AreasState.Error(
-                resources.getString(R.string.filter_message_failed_to_get_list),
-                R.drawable.areas_placeholder_can_not_receive_list
+            _areaData.postValue(
+                LiveDataResource.AreasStateStorage(
+                    data = AreasState.Error(
+                        resources.getString(R.string.filter_message_failed_to_get_list),
+                        R.drawable.areas_placeholder_can_not_receive_list
+                    )
+                )
             )
             return
         }
         if (filterText.isNullOrEmpty()) {
             filteredAreas = areas
-            areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+            _areaData.postValue(
+                LiveDataResource.AreasStateStorage(
+                    data = AreasState.DisplayAreas(
+                        filteredAreas!!
+                    )
+                )
+            )
         } else {
             filteredAreas = areas.filter {
                 it.name.contains(filterText, true)
             }
             if (filteredAreas!!.isNotEmpty()) {
-                areasStateLiveData.value = AreasState.DisplayAreas(filteredAreas!!)
+                _areaData.postValue(
+                    LiveDataResource.AreasStateStorage(
+                        data = AreasState.DisplayAreas(
+                            filteredAreas!!
+                        )
+                    )
+                )
             } else {
-                areasStateLiveData.value = AreasState.Error(
-                    resources.getString(R.string.filter_message_no_region),
-                    R.drawable.search_placeholder_nothing_found
+                _areaData.postValue(
+                    LiveDataResource.AreasStateStorage(
+                        data = AreasState.Error(
+                            resources.getString(R.string.filter_message_no_region),
+                            R.drawable.search_placeholder_nothing_found
+                        )
+                    )
                 )
             }
         }

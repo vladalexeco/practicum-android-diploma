@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseAreaBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
@@ -19,6 +20,7 @@ import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.mapToAreaPlain
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.AreaIndustriesAdapter
 import ru.practicum.android.diploma.feature.filter.presentation.states.AreasState
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseAreaViewModel
 
 class ChooseAreaFragment : Fragment() {
@@ -64,19 +66,27 @@ class ChooseAreaFragment : Fragment() {
 
     private fun initObservers() {
         viewModel.apply {
-            observeAreasState().observe(viewLifecycleOwner) { state ->
-                when (state) {
-                    is AreasState.DisplayAreas -> displayAreas(ArrayList(state.areas))
-                    is AreasState.Error -> displayError(state)
-                }
-            }
-            areaData().observe(viewLifecycleOwner) { area ->
-                if (area.isChecked) {
-                    binding.chooseAreaApproveButton.visibility = View.VISIBLE
-                    currentAreaPlain = area.mapToAreaPlain()
-                } else {
-                    binding.chooseAreaApproveButton.visibility = View.GONE
-                    currentAreaPlain = null
+            areaData.observe(viewLifecycleOwner) { liveDataResource ->
+                when(liveDataResource) {
+                    is LiveDataResource.AreaStorage -> {
+                        val area: Area = liveDataResource.data
+                        if (area.isChecked) {
+                            binding.chooseAreaApproveButton.visibility = View.VISIBLE
+                            currentAreaPlain = area.mapToAreaPlain()
+                        } else {
+                            binding.chooseAreaApproveButton.visibility = View.GONE
+                            currentAreaPlain = null
+                        }
+                    }
+
+                    is LiveDataResource.AreasStateStorage -> {
+                        when (val state: AreasState = liveDataResource.data) {
+                            is AreasState.DisplayAreas -> displayAreas(ArrayList(state.areas))
+                            is AreasState.Error -> displayError(state)
+                        }
+                    }
+
+                    else -> throw Throwable(getString(R.string.bad_inheritor_error))
                 }
             }
         }
