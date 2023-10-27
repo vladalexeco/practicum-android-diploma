@@ -1,10 +1,6 @@
 package ru.practicum.android.diploma.core.util
 
 object CurrencyLogoCreator {
-    /**
-     * Валюта вакансии приходит с сервера String?, в связи с чем невозможно передать в функцию объект
-     * Currecy.
-     */
 
     fun getSymbol(currency: String?): String {
         return when (currency) {

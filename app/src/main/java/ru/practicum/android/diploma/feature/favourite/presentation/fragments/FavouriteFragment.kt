@@ -17,14 +17,14 @@ import ru.practicum.android.diploma.feature.favourite.data.model.toVacancyShort
 import ru.practicum.android.diploma.feature.favourite.presentation.FavoriteVacancyState
 import ru.practicum.android.diploma.feature.favourite.presentation.viewmodels.FavouriteFragmentViewModel
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.SimilarVacanciesAdapter
+import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.VacanciesAdapterCommon
 
-class FavouriteFragment : Fragment(), SimilarVacanciesAdapter.ClickListener {
+class FavouriteFragment : Fragment(), VacanciesAdapterCommon.ClickListener {
 
     private var _binding: FragmentFavouriteBinding? = null
     private val binding get() = _binding!!
     private val viewModel: FavouriteFragmentViewModel by viewModel()
-    private var favoriteAdapter: SimilarVacanciesAdapter? = null
+    private var favoriteAdapter: VacanciesAdapterCommon? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +37,7 @@ class FavouriteFragment : Fragment(), SimilarVacanciesAdapter.ClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        favoriteAdapter = SimilarVacanciesAdapter(this, requireContext())
+        favoriteAdapter = VacanciesAdapterCommon(this, requireContext())
 
         binding.recyclerViewFavorite.layoutManager = LinearLayoutManager(requireActivity())
         binding.recyclerViewFavorite.adapter = favoriteAdapter

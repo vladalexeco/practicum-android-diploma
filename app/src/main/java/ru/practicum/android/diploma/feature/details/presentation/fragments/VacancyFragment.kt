@@ -45,14 +45,12 @@ class VacancyFragment : Fragment() {
         val vacancyId = requireArguments().getString(VACANCY_ID)
         viewModel.getDetailedVacancyData(vacancyId)
         getVacancy(vacancyId)
+        viewModel.getVacancyById(vacancyId)
 
         initListeners()
 
         viewModel.dataState.observe(viewLifecycleOwner) { dataState ->
             render(dataState)
-            if (dataState is DataState.DataReceived) {
-                viewModel.checkFavoriteStatus(dataState.data)
-            }
         }
 
         binding.similarVacanciesButton.setOnClickListener {
@@ -68,18 +66,14 @@ class VacancyFragment : Fragment() {
         viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     private fun getVacancy(vacancyId: String?) {
         if (!isNetworkAvailable(requireContext())) {
             vacancyId?.let { id ->
-                viewModel.getVacancyById(id).observe(viewLifecycleOwner) { vacancy ->
+                viewModel.dataState.observe(viewLifecycleOwner) { vacancy ->
                     vacancy?.also {
-                        render(DataState.DataReceived(it))
-                        viewModel.checkFavoriteStatus(it)
+                        viewModel.getVacancyById(id)
                         binding.similarVacanciesButton.visibility = View.GONE
                     }
                 }
@@ -113,9 +107,6 @@ class VacancyFragment : Fragment() {
             }
         }
 
-        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            setFabIcon(isFavorite)
-        }
     }
 
     private fun render(dataState: DataState) {
@@ -123,10 +114,11 @@ class VacancyFragment : Fragment() {
         when (dataState) {
             is DataState.Loading -> showLoader()
             is DataState.Failed -> showErrorMessage()
+            is DataState.VacancyByIdReceived -> dataState.vacancy?.let { setContentToViews(it) }
             is DataState.DataReceived -> {
                 setContentToViews(vacancyFull = dataState.data)
                 showContent()
-                viewModel.checkFavoriteStatus(dataState.data)
+                setFabIcon(dataState.isFavorite)
             }
         }
     }
@@ -157,6 +149,7 @@ class VacancyFragment : Fragment() {
             } else {
                 getString(R.string.salary_template_from_to, salary.from, salary.to, currencySymbol)
             }
+
             binding.salary.text = message
         }
     }
@@ -281,6 +274,11 @@ class VacancyFragment : Fragment() {
             val networkInfo = connectivityManager.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

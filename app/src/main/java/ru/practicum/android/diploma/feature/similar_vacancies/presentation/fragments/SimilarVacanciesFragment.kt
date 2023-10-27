@@ -15,14 +15,15 @@ import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.SimilarSearchState
 import ru.practicum.android.diploma.feature.similar_vacancies.presentation.viewmodels.SimilarVacanciesViewModel
-import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.SimilarVacanciesAdapter
+import ru.practicum.android.diploma.feature.similar_vacancies.simillarvacanciesadapter.VacanciesAdapterCommon
 
-class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListener {
+class SimilarVacanciesFragment : Fragment(), VacanciesAdapterCommon.ClickListener {
 
     private val viewModel: SimilarVacanciesViewModel by viewModel()
     private var _binding: FragmentSimilarVacanciesBinding? = null
     private val binding get() = _binding!!
-    private var similarVacanciesAdapter: SimilarVacanciesAdapter? = null
+
+    private var similarVacanciesAdapter: VacanciesAdapterCommon? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +36,7 @@ class SimilarVacanciesFragment : Fragment(), SimilarVacanciesAdapter.ClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        similarVacanciesAdapter = SimilarVacanciesAdapter(this, requireContext())
+        similarVacanciesAdapter = VacanciesAdapterCommon(this, requireContext())
         binding.similarVacanciesRecyclerView.adapter = similarVacanciesAdapter
 
         binding.similarVacanciesBackArrowImageview.setOnClickListener {

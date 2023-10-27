@@ -83,4 +83,6 @@
     <string name="salary_template_from_to">от %1$d до %2$d %3$s</string>
     <string name="salary_template_to">до %1$d %2$s</string>
 
+    <string name="bad_inheritor_error">Incorrect inheritor of the LiveDataSource class</string>
+
 </resources>

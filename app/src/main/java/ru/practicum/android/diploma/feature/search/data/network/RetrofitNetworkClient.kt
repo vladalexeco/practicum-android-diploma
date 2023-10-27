@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.core.util.STATUS_CODE_BAD_REQUEST
 import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
 import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
@@ -45,7 +44,7 @@ class RetrofitNetworkClient(
                     },
                     industry = filterSettings.industryPlain?.id,
                     salary = if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
-                    withSalary =  filterSettings.notShowWithoutSalary
+                    withSalary = filterSettings.notShowWithoutSalary
                 )
                 response.apply { resultCode = STATUS_CODE_SUCCESS }
             } catch (e: Throwable) {
@@ -54,12 +53,9 @@ class RetrofitNetworkClient(
         }
     }
 
-    override suspend fun getVacancy(dto: Any): Response {
+    override suspend fun getVacancy(dto: SearchRequest): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
-        }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = STATUS_CODE_BAD_REQUEST }
         }
         return withContext(Dispatchers.IO) {
             try {
@@ -72,12 +68,9 @@ class RetrofitNetworkClient(
         }
     }
 
-    override suspend fun getSimilarVacancies(dto: Any): Response {
+    override suspend fun getSimilarVacancies(dto: SearchRequest): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
-        }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = STATUS_CODE_BAD_REQUEST }
         }
         return withContext(Dispatchers.IO) {
             try {
