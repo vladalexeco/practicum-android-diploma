@@ -66,8 +66,6 @@ class VacancyFragment : Fragment() {
         viewModel.currentVacancyFull?.let { viewModel.checkFavoriteStatus(it) }
     }
 
-    }
-
     private fun getVacancy(vacancyId: String?) {
         if (!isNetworkAvailable(requireContext())) {
             vacancyId?.let { id ->
@@ -96,17 +94,14 @@ class VacancyFragment : Fragment() {
                 viewModel.onShareVacancyClicked(alternateUrl)
             }
         }
-
         vacancyDetailsBackArrowImageview.setOnClickListener {
             findNavController().popBackStack()
         }
-
         favoritesIcon.setOnClickListener {
             viewModel.currentVacancyFull?.let { vacancyFull ->
                 viewModel.onFavoriteButtonClick(vacancyFull)
             }
         }
-
     }
 
     private fun render(dataState: DataState) {

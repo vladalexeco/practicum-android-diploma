@@ -22,7 +22,7 @@ class ChooseIndustryViewModel(
 ) : ViewModel() {
 
     private var _dataIndustry = MutableLiveData<LiveDataResource>()
-    val  dataIndustry: LiveData<LiveDataResource> = _dataIndustry
+    val dataIndustry: LiveData<LiveDataResource> = _dataIndustry
 
     private var industries = arrayListOf<Industry>()
     private lateinit var filteredIndustries: List<Industry>
