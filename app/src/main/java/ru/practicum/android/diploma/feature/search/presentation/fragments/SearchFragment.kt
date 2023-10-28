@@ -77,6 +77,9 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchInputEditText.doOnTextChanged { text, _, _, _ ->
             vacanciesAdapter?.clear()
             clearButtonVisibility(text)
+            if (text?.isEmpty() == true) {
+                viewModel.clearList()
+            }
             text?.let {
                 viewModel.searchDebounce(it.toString())
                 binding.apply {
