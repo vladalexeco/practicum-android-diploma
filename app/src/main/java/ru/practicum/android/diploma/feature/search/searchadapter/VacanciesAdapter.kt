@@ -15,20 +15,19 @@ class VacanciesAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var vacancies = listOf<VacancyShort>()
-        set(newValue) {
-            val diffCallBack = VacancyDiffCallBack(field, newValue)
-            val diffResult = DiffUtil.calculateDiff(diffCallBack)
-            field = newValue
-            diffResult.dispatchUpdatesTo(this)
-        }
+    private val vacancies = mutableListOf<VacancyShort>()
 
     fun setVacancyList(list: List<VacancyShort>) {
-        vacancies = list
+        val diffCallBack = VacancyDiffCallBack(vacancies, list)
+        val diffResult = DiffUtil.calculateDiff(diffCallBack)
+        vacancies.clear()
+        vacancies.addAll(list)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun clear() {
-        vacancies = ArrayList()
+        vacancies.clear()
+        notifyDataSetChanged()
     }
 
     fun interface ClickListener {

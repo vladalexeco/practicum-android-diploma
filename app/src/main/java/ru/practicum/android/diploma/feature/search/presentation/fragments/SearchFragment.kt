@@ -76,6 +76,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
         binding.searchInputEditText.doOnTextChanged { text, _, _, _ ->
             vacanciesAdapter?.clear()
+            viewModel.clearList()
             clearButtonVisibility(text)
             text?.let {
                 viewModel.searchDebounce(it.toString())
@@ -178,6 +179,8 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchInputEditText.setText("")
         binding.searchInputEditText.clearFocus()
         clearContent()
+        vacanciesAdapter?.clear()
+        viewModel.clearList()
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
         viewModel.currentPage = 0
         viewModel.totalPages = 0

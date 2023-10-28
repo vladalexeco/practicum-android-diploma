@@ -127,6 +127,10 @@ class SearchViewModel(
         }
     }
 
+    fun clearList() {
+        vacanciesList.clear()
+    }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private const val PAGE_SIZE = 20
