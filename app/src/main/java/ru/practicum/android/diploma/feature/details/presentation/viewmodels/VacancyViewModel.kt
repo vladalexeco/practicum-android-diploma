@@ -49,7 +49,7 @@ class VacancyViewModel(
 
     fun getDetailedVacancyData(vacancyId: String?) {
 
-        _dataState.postValue(DataState.Loading)
+        _dataState.value = DataState.Loading
 
         viewModelScope.launch {
             getVacancyUseCase.getVacancy(vacancyId ?: "").collect { serverResponse ->
@@ -57,18 +57,18 @@ class VacancyViewModel(
                 if (serverResponse.first != null) {
                     val vacancyFull: VacancyFull = serverResponse.first!!.vacancy
                     val isFavorite = vacancyId?.contains(vacancyFull.id) == true
-                    _dataState.postValue(
+                    _dataState.value =
                         DataState.DataReceived(
                             data = vacancyFull,
                             isFavorite = isFavorite
                         )
-                    )
+
                     checkFavoriteStatus(vacancyFull)
                 }
 
                 if (serverResponse.second != null) {
                     val responseCode: Int = serverResponse.second!!
-                    _dataState.postValue(DataState.Failed(codeResponse = responseCode))
+                    _dataState.value = DataState.Failed(codeResponse = responseCode)
                 }
 
             }
