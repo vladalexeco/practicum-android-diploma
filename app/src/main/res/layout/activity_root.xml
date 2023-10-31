@@ -23,14 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_2"
         android:background="@color/yp_gray"
-        app:layout_constraintTop_toBottomOf="@id/container_view"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintTop_toBottomOf="@id/container_view" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         style="@style/NavigationViewStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:itemRippleColor="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

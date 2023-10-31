@@ -1,22 +1,30 @@
 package ru.practicum.android.diploma.core.util
 
-/** Передатчик Id вакансии
- * Например, по клику на вакансию в поиске мы вызываем DataTransmitter.postId(vacancy.id) и
- * переходим на другой фрагмент.
- * Там мы либо в самом фрагменте, либо во ViewModel делаем примерно следующее:
- * val id = DataTransmitter.getId()
- * И потом делаем с этим Id что нужно.
- */
+import ru.practicum.android.diploma.feature.filter.domain.model.AreaPlain
+import ru.practicum.android.diploma.feature.filter.domain.model.Country
+import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 
 object DataTransmitter {
 
-    private var vacancyId: String = ""
+    private var currentIndustryPlain: IndustryPlain? = null
+    private var currentCountry: Country? = null
+    private var currentAreaPlain: AreaPlain? = null
 
-    fun postId(id: String) {
-        vacancyId = id
+    fun postAreaPlain(areaPlain: AreaPlain?) {
+        currentAreaPlain = areaPlain
     }
 
-    fun getId(): String {
-        return vacancyId
+    fun getAreaPlain(): AreaPlain? = currentAreaPlain
+
+    fun postCountry(country: Country?) {
+        currentCountry = country
     }
+
+    fun getCountry(): Country? = currentCountry
+
+    fun postIndustryPlain(industryPlain: IndustryPlain?) {
+        currentIndustryPlain = industryPlain
+    }
+
+    fun getIndustryPlain(): IndustryPlain? = currentIndustryPlain
 }

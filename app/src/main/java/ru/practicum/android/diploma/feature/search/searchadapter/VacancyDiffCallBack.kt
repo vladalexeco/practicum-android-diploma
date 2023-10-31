@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.feature.search.searchadapter
 import androidx.recyclerview.widget.DiffUtil
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyDiffCallBack (
+class VacancyDiffCallBack(
     private val oldList: List<VacancyShort>,
     private val newList: List<VacancyShort>
 ) : DiffUtil.Callback() {
@@ -13,14 +13,14 @@ class VacancyDiffCallBack (
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldTrack = oldList[oldItemPosition]
-        val newTrack = newList[newItemPosition]
-        return oldTrack.name == newTrack.name
+        val oldList = oldList[oldItemPosition]
+        val newList = newList[newItemPosition]
+        return oldList == newList
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldTrack = oldList[oldItemPosition]
-        val newTrack = newList[newItemPosition]
-        return oldTrack == newTrack
+        val oldList = oldList[oldItemPosition]
+        val newList = newList[newItemPosition]
+        return oldList == newList
     }
 }

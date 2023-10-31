@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/dimens_20"
         android:layout_marginEnd="@dimen/dimens_8"
         android:fontFamily="@font/ys_display_medium"
-        android:text="Избранное"
+        android:text="@string/favourite_header_favourite"
         android:textColor="@color/blackDayWhiteNight"
         android:textSize="@dimen/textSize_22"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/vacancy_item"/>
+        tools:listitem="@layout/vacancy_item" />
 
     <LinearLayout
         android:id="@+id/place_holder_favorite"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimens_16"
             android:fontFamily="@font/ys_display_medium"
-            android:text="Список пуст"
+            android:text="@string/favourite_message_list_is_empty"
             android:textColor="@color/blackDayWhiteNight"
             android:textSize="@dimen/textSize_22" />
     </LinearLayout>

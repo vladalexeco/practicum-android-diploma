@@ -7,24 +7,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.util.DataTransmitter
+import ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
-import ru.practicum.android.diploma.feature.search.presentation.SearchState
+import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
+import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
-
     private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
-
     private var vacanciesAdapter: VacanciesAdapter? = null
+    private val binding get() = _binding!!
+    private var lastVisibleItemPosition: Int = 0
+
+    private val onScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+
+            if (!viewModel.isLoading) {
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
+                    && firstVisibleItemPosition >= 0
+                    && !viewModel.isLastPage()
+                ) {
+                    viewModel.loadNextPage()
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +56,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +66,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             findNavController().navigate(R.id.action_searchFragment_to_settingsFiltersFragment)
         }
 
-        vacanciesAdapter = VacanciesAdapter(this)
+        vacanciesAdapter = VacanciesAdapter(this, requireContext())
         binding.searchRecycler.adapter = vacanciesAdapter
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) {
@@ -51,28 +75,48 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         }
 
         binding.searchInputEditText.doOnTextChanged { text, _, _, _ ->
+            vacanciesAdapter?.clear()
             clearButtonVisibility(text)
-            text?.let { viewModel.searchDebounce(it.toString()) }
+            if (text?.isEmpty() == true) {
+                viewModel.clearList()
+            }
+            text?.let {
+                viewModel.searchDebounce(it.toString())
+                binding.apply {
+                    amountTextView.visibility = View.GONE
+                    searchPlaceholderImageView.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                }
+            }
         }
 
         binding.clearSearchImageView.setOnClickListener {
             clearSearch()
+            viewModel.vacanciesList.clear()
         }
+
+        binding.searchRecycler.addOnScrollListener(onScrollListener)
+        renderFilter()
     }
 
-    private fun render(state: SearchState) {
+    private fun render(state: VacanciesSearchState) {
         when (state) {
-            is SearchState.Loading -> showLoading()
-            is SearchState.Content -> showContent(state.response)
-            is SearchState.Error -> showError()
-            is SearchState.Empty -> showEmpty()
-            is SearchState.ClearScreen -> showClearScreen()
+            is VacanciesSearchState.Loading -> showLoading()
+            is VacanciesSearchState.Content -> showContent(state.response)
+            is VacanciesSearchState.Error -> showError()
+            is VacanciesSearchState.Empty -> showEmpty()
+            is VacanciesSearchState.ClearScreen -> showClearScreen()
+            is VacanciesSearchState.ServerError -> showServerError()
         }
     }
 
     private fun showLoading() {
-        clearContent()
-        binding.progressBar.visibility = View.VISIBLE
+        if (viewModel.isFirstLoad) {
+            clearContent()
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun showError() {
@@ -82,16 +126,21 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun showEmpty() {
         clearContent()
-        binding.amountTextView.visibility = View.VISIBLE
-        binding.nothingFoundLinearlayout.visibility = View.VISIBLE
-        binding.amountTextView.text = "Таких вакансий нет"
+        binding.apply {
+            amountTextView.visibility = View.VISIBLE
+            nothingFoundLinearlayout.visibility = View.VISIBLE
+            amountTextView.text = getString(R.string.search_message_no_vacancies)
+        }
     }
 
     private fun showContent(response: VacanciesResponse) {
         clearContent()
-        vacanciesAdapter?.vacancies = response.items
-        binding.searchRecycler.visibility = View.VISIBLE
         binding.amountTextView.visibility = View.VISIBLE
+        binding.amountTextView.text = response.found.toString()
+        vacanciesAdapter?.setVacancyList(viewModel.vacanciesList.toList())
+        binding.searchRecycler.visibility = View.VISIBLE
+        val itemAnimator = SlideInBottomAnimator()
+        binding.searchRecycler.itemAnimator = itemAnimator
     }
 
     private fun showClearScreen() {
@@ -100,18 +149,26 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
     }
 
+    private fun showServerError() {
+        clearContent()
+        binding.serverNotRespondingLinearlayout.visibility = View.VISIBLE
+    }
+
     private fun clearContent() {
-        binding.searchPlaceholderImageView.visibility = View.GONE
-        binding.searchRecycler.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-        binding.internetProblemLinearlayout.visibility = View.GONE
-        binding.nothingFoundLinearlayout.visibility = View.GONE
-        binding.serverNotRespondingLinearlayout.visibility = View.GONE
-        binding.amountTextView.visibility = View.GONE
+        binding.apply {
+            searchPlaceholderImageView.visibility = View.GONE
+            searchRecycler.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            internetProblemLinearlayout.visibility = View.GONE
+            nothingFoundLinearlayout.visibility = View.GONE
+            serverNotRespondingLinearlayout.visibility = View.GONE
+            amountTextView.visibility = View.GONE
+        }
     }
 
     private fun clearButtonVisibility(s: CharSequence?) {
         if (s.isNullOrEmpty()) {
+            viewModel.showClearScreen()
             binding.searchImageView.visibility = View.VISIBLE
             binding.clearSearchImageView.visibility = View.GONE
         } else {
@@ -125,12 +182,16 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
         binding.searchInputEditText.clearFocus()
         clearContent()
         binding.searchPlaceholderImageView.visibility = View.VISIBLE
+        viewModel.currentPage = 0
+        viewModel.totalPages = 0
     }
 
-    private fun showVacanciesNumber(searchState: SearchState) {
-        if (searchState is SearchState.Content) {
+    private fun showVacanciesNumber(vacanciesSearchState: VacanciesSearchState) {
+        if (vacanciesSearchState is VacanciesSearchState.Content) {
             binding.amountTextView.text = requireContext().resources.getQuantityString(
-                R.plurals.plural_vacancies, searchState.response.found, searchState.response.found
+                R.plurals.plural_vacancies,
+                vacanciesSearchState.response.found,
+                vacanciesSearchState.response.found
             )
         }
     }
@@ -142,7 +203,30 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        DataTransmitter.postId(vacancy.id)
-        findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_vacancyFragment,
+            VacancyFragment.createArgs(vacancy.id)
+        )
+    }
+
+    private fun renderFilter() {
+        val filters = viewModel.getFilters()
+        if (
+            filters.country != null
+            || filters.industryPlain != null
+            || filters.areaPlain != null
+            || filters.notShowWithoutSalary
+            || filters.expectedSalary != NEGATIVE_BALANCE
+        )
+            binding.filterButtonImageView.setImageResource(R.drawable.ic_filter_on)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.doNewSearch(binding.searchInputEditText.text.toString())
+    }
+
+    companion object {
+        const val NEGATIVE_BALANCE = -1
     }
 }

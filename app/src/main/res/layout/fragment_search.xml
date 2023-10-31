@@ -13,7 +13,7 @@
         android:layout_marginStart="@dimen/dimens_16"
         android:layout_marginTop="@dimen/dimens_20"
         android:fontFamily="@font/ys_display_medium"
-        android:text="Поиск вакансий"
+        android:text="@string/search_header_search_vacancies"
         android:textColor="@color/blackDayWhiteNight"
         android:textSize="@dimen/textSize_22"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,8 +35,8 @@
         android:id="@+id/search_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/filter_button_imageView">
+
         <EditText
             android:id="@+id/searchInput_editText"
             android:layout_width="match_parent"
@@ -47,25 +47,25 @@
             android:backgroundTint="@color/LightGrayDayWhiteNight"
             android:drawableTint="@color/yp_black"
             android:fontFamily="@font/ys_display_regular"
-            android:hint="Введите запрос"
+            android:hint="@string/search_hint_enter_request"
             android:imeOptions="actionDone"
             android:padding="@dimen/dimens_16"
             android:singleLine="true"
             android:textColor="@color/yp_black"
             android:textColorHint="@color/grayDayWhiteNight"
             android:textCursorDrawable="@drawable/color_cursor"
-            android:textSize="@dimen/textSize_16"/>
+            android:textSize="@dimen/textSize_16" />
 
         <ImageView
             android:id="@+id/clearSearch_ImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:layout_marginBottom="2dp"
             android:background="@null"
             android:padding="@dimen/dimens_12"
             android:visibility="gone"
-            android:layout_marginEnd="@dimen/dimens_16"
-            android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/search_frame_layout"
             app:layout_constraintEnd_toEndOf="@+id/search_frame_layout"
             app:layout_constraintTop_toTopOf="@+id/search_frame_layout"
@@ -77,11 +77,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dimens_16"
+            android:layout_marginBottom="2dp"
             android:background="@null"
             android:padding="@dimen/dimens_12"
             android:visibility="visible"
-            android:layout_marginEnd="@dimen/dimens_16"
-            android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/search_frame_layout"
             app:layout_constraintEnd_toEndOf="@+id/search_frame_layout"
             app:layout_constraintTop_toTopOf="@+id/search_frame_layout"
@@ -109,17 +109,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimens_8"
+        android:layout_marginBottom="@dimen/dimens_4"
+        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/dimens_16"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amount_textView"
+        tools:itemCount="6"
         tools:listitem="@layout/vacancy_item" />
 
     <ImageView
         android:id="@+id/search_placeholder_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +166,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center"
-            android:text="Нет интернета"
+            android:text="@string/message_no_internet"
             android:textColor="@color/blackDayWhiteNight"
             android:textSize="@dimen/textSize_22" />
     </LinearLayout>
@@ -189,7 +194,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center"
-            android:text="Не удалось получить \n список вакансий"
+            android:text="@string/message_failed_get_vacancies"
             android:textColor="@color/blackDayWhiteNight"
             android:textSize="@dimen/textSize_22" />
     </LinearLayout>
@@ -217,10 +222,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center"
-            android:text="Ошибка сервера"
+            android:text="@string/message_server_error"
             android:textColor="@color/blackDayWhiteNight"
             android:textSize="@dimen/textSize_22" />
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

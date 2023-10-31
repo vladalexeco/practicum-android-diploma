@@ -1,15 +1,20 @@
 package ru.practicum.android.diploma.feature.search.searchadapter
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.util.Currency
 import ru.practicum.android.diploma.core.util.CurrencyLogoCreator
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 
-class VacancyViewHolder(private val binding: VacancyItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class VacancyViewHolder(
+    private val binding: VacancyItemBinding,
+    private val context: Context
+) : RecyclerView.ViewHolder(binding.root) {
 
+    @SuppressLint("StringFormatMatches")
     fun bind(
         model: VacancyShort,
         listener: VacanciesAdapter.ClickListener
@@ -19,33 +24,32 @@ class VacancyViewHolder(private val binding: VacancyItemBinding) : RecyclerView.
             listener.onClick(model)
         }
 
-        if (model.employer?.logoUrls != null) {
-            Glide.with(itemView)
-                .load(model.employer.logoUrls.original)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(binding.vacancyImageView)
-        } else {
-            // Если logo_urls равен null, загружаем изображение по умолчанию
-            Glide.with(itemView)
-                .load(R.drawable.ic_launcher_foreground)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(binding.vacancyImageView)
-        }
+        Glide.with(itemView)
+            .load(model.employer?.logoUrls?.original)
+            .placeholder(R.drawable.placeholder)
+            .into(binding.vacancyImageView)
 
         binding.vacancyTextView.text = "${model.name}, ${model.area.name}"
         binding.employerTextView.text = model.employer?.name
         if (model.salary != null) {
             val text = CurrencyLogoCreator.getSymbol(model.salary.currency)
-            if (model.salary.from != null && model.salary.to != null) {
-                binding.salaryTextView.text = "От ${model.salary.from} до ${model.salary.to} $text"
-            } else if (model.salary.from == null && model.salary.to != null) {
-                binding.salaryTextView.text = "До ${model.salary.to} $text"
-            } else {
-                binding.salaryTextView.text = "От ${model.salary.from} $text"
+            when {
+                model.salary.from != null && model.salary.to != null -> {
+                    binding.salaryTextView.text =
+                       context.getString(R.string.salary_template_from_to, model.salary.from, model.salary.to, text)
+                }
+
+                model.salary.from == null && model.salary.to != null -> {
+                    binding.salaryTextView.text = context.getString(R.string.salary_template_to, model.salary.to, text)
+                }
+
+                else -> {
+                    binding.salaryTextView.text = context.getString(R.string.salary_template_from, model.salary.from, text)
+                }
             }
 
         } else {
-            binding.salaryTextView.text = "Зарплата не указана"
+            binding.salaryTextView.text = context.getString(R.string.message_salary_not_pointed)
         }
     }
 }

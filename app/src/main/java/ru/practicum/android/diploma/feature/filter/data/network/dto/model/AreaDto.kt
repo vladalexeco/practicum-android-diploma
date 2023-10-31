@@ -1,16 +1,16 @@
 package ru.practicum.android.diploma.feature.filter.data.network.dto.model
 
+import com.google.gson.annotations.SerializedName
 import ru.practicum.android.diploma.feature.filter.domain.model.Area
-import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 
 data class AreaDto(
     val id: String,
-    val parent_id: String?,
+    @SerializedName("parent_id") val parentId: String?,
     val name: String,
     val areas: List<AreaDto>
 )
 
 fun AreaDto.mapToArea(): Area {
     val mappedIndustries: List<Area> = areas.map { it.mapToArea() }
-    return Area(id, parent_id, name, mappedIndustries)
+    return Area(id, parentId, name, mappedIndustries)
 }

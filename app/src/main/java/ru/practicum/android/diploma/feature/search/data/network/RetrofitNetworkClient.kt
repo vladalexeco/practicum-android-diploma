@@ -5,75 +5,93 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.core.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SERVER_ERROR
+import ru.practicum.android.diploma.core.util.STATUS_CODE_SUCCESS
+import ru.practicum.android.diploma.feature.filter.domain.model.FilterSettings
 import ru.practicum.android.diploma.feature.search.data.NetworkClient
 import ru.practicum.android.diploma.feature.search.data.Response
 
-class RetrofitNetworkClient (private val context: Context,
-                             private val hhApi: HeadHunterApi) : NetworkClient {
+class RetrofitNetworkClient(
+    private val context: Context,
+    private val hhApi: HeadHunterApi
+) : NetworkClient {
 
-    override suspend fun getVacancies(dto: Any): Response {
+    override suspend fun getVacancies(
+        dto: SearchRequest,
+        pages: Int,
+        perPage: Int,
+        page: Int,
+        filterSettings: FilterSettings
+    ): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
-        }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = 400 }
+            return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
         }
         return withContext(Dispatchers.IO) {
             try {
-                val response = hhApi.getVacancies(dto.data)
-                response.apply { resultCode = 200 }
-            } catch (e:Throwable) {
-                Response().apply { resultCode = 500}
+                val options = mapOf(
+                    "pages" to pages,
+                    "per_page" to perPage,
+                    "page" to page
+                )
+                val response = hhApi.getVacancies(
+                    text = dto.data,
+                    options = options,
+                    area = if (filterSettings.areaPlain?.id == null) {
+                        filterSettings.country?.id
+                    } else {
+                        filterSettings.areaPlain.id
+                    },
+                    industry = filterSettings.industryPlain?.id,
+                    salary = if (filterSettings.expectedSalary == -1) null else filterSettings.expectedSalary,
+                    withSalary = filterSettings.notShowWithoutSalary
+                )
+                response.apply { resultCode = STATUS_CODE_SUCCESS }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
             }
         }
     }
 
-    override suspend fun getVacancy(dto: Any): Response {
+    override suspend fun getVacancy(dto: SearchRequest): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
-        }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = 400 }
+            return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
         }
         return withContext(Dispatchers.IO) {
             try {
                 val responseVacancy = hhApi.getVacancy(dto.data)
                 val response = VacancyDtoResponse(vacancy = responseVacancy)
-                response.apply { resultCode = 200 }
-            } catch (e:Throwable) {
-                Response().apply { resultCode = 500}
+                response.apply { resultCode = STATUS_CODE_SUCCESS }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
             }
         }
     }
 
-    override suspend fun getSimilarVacancies(dto: Any): Response {
+    override suspend fun getSimilarVacancies(dto: SearchRequest): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
-        }
-        if (dto !is SearchRequest) {
-            return Response().apply { resultCode = 400 }
+            return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
         }
         return withContext(Dispatchers.IO) {
             try {
                 val response = hhApi.getSimilarVacancies(dto.data)
-                response.apply { resultCode = 200 }
-            } catch (e:Throwable) {
-                Response().apply { resultCode = 500}
+                response.apply { resultCode = STATUS_CODE_SUCCESS }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
             }
         }
     }
 
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
-            }
-        }
-        return false
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        return capabilities?.run {
+            hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } ?: false
     }
 }

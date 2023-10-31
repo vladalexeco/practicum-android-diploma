@@ -1,5 +1,7 @@
-package com.usunin1994.headhunterapi.data.dtomodels
+package ru.practicum.android.diploma.feature.search.data.dtomodels
 
-data class AreaDto(val id: String,
-              val name: String,
-              val url: String)
+data class AreaDto(
+    val id: String,
+    val name: String,
+    val url: String
+)

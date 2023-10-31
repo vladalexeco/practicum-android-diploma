@@ -6,12 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryAreaModel
 
-class FilterAdapter<T : IndustryAreaModel>(
+class IndustriesAreasAdapter<T : IndustryAreaModel>(
     val items: ArrayList<T>,
     private val clickListener: ClickListener
 ) : RecyclerView.Adapter<FilterViewHolder>() {
-
-    private var positionChecked = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder =
         FilterViewHolder(
@@ -21,28 +19,17 @@ class FilterAdapter<T : IndustryAreaModel>(
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
         holder.bind(
-            items[position],
-            position,
+            items[holder.adapterPosition],
+            holder.adapterPosition,
             clickListener,
-            { notifyItemChanged(position) },
-            { isChecked: Boolean -> setPositionChecked(position, isChecked) })
+        ) { notifyItemChanged(holder.adapterPosition) }
 
         holder.itemView.setOnClickListener {
             clickListener.onItemClicked(
-                items[position],
-                position,
-                { notifyItemChanged(position) },
-                { isChecked: Boolean -> setPositionChecked(position, isChecked) }
-            )
+                items[holder.adapterPosition],
+                holder.adapterPosition,
+            ) { notifyItemChanged(holder.adapterPosition) }
         }
-    }
-
-    private fun setPositionChecked(position: Int, isChecked: Boolean) {
-        if (positionChecked > -1) {
-            items[positionChecked].isChecked = false
-            notifyItemChanged(positionChecked)
-        }
-        positionChecked = if (isChecked) position else -1
     }
 
     override fun getItemCount(): Int = items.size
@@ -52,7 +39,6 @@ class FilterAdapter<T : IndustryAreaModel>(
             model: IndustryAreaModel,
             position: Int,
             notifyItemChanged: () -> Unit,
-            setPositionChecked: (Boolean) -> Unit
         )
     }
 }
