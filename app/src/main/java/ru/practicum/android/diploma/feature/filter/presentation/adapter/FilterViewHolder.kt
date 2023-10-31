@@ -16,7 +16,7 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
         model: IndustryAreaModel,
         position: Int,
-        clickListener: FilterAdapter.ClickListener,
+        clickListener: IndustriesAreasAdapter.ClickListener,
         notifyItemChanged: () -> Unit,
     ) {
         name.text = model.name

@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/vacancy_item"/>
+        tools:listitem="@layout/vacancy_item" />
 
     <LinearLayout
         android:id="@+id/place_holder_favorite"

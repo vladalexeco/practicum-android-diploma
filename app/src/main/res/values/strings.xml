@@ -23,7 +23,7 @@
 
 
     // Экран "Избранное"
-    <string name="favourite_header_favourite">Избарнное</string>
+    <string name="favourite_header_favourite">Избранное</string>
     <string name="favourite_message_list_is_empty">Список пуст</string>
 
     // Экраны "Фильтры"
@@ -68,6 +68,10 @@
     <string name="bottom_navigation_title_favourite">Избранное</string>
     <string name="bottom_navigation_title_command">Команда</string>
 
+    // ExternalNavigatorImpl
+    <string name="external_nav_mail_to">mailto:</string>
+    <string name="external_nav_telephone">tel:</string>
+
     // Общие ресурсы
     <string name="message_no_internet">Нет интернета</string>
     <string name="message_failed_get_vacancies">Не удалось получить \n список вакансий</string>
@@ -78,5 +82,7 @@
     <string name="salary_template_from">от %1$d %2$s</string>
     <string name="salary_template_from_to">от %1$d до %2$d %3$s</string>
     <string name="salary_template_to">до %1$d %2$s</string>
+
+    <string name="bad_inheritor_error">Incorrect inheritor of the LiveDataSource class</string>
 
 </resources>

@@ -9,31 +9,24 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.presentation.viewmodels.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.feature.details.presentation.fragments.VacancyFragment
 import ru.practicum.android.diploma.feature.search.domain.VacanciesResponse
 import ru.practicum.android.diploma.feature.search.domain.models.VacancyShort
 import ru.practicum.android.diploma.feature.search.searchadapter.SlideInBottomAnimator
 import ru.practicum.android.diploma.feature.search.presentation.VacanciesSearchState
-import ru.practicum.android.diploma.feature.search.presentation.viewmodels.VacancyIdSharedViewModel
 import ru.practicum.android.diploma.feature.search.searchadapter.VacanciesAdapter
 
 class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private val viewModel: SearchViewModel by viewModel()
-    private val sharedViewModel: VacancyIdSharedViewModel by activityViewModel()
-
     private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
-
-    private var isLoading = false
-    private var isFirstLoad = true
-    private var lastVisibleItemPosition: Int = 0
-
     private var vacanciesAdapter: VacanciesAdapter? = null
+    private val binding get() = _binding!!
+    private var lastVisibleItemPosition: Int = 0
 
     private val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -45,7 +38,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-            if (!isLoading) {
+            if (!viewModel.isLoading) {
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                     && firstVisibleItemPosition >= 0
                     && !viewModel.isLastPage()
@@ -81,22 +74,19 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
             showVacanciesNumber(it)
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            isLoading = it
-        }
-
-        viewModel.isFirstLoad.observe(viewLifecycleOwner) {
-            isFirstLoad = it
-        }
-
         binding.searchInputEditText.doOnTextChanged { text, _, _, _ ->
             vacanciesAdapter?.clear()
             clearButtonVisibility(text)
+            if (text?.isEmpty() == true) {
+                viewModel.clearList()
+            }
             text?.let {
                 viewModel.searchDebounce(it.toString())
-                binding.amountTextView.visibility = View.GONE
-                binding.searchPlaceholderImageView.visibility = View.GONE
-                binding.progressBar.visibility = View.VISIBLE
+                binding.apply {
+                    amountTextView.visibility = View.GONE
+                    searchPlaceholderImageView.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -121,7 +111,7 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     private fun showLoading() {
-        if (isFirstLoad) {
+        if (viewModel.isFirstLoad) {
             clearContent()
             binding.progressBar.visibility = View.VISIBLE
         } else {
@@ -136,9 +126,11 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
 
     private fun showEmpty() {
         clearContent()
-        binding.amountTextView.visibility = View.VISIBLE
-        binding.nothingFoundLinearlayout.visibility = View.VISIBLE
-        binding.amountTextView.text = getString(R.string.search_message_no_vacancies)
+        binding.apply {
+            amountTextView.visibility = View.VISIBLE
+            nothingFoundLinearlayout.visibility = View.VISIBLE
+            amountTextView.text = getString(R.string.search_message_no_vacancies)
+        }
     }
 
     private fun showContent(response: VacanciesResponse) {
@@ -163,13 +155,15 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     private fun clearContent() {
-        binding.searchPlaceholderImageView.visibility = View.GONE
-        binding.searchRecycler.visibility = View.GONE
-        binding.progressBar.visibility = View.GONE
-        binding.internetProblemLinearlayout.visibility = View.GONE
-        binding.nothingFoundLinearlayout.visibility = View.GONE
-        binding.serverNotRespondingLinearlayout.visibility = View.GONE
-        binding.amountTextView.visibility = View.GONE
+        binding.apply {
+            searchPlaceholderImageView.visibility = View.GONE
+            searchRecycler.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            internetProblemLinearlayout.visibility = View.GONE
+            nothingFoundLinearlayout.visibility = View.GONE
+            serverNotRespondingLinearlayout.visibility = View.GONE
+            amountTextView.visibility = View.GONE
+        }
     }
 
     private fun clearButtonVisibility(s: CharSequence?) {
@@ -209,8 +203,10 @@ class SearchFragment : Fragment(), VacanciesAdapter.ClickListener {
     }
 
     override fun onClick(vacancy: VacancyShort) {
-        sharedViewModel.vacancyId = vacancy.id
-        findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_vacancyFragment,
+            VacancyFragment.createArgs(vacancy.id)
+        )
     }
 
     private fun renderFilter() {

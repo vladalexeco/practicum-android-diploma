@@ -33,7 +33,7 @@ data class VacancyFullEntity(
 
 fun VacancyFull.toVacancyFullEntity(): VacancyFullEntity {
     return VacancyFullEntity(
-        id = this.id!!,
+        id = this.id,
         applyAlternateUrl = this.applyAlternateUrl,
         area = this.area,
         contacts = this.contacts,
@@ -68,7 +68,7 @@ fun VacancyFullEntity.toVacancyFull(): VacancyFull {
 fun VacancyFull.toVacancyShort(): VacancyShort {
     return this.area?.toArea()?.let {
         VacancyShort(
-            id = this.id ?: "",
+            id = this.id,
             area = it,
             employer = this.employer?.toEmployer() ,
             name = this.name ?: "",

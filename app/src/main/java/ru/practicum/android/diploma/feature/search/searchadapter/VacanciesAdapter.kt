@@ -56,7 +56,7 @@ class VacanciesAdapter(
         if (holder is VacancyViewHolder) {
             holder.bind(vacancies[position], listener)
         } else {
-            //
+            holder is LoadingViewHolder
         }
     }
 
@@ -65,10 +65,10 @@ class VacanciesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position < itemCount - 1) {
+        return if (position < itemCount - 1 || IsLastPage.IS_LAST_PAGE) {
             ITEM_VIEW_TYPE_ITEM
         } else {
-            if (!IsLastPage.IS_LAST_PAGE) ITEM_VIEW_TYPE_LOADING else ITEM_VIEW_TYPE_ITEM
+            ITEM_VIEW_TYPE_LOADING
         }
     }
 

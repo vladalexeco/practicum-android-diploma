@@ -36,7 +36,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
                     emit(Resource.Success(data))
                 }
 
-            else -> emit(Resource.Error(errorCode = -2))
+            else -> emit(Resource.Error(errorCode = STATUS_CODE_NO_NETWORK_CONNECTION))
         }
     }
 
@@ -49,7 +49,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
                 emit(Resource.Success(data))
             }
 
-            else -> emit(Resource.Error(errorCode = -2))
+            else -> emit(Resource.Error(errorCode = STATUS_CODE_NO_NETWORK_CONNECTION))
         }
     }
 
@@ -62,8 +62,7 @@ class VacancyRepositoryImpl(private val networkClient: NetworkClient) : VacancyR
                 emit(Resource.Success(data))
             }
 
-            else -> emit(Resource.Error(errorCode = -2))
-
+            else -> emit(Resource.Error(errorCode = STATUS_CODE_NO_NETWORK_CONNECTION))
         }
     }
 }

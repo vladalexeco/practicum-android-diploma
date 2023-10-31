@@ -8,14 +8,11 @@ abstract class IndustryAreaModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
-
         other as IndustryAreaModel
-
         if (
             this.id != other.id ||
             this.name != other.name
         ) return false
-
         return true
     }
 

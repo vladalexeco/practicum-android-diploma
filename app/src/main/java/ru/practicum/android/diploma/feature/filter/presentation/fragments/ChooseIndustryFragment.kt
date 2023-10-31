@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,8 @@ import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.Choos
 import ru.practicum.android.diploma.feature.filter.domain.model.Industry
 import ru.practicum.android.diploma.feature.filter.domain.model.IndustryPlain
 import ru.practicum.android.diploma.feature.filter.domain.model.mapToIndustryPlain
-import ru.practicum.android.diploma.feature.filter.presentation.adapter.FilterAdapter
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
+import ru.practicum.android.diploma.feature.filter.presentation.adapter.IndustriesAreasAdapter
 import kotlin.collections.ArrayList
 
 class ChooseIndustryFragment : Fragment() {
@@ -27,9 +29,7 @@ class ChooseIndustryFragment : Fragment() {
     private var _binding: FragmentChooseIndustryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChooseIndustryViewModel by viewModel()
-    private var industriesAdapter: FilterAdapter<Industry>? = null
-    private var previousIndustryClicked: Industry? = null
-
+    private var industriesAdapter: IndustriesAreasAdapter<Industry>? = null
     private var currentIndustryPlain: IndustryPlain? = null
 
     override fun onCreateView(
@@ -43,40 +43,52 @@ class ChooseIndustryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.observeIndustriesState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is IndustriesState.DisplayIndustries -> displayIndustries(ArrayList(state.industries))
-                is IndustriesState.Error -> displayError(state)
-                else -> {}
+        initObservers()
+        binding.apply {
+            chooseIndustryApproveButton.setOnClickListener {
+                if (currentIndustryPlain != null) {
+                    DataTransmitter.postIndustryPlain(currentIndustryPlain!!)
+                    findNavController().navigate(R.id.action_chooseIndustryFragment_to_settingsFiltersFragment)
+                }
+            }
+            chooseIndustryBackArrowImageview.setOnClickListener {
+                findNavController().popBackStack()
+            }
+            chooseIndustryEnterFieldEdittext.doOnTextChanged { text, _, _, _ ->
+                viewModel.onIndustryTextChanged(text.toString())
+                setEditTextIcon(text.isNullOrEmpty())
+            }
+            clearIndustryImageView.setOnClickListener {
+                binding.chooseIndustryEnterFieldEdittext.text.clear()
             }
         }
+    }
 
-        viewModel.dataIndustry.observe(viewLifecycleOwner) { industry ->
-            if (industry.isChecked) {
-                binding.chooseIndustryApproveButton.visibility = View.VISIBLE
-                currentIndustryPlain = industry.mapToIndustryPlain()
-            } else {
-                binding.chooseIndustryApproveButton.visibility = View.GONE
-                currentIndustryPlain = null
+    private fun initObservers() {
+        viewModel.apply {
+            dataIndustry.observe(viewLifecycleOwner) { liveDataResource ->
+                when(liveDataResource) {
+                    is LiveDataResource.IndustryStorage -> {
+                        val industry: Industry = liveDataResource.data
+                        if (industry.isChecked) {
+                            binding.chooseIndustryApproveButton.visibility = View.VISIBLE
+                            currentIndustryPlain = industry.mapToIndustryPlain()
+                        } else {
+                            binding.chooseIndustryApproveButton.visibility = View.GONE
+                            currentIndustryPlain = null
+                        }
+                    }
+
+                    is LiveDataResource.IndustryStateStorage -> {
+                        when (val state = liveDataResource.data) {
+                            is IndustriesState.DisplayIndustries -> displayIndustries(ArrayList(state.industries))
+                            is IndustriesState.Error -> displayError(state)
+                        }
+                    }
+
+                    else ->  throw Throwable(getString(R.string.bad_inheritor_error))
+                }
             }
-        }
-
-        binding.chooseIndustryApproveButton.setOnClickListener {
-            if (currentIndustryPlain != null) {
-                DataTransmitter.postIndustryPlain(currentIndustryPlain!!)
-                findNavController().navigate(
-                    R.id.action_chooseIndustryFragment_to_settingsFiltersFragment
-                )
-            }
-        }
-
-        binding.chooseIndustryBackArrowImageview.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.chooseIndustryEnterFieldEdittext.doOnTextChanged { text, _, _, _ ->
-            viewModel.onIndustryTextChanged(text.toString())
         }
     }
 
@@ -101,29 +113,22 @@ class ChooseIndustryFragment : Fragment() {
     }
 
     private fun initAdapter(industries: ArrayList<Industry>) {
-        industriesAdapter = FilterAdapter(industries) { industry, position, notifyItemChanged ->
+        industriesAdapter =
+            IndustriesAreasAdapter(industries) { industry, position, notifyItemChanged ->
+                industriesAdapter!!.items[position].isChecked = !industry.isChecked
+                notifyItemChanged.invoke()
+                val industryClicked = industriesAdapter!!.items[position]
 
-            industriesAdapter!!.items[position].isChecked = !industry.isChecked
-            notifyItemChanged.invoke()
-
-            val previousAreaPosition = if (previousIndustryClicked != null)
-                industriesAdapter!!.items.indexOf(previousIndustryClicked) else -1
-            if (previousAreaPosition != -1) {
-                industriesAdapter!!.items[previousAreaPosition].isChecked = false
-                industriesAdapter!!.notifyItemChanged(previousAreaPosition)
+                viewModel.onIndustryClicked(
+                    position,
+                    industryClicked,
+                ) { previousIndustryPositionClicked: Int ->
+                    industriesAdapter!!.items[previousIndustryPositionClicked].isChecked = false
+                    industriesAdapter!!.notifyItemChanged(
+                        previousIndustryPositionClicked
+                    )
+                }
             }
-
-            val areaClicked = industriesAdapter!!.items[position]
-            if (previousAreaPosition != -1) previousIndustryClicked =
-                industriesAdapter!!.items[previousAreaPosition]
-
-            viewModel.onIndustryClicked(areaClicked, previousIndustryClicked)
-
-            previousIndustryClicked =
-                if (previousIndustryClicked != areaClicked) areaClicked else null
-            binding.chooseIndustryApproveButton.visibility =
-                if (industries[position].isChecked) View.VISIBLE else View.GONE
-        }
     }
 
     private fun displayError(state: IndustriesState.Error) {
@@ -137,6 +142,13 @@ class ChooseIndustryFragment : Fragment() {
             .load(state.drawableId)
             .transform(CenterCrop())
             .into(binding.industriesErrorImage)
+    }
+
+    private fun setEditTextIcon(textIsEmpty: Boolean) {
+        binding.apply {
+            clearIndustryImageView.isVisible = !textIsEmpty
+            searchIndustryImageView.isVisible = textIsEmpty
+        }
     }
 
     override fun onDestroyView() {

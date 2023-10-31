@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.util.DataTransmitter
 import ru.practicum.android.diploma.databinding.FragmentChooseCountryBinding
 import ru.practicum.android.diploma.feature.filter.domain.model.Country
 import ru.practicum.android.diploma.feature.filter.presentation.adapter.CountriesAdapter
 import ru.practicum.android.diploma.feature.filter.presentation.states.CountriesState
+import ru.practicum.android.diploma.feature.filter.presentation.states.LiveDataResource
 import ru.practicum.android.diploma.feature.filter.presentation.viewmodels.ChooseCountryViewModel
 
 class ChooseCountryFragment : Fragment() {
@@ -35,19 +37,24 @@ class ChooseCountryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeCountriesState().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is CountriesState.DisplayCountries -> displayCountries(state.countries)
-                is CountriesState.Error -> displayError(state)
-                else -> {}
-            }
-        }
+        viewModel.dataCountry.observe(viewLifecycleOwner) { liveDataResource ->
+            when(liveDataResource) {
+                is LiveDataResource.CountryStorage -> {
+                    val country: Country = liveDataResource.data
+                    DataTransmitter.postCountry(country)
+                    DataTransmitter.postAreaPlain(null)
+                    findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
+                }
 
-        viewModel.dataCountry.observe(viewLifecycleOwner) { country ->
-            DataTransmitter.postCountry(country)
-            DataTransmitter.postAreaPlain(null)
-            //findNavController().navigate(R.id.action_chooseCountryFragment_to_chooseWorkplaceFragment)
-            findNavController().popBackStack()
+                is LiveDataResource.CountryStateStorage -> {
+                    when (val state = liveDataResource.data) {
+                        is CountriesState.DisplayCountries -> displayCountries(state.countries)
+                        is CountriesState.Error -> displayError(state)
+                    }
+                }
+
+                else -> throw Throwable(getString(R.string.bad_inheritor_error))
+            }
         }
 
         binding.chooseCountryBackArrowImageview.setOnClickListener {
